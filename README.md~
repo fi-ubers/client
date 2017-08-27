@@ -18,6 +18,4 @@ Si todo esto fue bien, pueden darle _Build > Clean project_ y luego _Run_ para c
 
 # Problemas haciendo que todo funque
 
-⋅⋅* Si les sale algún problema del Debug Bridge (o ADB): El [ADB](https://developer.android.com/studio/command-line/adb.html?hl=es-419) es lo que te deja conectar Android Studio con tu teléfono enchufado. Es fácil [bajarlo desde la terminal](https://www.youtube.com/watch?v=DV4_A_YSwO8).
-
 
