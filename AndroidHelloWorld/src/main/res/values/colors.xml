@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--    ARCHIVO DE PALETA DE COLORES DE NUESTRO PROYECTO
+
+Para facilitar el uso de los colores en la aplicación y poder rápidamente
+cambiar la apariencia en caso de ser necesario, la siguiente lista de
+colores debe ser tomada como el estándar en el proyecto. Cualquier otro
+color que no pertenezca a esta lista debe ser usado sólamente en ocasiones
+bien particulares y que lo ameriten.
+
+Lista de colores y cuándo usar cada uno:
+- col_plain_text: Para texto plano normal. Ejemplos: mensajes, campos a
+completar por el usuario, impresiones simples por pantalla.
+- col_std_btn_text y col_std_btn_bck: Definen respectivamente el color del
+texto y el fondo de un botón "estándar", un botón común. Ej: botones para
+realizar acciones simples, confirmar/cancelar, botones que uno "esperaría
+que estuvieran ahí".
+- col_imp_btn_text y col_imp_btn_bck: Definen respectivamente el color del
+texto y el fondo de un botón "importante". Los botones importantes deben
+distinguirse de los botones estándar de acuerdo a la "función" realizada.
+Básicamente, los botones importantes son los que hacen acciones "críticas".
+Ej: Confirmar un viaje, cancelar un viaje ya pedido, darle ok a modificar
+algo importante, acciones que marcan un "antes y un después".
+- col_highlight: Mi idea con este básicamente era imitar el color de cuando
+"seleccionás" cosas.
+-->
+<resources>
+    <color name="col_plain_text">#0b0b0b</color>
+    <color name="col_std_btn_text">#0099d2</color>
+    <color name="col_std_btn_bck">#00000000</color>
+    <color name="col_imp_btn_text">#ffffff</color>
+    <color name="col_imp_btn_bck">#ff7400</color>
+    <color name="col_highlight">#9b00ff37</color>
+</resources>

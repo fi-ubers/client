@@ -14,13 +14,13 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="11"
+        android:layout_weight="7.5"
         android:src="@drawable/fiuber_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.5"
+        android:layout_weight="1.2"
         android:orientation="horizontal">
 
         <EditText
@@ -46,19 +46,46 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/requestBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.4"
-        android:text="Make request" />
-
     <TextView
         android:id="@+id/resultTxtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-         />
+        android:layout_weight="2.2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/getBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/col_std_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:text="GET" />
+
+        <Button
+            android:id="@+id/postBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/col_std_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:text="POST" />
+
+        <Button
+            android:id="@+id/deleteBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/col_std_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:text="DELETE" />
+
+    </LinearLayout>
 
 
 </LinearLayout>
