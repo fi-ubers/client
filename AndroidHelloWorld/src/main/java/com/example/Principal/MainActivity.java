@@ -15,7 +15,10 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
 
-
+/**
+ * The main menu {@link Activity} of the app. The starting point for the very
+ * users operations.
+ */
 public class MainActivity extends Activity {
 
 	EditText userName, userId;
@@ -23,7 +26,6 @@ public class MainActivity extends Activity {
 	TextView resultTxtView;
 
 	@Override
-
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);

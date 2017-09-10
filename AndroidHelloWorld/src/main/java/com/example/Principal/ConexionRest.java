@@ -13,6 +13,9 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+/**
+ * Provides transparency in making HTTP requests to the app-server via REST API.
+ */
 public class ConexionRest extends AsyncTask<Void, Integer, String> {
 
     private String appUrlString = "https://fiuber-app-server-test.herokuapp.com/greet/1";
@@ -22,7 +25,11 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
     private String toSendText = ""; // Sólo para enviar con POST
     private URL appUrl;
 
-
+    /**
+     * Generates a GET request to the app-server for retrieving a user data.
+     * @param userId The user's Id number whose information you want to retrieve
+     * @param txtVw TextView to update with the app-server response
+     */
     public void generarGet(Integer userId, TextView txtVw){
         if(this.getStatus() == AsyncTask.Status.RUNNING) {
             Log.w("Fiuber ConexionRest", "cannot GET: other task running");
@@ -34,6 +41,12 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         this.execute();
     }
 
+    /**
+     * Generates a POST request to the app-server for creating a new user.
+     * @param userId The new user's Id number you wish to assign
+     * @param userName The new user's name
+     * @param txtVw TextView to update with the app-server response
+     */
     public void generarPost(Integer userId, String userName, TextView txtVw){
         if(this.getStatus() == AsyncTask.Status.RUNNING) {
             Log.w("Fiuber ConexionRest", "cannot POST: other task running");
@@ -46,6 +59,11 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         this.execute();
     }
 
+    /**
+     * Generates a DELETE request to the app-server for removing a user data.
+     * @param userId The user's Id number whose information you want to erase
+     * @param txtVw TextView to update with the app-server response
+     */
     public void generarDelete(Integer userId, TextView txtVw){
         if(this.getStatus() == AsyncTask.Status.RUNNING) {
             Log.w("Fiuber ConexionRest", "cannot DELETE: other task running");
@@ -57,28 +75,43 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         this.execute();
     }
 
+    /**
+     STILL NOT IMPLEMENTED
+     */
     @Override
     protected void onPreExecute() {
 
     }
 
+    /**
+     STILL NOT IMPLEMENTED
+     */
     @Override
     protected void onPostExecute(String aVoid) {
         resultTxtView.setText(aVoid);
     }
 
+    /**
+     STILL NOT IMPLEMENTED
+     */
     @Override
     protected void onProgressUpdate(Integer... values) {
 
     }
 
+    /**
+     STILL NOT IMPLEMENTED
+     */
     @Override
     protected void onCancelled() {
 
     }
 
-    // Lee desde la conexión HttpsURLConnection especificada el mensaje
-    // que nos envía de respuesta
+    /**
+     * Private method for reading the app-server response after a request.
+     * @param conn The {@link HttpsURLConnection} with the app-server
+     * @return A {@link StringBuilder} class with the app-server full response
+     */
     private StringBuilder lecturaDesdeConexion(HttpsURLConnection conn){
         StringBuilder lineaSalida = new StringBuilder();
         try {
@@ -106,6 +139,10 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         return lineaSalida;
     }
 
+    /**
+     * Overrided {@link AsyncTask} method for connection execution. This
+     * method is the one which actually make the REST requests.
+     */
     @Override
     protected String doInBackground(Void... params) {
         StringBuilder lineaSalida = new StringBuilder();

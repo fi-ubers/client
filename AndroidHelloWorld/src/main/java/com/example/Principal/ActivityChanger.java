@@ -8,7 +8,6 @@ import android.util.Log;
  * A simple singleton class for changing from one activity
  * to another. Basically a transition-maker.
  */
-
 public class ActivityChanger {
     private static ActivityChanger instancia = null;
 

@@ -15,7 +15,10 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-
+/**
+ * A {@link Fragment} for containing Facebook login button. It handles
+ * logging in with a Facebook account.
+ */
 public class LoginFragment extends Fragment {
 
     private LoginButton fbLoginBtn;
