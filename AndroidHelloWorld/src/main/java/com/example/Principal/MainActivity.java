@@ -1,7 +1,7 @@
-package com.keylesson.Principal;
+package com.example.Principal;
 
 import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,9 +10,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-import com.example.Principal.ConexionRest;
+import com.facebook.AccessToken;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
 
-
+/**
+ * The main menu {@link Activity} of the app. The starting point for the very
+ * users operations.
+ */
 public class MainActivity extends Activity {
 
 	EditText userName, userId;
@@ -23,7 +29,20 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Log.i("Fiuber Main activity", "Main activity started!");
+		Log.i("Fiuber MainActivity", "Main activity started!");
+
+		if(AccessToken.getCurrentAccessToken() == null)
+			ActivityChanger.getInstance().gotoLogInScreen(this);
+		else {
+			// Facebook fields
+			Profile curProfile = Profile.getCurrentProfile();
+			ProfilePictureView profilePictureView;
+			profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
+			profilePictureView.setProfileId(curProfile.getId());
+
+			String fbName = curProfile.getName();
+			((TextView) findViewById(R.id.fbUsrName)).setText(fbName);
+		}
 
 		userName = (EditText) findViewById(R.id.userName);
 		userId = (EditText) findViewById(R.id.userId);
@@ -36,13 +55,12 @@ public class MainActivity extends Activity {
 		getBtn.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				String uName = "";
 				Integer uId = 0;
 				try {
 					uId = Integer.parseInt(userId.getText().toString());
 				}
 				catch(Exception e){
-					Log.e("Fiuber Main activity", "exception", e);
+					Log.e("Fiuber MainActivity", "exception", e);
 				}
 
 				ConexionRest conThread = new ConexionRest();
@@ -61,7 +79,7 @@ public class MainActivity extends Activity {
 					uName = userName.getText().toString();
 				}
 				catch(Exception e){
-					Log.e("Fiuber Main activity", "exception", e);
+					Log.e("Fiuber MainActivity", "exception", e);
 				}
 
 				ConexionRest conThread = new ConexionRest();
@@ -78,7 +96,7 @@ public class MainActivity extends Activity {
 					uId = Integer.parseInt(userId.getText().toString());
 				}
 				catch(Exception e){
-					Log.e("Fiuber Main activity", "exception", e);
+					Log.e("Fiuber MainActivity", "exception", e);
 				}
 
 				ConexionRest conThread = new ConexionRest();
@@ -88,6 +106,9 @@ public class MainActivity extends Activity {
 
 	}
 
-
-
+	public void logout(View view) {
+		Log.i("Fiuber Main activity", "Logging out user");
+		LoginManager.getInstance().logOut();
+		ActivityChanger.getInstance().gotoLogInScreen(this);
+	}
 }

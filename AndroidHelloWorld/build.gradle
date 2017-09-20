@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.keylesson.android"
+        applicationId "com.example.android"
         minSdkVersion 19
         targetSdkVersion 19
     }
@@ -16,4 +16,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+}
+
+
+
+dependencies {
+    // compile 'com.android.support:appcompat-v7:19.0.3'
+    // compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.facebook.android:facebook-android-sdk:4.8.0'
+  //  compile 'com.android.support:appcompat-v7:21.0.3'
+  //  compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    // Required -- JUnit 4 framework
+    testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
 }
