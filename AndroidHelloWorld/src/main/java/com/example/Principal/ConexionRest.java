@@ -27,15 +27,15 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
 
     /**
      * Generates a GET request to the app-server for retrieving a user data.
-     * @param userId The user's Id number whose information you want to retrieve
+     * @param urlRequest The URL for making the request
      * @param txtVw TextView to update with the app-server response
      */
-    public void generarGet(Integer userId, TextView txtVw){
+    public void generateGet(String urlRequest, TextView txtVw){
         if(this.getStatus() == AsyncTask.Status.RUNNING) {
             Log.w("Fiuber ConexionRest", "cannot GET: other task running");
             return;
         }
-        appUrlString = baseUrlString + "/greet/" + String.valueOf(userId);
+        appUrlString = urlRequest;
         restMethod = "GET";
         resultTxtView = txtVw;
         this.execute();
@@ -43,17 +43,19 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
 
     /**
      * Generates a POST request to the app-server for creating a new user.
-     * @param userId The new user's Id number you wish to assign
-     * @param userName The new user's name
+     * @param jsonRequest The string in Json format for the POST
+     * @param urlRequest The URL for making the request
      * @param txtVw TextView to update with the app-server response
      */
-    public void generarPost(Integer userId, String userName, TextView txtVw){
+    public void generatePost(String jsonRequest, String urlRequest, TextView txtVw){
         if(this.getStatus() == AsyncTask.Status.RUNNING) {
             Log.w("Fiuber ConexionRest", "cannot POST: other task running");
             return;
         }
-        toSendText = "{ \"user\" : {  \"id\": " + String.valueOf(userId) + ",  \"name\": \""+ userName + "\"} }";
-        appUrlString = baseUrlString + "/greet";
+
+        toSendText = jsonRequest;
+        Log.i("Fiuber ConexionRest", "Json is:" + toSendText);
+        appUrlString = urlRequest;
         restMethod = "POST";
         resultTxtView = txtVw;
         this.execute();
@@ -61,15 +63,15 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
 
     /**
      * Generates a DELETE request to the app-server for removing a user data.
-     * @param userId The user's Id number whose information you want to erase
+     * @param urlRequest The URL for making the request
      * @param txtVw TextView to update with the app-server response
      */
-    public void generarDelete(Integer userId, TextView txtVw){
+    public void generateDelete(String urlRequest, TextView txtVw){
         if(this.getStatus() == AsyncTask.Status.RUNNING) {
             Log.w("Fiuber ConexionRest", "cannot DELETE: other task running");
             return;
         }
-        appUrlString = baseUrlString + "/greet/" + String.valueOf(userId);
+        appUrlString = urlRequest;
         restMethod = "DELETE";
         resultTxtView = txtVw;
         this.execute();
@@ -112,19 +114,19 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
      * @param conn The {@link HttpsURLConnection} with the app-server
      * @return A {@link StringBuilder} class with the app-server full response
      */
-    private StringBuilder lecturaDesdeConexion(HttpsURLConnection conn){
-        StringBuilder lineaSalida = new StringBuilder();
+    private StringBuilder readFromConnection(HttpsURLConnection conn){
+        StringBuilder outputLine = new StringBuilder();
         try {
             int rsp = conn.getResponseCode();
-            Boolean rspEsAcorde = (rsp == HttpURLConnection.HTTP_OK);
-            rspEsAcorde = rspEsAcorde || ((rsp == HttpURLConnection.HTTP_CREATED) && (restMethod == "POST"));
-            if (rspEsAcorde) {
+            Boolean rspIsOk = (rsp == HttpURLConnection.HTTP_OK);
+            rspIsOk = rspIsOk || ((rsp == HttpURLConnection.HTTP_CREATED) && (restMethod == "POST"));
+            if (rspIsOk) {
                 BufferedReader lector = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-                String lineaAct = lector.readLine();
-                while (lineaAct != null) {
-                    lineaSalida.append(lineaAct);
-                    lineaAct = lector.readLine();
+                String curLine = lector.readLine();
+                while (curLine != null) {
+                    outputLine.append(curLine);
+                    curLine = lector.readLine();
                 }
 
                 lector.close();
@@ -136,7 +138,7 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         catch (Exception e) {
             Log.e("Fiuber ConexionRest", "exception", e);
         }
-        return lineaSalida;
+        return outputLine;
     }
 
     /**
@@ -145,17 +147,17 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
      */
     @Override
     protected String doInBackground(Void... params) {
-        StringBuilder lineaSalida = new StringBuilder();
+        StringBuilder outputLine = new StringBuilder();
         try {
             appUrl = new URL(appUrlString);
             HttpsURLConnection conn = (HttpsURLConnection) appUrl.openConnection();
             conn.setRequestMethod(restMethod);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 1.5; es-Es) HTTP");
 
-            if(restMethod == "GET") {
-                lineaSalida = this.lecturaDesdeConexion(conn);
+            if(restMethod.equals("GET")) {
+                outputLine = this.readFromConnection(conn);
             }
-            else if(restMethod == "POST"){
+            else if(restMethod.equals("POST")){
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
 
@@ -166,14 +168,14 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
                 os.close();
 
                 // Recibo el ACK
-                lineaSalida = this.lecturaDesdeConexion(conn);
+                outputLine = this.readFromConnection(conn);
             }
-            else if(restMethod == "DELETE"){
+            else if(restMethod.equals("DELETE")){
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded" );
                 conn.connect();
 
                 // Recibo el ACK
-                lineaSalida = this.lecturaDesdeConexion(conn);
+                outputLine = this.readFromConnection(conn);
             }
             else {
                 Log.e("Fiuber ConexionRest", "invalid REST method: " + restMethod);
@@ -184,6 +186,13 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         } catch (Exception e) {
             Log.e("Fiuber ConexionRest", "exception", e);
         }
-        return lineaSalida.toString();
+        return outputLine.toString();
+    }
+
+    /**
+     * Returns base URL with the app-server connection.
+     */
+    public String getBaseUrl(){
+        return this.baseUrlString;
     }
 }

@@ -44,12 +44,23 @@ public class ActivityChanger {
      * Sets the current Activity to LoginActivity. Uses Intent flags
      * to clear current task and make LoginActivity the one on the top.
      * @param prevContext Previous context for the switch
-
      */
     public void gotoLogInScreen(Context prevContext){
         Log.i("Fiuber ActivityChanger", "Returning to Log In screen");
         Intent intent = new Intent(prevContext, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        prevContext.startActivity(intent);
+    }
+
+    /**
+     * Changes the current Activity from prevContext to newContext.
+     * Note that newContext should be passed as a Class.
+     * Example: gotoActivity(MainActivity.this, RestApiActivity.class)
+     * @param prevContext Previous context for the switch
+     * @param newContext New context for the switch
+     */
+    public void gotoActivity(Context prevContext, Class newContext){
+        Intent intent = new Intent(prevContext, newContext);
         prevContext.startActivity(intent);
     }
 }

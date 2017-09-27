@@ -15,6 +15,9 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+
+import java.util.Arrays;
+
 /**
  * A {@link Fragment} for containing Facebook login button. It handles
  * logging in with a Facebook account.
@@ -31,10 +34,10 @@ public class LoginFragment extends Fragment {
 
         callbackManager = CallbackManager.Factory.create();
         fbLoginBtn = (LoginButton) view.findViewById(R.id.fbLoginBtn);
-        fbLoginBtn.setReadPermissions("user_friends");
+        fbLoginBtn.setReadPermissions(Arrays.asList("email", "user_friends", "user_birthday", "public_profile"));
         fbLoginBtn.setFragment(this);
 
-
+        // Facebook login button
         fbLoginBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -55,6 +58,9 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Private method for goint to MainActivity.
+     */
     private void goMainScreen(){
         ActivityChanger.getInstance().gotoMenuScreen(this.getActivity());
     }

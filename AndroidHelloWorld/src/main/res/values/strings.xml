@@ -2,7 +2,23 @@
 <resources>
 
     <string name="app_name">Fiuber</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="title_activity_rest_api">REST API</string>
     <string name="action_settings">Settings</string>
     <string name="facebook_app_id">127973881178219</string>
+    <string name="title_activity_select_trip">New trip</string>
+    <string name="title_activity_manual_sign_in">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">Incorrect email address or password</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>

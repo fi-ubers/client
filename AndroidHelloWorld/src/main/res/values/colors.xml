@@ -24,10 +24,10 @@ algo importante, acciones que marcan un "antes y un después".
 "seleccionás" cosas.
 -->
 <resources>
-    <color name="col_plain_text">#0b0b0b</color>
+    <color name="col_plain_text">#050f9f</color>
     <color name="col_std_btn_text">#0099d2</color>
     <color name="col_std_btn_bck">#00000000</color>
-    <color name="col_imp_btn_text">#ffffff</color>
-    <color name="col_imp_btn_bck">#ff7400</color>
+    <color name="col_imp_btn_text">#ff7400</color>
+    <color name="col_imp_btn_bck">#00000000</color>
     <color name="col_highlight">#9b00ff37</color>
 </resources>
