@@ -43,7 +43,7 @@ public class RestApiActivity extends Activity{
                 }
 
                 ConexionRest conThread = new ConexionRest();
-                String appUrlString = conThread.getBaseUrl() + "/greet/" + String.valueOf(uId);
+                String appUrlString = conThread.getBaseUrl() + "/users/" + String.valueOf(uId);
                 conThread.generateGet(appUrlString, resultTxtView);
             }
         });

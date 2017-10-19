@@ -40,14 +40,13 @@ public class MainActivity extends Activity {
 				ActivityChanger.getInstance().gotoLogInScreen(this);
 				}
 			// If here, user already signed in manually.
-			// TODO: Handle manual log in
 			Log.i("Fiuber MainActivity", "User has logged in manually");
 			}
 		else {
 			Log.i("Fiuber MainActivity", "User has logged in with FB");
 			// If here, the user has logged in using Facebook.
 			// Let's initialize UserInfo based on that
-			// TODO: check if it's first time, or if user's just loggin in
+			// TODO: check if it's first time, or if user's just logging in
 			// if(!userInAppServer())
 			//		RegisterInAppServer();
 					initializeUserInfoFacebook();
@@ -60,8 +59,8 @@ public class MainActivity extends Activity {
 			profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
 			profilePictureView.setProfileId(curProfile.getId());
 
-
-			((TextView) findViewById(R.id.fbUsrName)).setText(UserInfo.getInstance().getUserName());
+			((TextView) findViewById(R.id.fbUsrName)).setText("Token: " + AccessToken.getCurrentAccessToken().getToken());
+			//((TextView) findViewById(R.id.fbUsrName)).setText(UserInfo.getInstance().getFirstName());
 		}
 
 		restApiBtn = (Button) findViewById(R.id.restApiBtn);
@@ -114,7 +113,9 @@ public class MainActivity extends Activity {
 						String mail = json.getString("email");
 						String id = json.getString("id");
 						String bth = json.getString("birthday");
-						UserInfo.getInstance().initializeUserInfo(mail, name, id, bth);
+						String fbTkn = AccessToken.getCurrentAccessToken().getToken();
+						UserInfo ui = UserInfo.getInstance();
+						ui.initializeUserInfo(id, mail, name, "", "", bth, "", fbTkn, "");
 						//web.loadData(text, "text/html", "UTF-8");
 					}
 

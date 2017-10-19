@@ -33,7 +33,7 @@ public class ProfileActivity extends Activity {
 		if(!uInfo.wasInitialized())
 			Log.w("ProfileActivity", "UserInfo not initialized!");
 
-		userNameSurname.setText(uInfo.getUserName());
+		userNameSurname.setText(uInfo.getFirstName());
 		userMail.setText(uInfo.getEmail());
 		userBirthdate.setText(uInfo.getBirthdate());
 		userUsID.setText("  " + uInfo.getUserId());
@@ -58,10 +58,13 @@ public class ProfileActivity extends Activity {
 				String newMail = userMail.getText().toString();
 				String newBth = userBirthdate.getText().toString();
 				String newId = userUsID.getText().toString();
-				if(UserInfo.getInstance().infoWillChange(newMail, newName, newId, newBth)){
+				UserInfo ui = UserInfo.getInstance();
+				if(ui.infoWillChange(newMail, newName, newId, newBth)){
+					String prevFbTkn = UserInfo.getInstance().getFbToken();
+					String prevAppSTkn = UserInfo.getInstance().getAppServerToken();
 					// TODO: Post changes to app server
-					UserInfo.getInstance().seppuku();
-					UserInfo.getInstance().initializeUserInfo(newMail, newName, newId, newBth);
+					ui.seppuku();
+					ui.initializeUserInfo(newId, newMail, newName, "", "", newBth, "", prevFbTkn, prevAppSTkn);
 				}
 
 				ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, MainActivity.class);

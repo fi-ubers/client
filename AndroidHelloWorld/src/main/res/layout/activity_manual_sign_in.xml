@@ -30,13 +30,13 @@
         android:orientation="vertical">
 
         <AutoCompleteTextView
-            android:id="@+id/emailSignIn"
+            android:id="@+id/userIdSignIn"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColorHint="#ffffff"
             android:textColor="#ffffff"
-            android:hint="@string/prompt_email"
+            android:hint="@string/prompt_user_id"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             />
@@ -60,6 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"/>
+
+
 
         <Button
             android:id="@+id/signInBtn"
@@ -108,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:hint="@string/prompt_email"
+            android:hint="@string/prompt_user_id"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             />

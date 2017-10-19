@@ -17,14 +17,24 @@ import javax.net.ssl.HttpsURLConnection;
  * Provides transparency in making HTTP requests to the app-server via REST API.
  */
 public class ConexionRest extends AsyncTask<Void, Integer, String> {
-
     private String appUrlString = "https://fiuber-app-server-test.herokuapp.com/greet/1";
-    private String baseUrlString = "https://fiuber-app-server-test.herokuapp.com";
+    private String baseUrlString = "https://fiuber-app-server-test.herokuapp.com/v1/api";
     private String restMethod = "GET";
+    private String lastResponse = "";
     private TextView resultTxtView;
     private String toSendText = ""; // Sólo para enviar con POST
     private URL appUrl;
+    private RestUpdate updater;
 
+    ConexionRest(){
+        this.updater = null;
+        this.resultTxtView = null;
+    }
+
+    ConexionRest(RestUpdate anUpdater){
+        this.updater = anUpdater;
+        this.resultTxtView = null;
+    }
     /**
      * Generates a GET request to the app-server for retrieving a user data.
      * @param urlRequest The URL for making the request
@@ -90,7 +100,12 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
      */
     @Override
     protected void onPostExecute(String aVoid) {
-        resultTxtView.setText(aVoid);
+        if(resultTxtView != null)
+            resultTxtView.setText(aVoid);
+        lastResponse = aVoid;
+        Log.i("ConexionRest", "Finished request!");
+        if(this.updater != null)
+            this.updater.executeUpdate(aVoid);
     }
 
     /**
@@ -153,6 +168,9 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
             HttpsURLConnection conn = (HttpsURLConnection) appUrl.openConnection();
             conn.setRequestMethod(restMethod);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 1.5; es-Es) HTTP");
+            UserInfo ui = UserInfo.getInstance();
+            if(ui.wasInitialized())
+                conn.addRequestProperty("UserToken", ui.getAppServerToken());
 
             if(restMethod.equals("GET")) {
                 outputLine = this.readFromConnection(conn);
@@ -195,4 +213,9 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
     public String getBaseUrl(){
         return this.baseUrlString;
     }
+
+    public String getLastResponse(){
+        return lastResponse;
+    }
 }
+

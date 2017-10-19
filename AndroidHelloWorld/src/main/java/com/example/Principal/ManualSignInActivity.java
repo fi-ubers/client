@@ -10,12 +10,12 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,25 +31,17 @@ import java.util.List;
 
 
 /**
- * A login screen that offers login via emailSignIn/password.
+ * A login screen that offers login via userIdSignIn/password.
  */
 public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * Format is userEmail:userPassword
-     * TODO: remove after connecting to app server.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "fiuber@example.com:hello", "cristian@calonico.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
     // UI references (log in)
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mUserIdView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -62,7 +54,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_sign_in);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.emailSignIn);
+        mUserIdView = (AutoCompleteTextView) findViewById(R.id.userIdSignIn);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.passwordSignIn);
@@ -85,11 +77,16 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             }
         });
 
-     //   mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
         signUpBtn = (Button) findViewById(R.id.signUpBtn);
-        // TODO: Handle registration against app server
+        signUpBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserSignupTask ust = new UserSignupTask();
+                ust.signUser();
+            }
+        });
     }
 
     private void populateAutoComplete() {
@@ -99,7 +96,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
 
     /**
      * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid emailSignIn, missing fields, etc.), the
+     * If there are form errors (invalid userIdSignIn, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
@@ -108,11 +105,11 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUserIdView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String userId = mUserIdView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -125,14 +122,14 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             cancel = true;
         }
 
-        // Check for a valid emailSignIn address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        // Check for a valid userIdSignIn address.
+        if (TextUtils.isEmpty(userId)) {
+            mUserIdView.setError(getString(R.string.error_field_required));
+            focusView = mUserIdView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        } else if (!isUserIdValid(userId)) {
+            mUserIdView.setError(getString(R.string.error_invalid_email));
+            focusView = mUserIdView;
             cancel = true;
         }
 
@@ -143,9 +140,9 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+           // showProgress(true);
+            mAuthTask = new UserLoginTask(userId, password);
+            mAuthTask.logUser();
         }
     }
 
@@ -156,8 +153,12 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         ActivityChanger.getInstance().gotoMenuScreen(this);
     }
 
-    private boolean isEmailValid(String email) {
-        boolean emailOk = email.contains("@");
+    private boolean isUserIdValid(String userId) {
+        boolean idOk = userId.length() > 1;
+        // Next line checks that userId has at least one letter
+        idOk &= (userId.matches(".*[a-z].*") || userId.matches(".*[A-Z].*"));
+        return idOk;
+    /*    boolean emailOk = email.contains("@");
         emailOk &= email.contains(".");
 
         int aPosition = email.indexOf("@");
@@ -168,11 +169,11 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
 
         emailOk &= ((dotPosition - aPosition)  >= 2);
 
-        return emailOk;
+        return emailOk;*/
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        return password.length() > 3;
     }
 
     /**
@@ -186,15 +187,6 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-       /*     mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });*/
-
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
@@ -203,11 +195,6 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-        //    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-         //   mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -218,13 +205,13 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
                         ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
 
-                // Select only emailSignIn addresses.
+                // Select only userIdSignIn addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
                 .CONTENT_ITEM_TYPE},
 
-                // Show primary emailSignIn addresses first. Note that there won't be
-                // a primary emailSignIn address if the user hasn't specified one.
+                // Show primary userIdSignIn addresses first. Note that there won't be
+                // a primary userIdSignIn address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
@@ -251,7 +238,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
                 new ArrayAdapter<>(ManualSignInActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mUserIdView.setAdapter(adapter);
     }
 
 
@@ -265,54 +252,47 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         int IS_PRIMARY = 1;
     }
 
+// --------------------------------------------------------------------------------------------------------
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask implements RestUpdate{
 
-        private final String mEmail;
+        private final String mUserId;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String userId, String password) {
+            mUserId = userId;
             mPassword = password;
         }
 
-        /* Checks if the emailSignIn:password pair has been already registered.*/
-        private Boolean userIsRegistered(String email, String password){
-            // TODO: authenticate against app server
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(email)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(password);
-                }
-            }
-            return false;
+        /* Checks if the userIdSignIn:password pair has been already registered.*/
+        private Boolean userIsRegistered(String servResponse){
+            Jsonator jnator = new Jsonator();
+            return jnator.userLoggedInIsOk(servResponse);
         }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if(userIsRegistered(mEmail, mPassword)){
-                // TODO: GET from app server user data
-                UserInfo.getInstance().initializeUserInfo(mEmail, "Fiuber Team", "000", "09/01/2017");
+        protected Boolean checkUserLog(String servResponse) {
+            if(userIsRegistered(servResponse)){
+                Jsonator jnator = new Jsonator();
+                jnator.readUserLoggedInInfo(servResponse);
+                UserInfo ui = UserInfo.getInstance();
+
+                ui.initializeUserInfo(ui.getUserId(), ui.getEmail(), ui.getFirstName(),
+                        ui.getLastName(), ui.getCountry(), ui.getBirthdate(), mPassword, "", ui.getAppServerToken());
                 return true;
             }
-            else{
-                // TODO: Register user?
+            else
                 return false;
-            }
-
         }
 
-        @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void enterApplication(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
 
             if (success) {
-                finish();
                 goMainScreen();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -320,10 +300,93 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             }
         }
 
-        @Override
         protected void onCancelled() {
             mAuthTask = null;
+           // showProgress(false);
+        }
+
+        public void logUser() {
+            try {
+                Jsonator jnator = new Jsonator();
+                String toSendJson = jnator.writeUserLoginCredentials(mUserId, mPassword, " ");
+                ConexionRest conn = new ConexionRest(this);
+                String urlReq = conn.getBaseUrl() + "/users/login";
+                Log.d("ManualSignInActivity", "JSON to send: "+ toSendJson);
+                conn.generatePost(toSendJson, urlReq, null);
+            }
+            catch(Exception e){
+                Log.e("ManualSignInActivity", "Manual log in error: ", e);
+            }
+        }
+
+        @Override
+        public void executeUpdate(String servResponse) {
+            Log.d("ManualSignInActivity", "Response from server: "+ servResponse);
+            Boolean resultado = this.checkUserLog(servResponse);
+            enterApplication(resultado);
+        }
+    }
+
+// --------------------------------------------------------------------------------------------------------
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserSignupTask implements RestUpdate{
+        // TODO: Handle registration against app server
+        UserSignupTask() {
+
+        }
+
+        /* Checks if the userIdSignIn:password pair was registered correctly*/
+        private Boolean userIsRegistered(String servResponse){
+            Jsonator jnator = new Jsonator();
+            return jnator.userSignedUpIsOk(servResponse);
+        }
+
+        void getSignUpFields(){
+            // TODO: Fill UserInfo with sign up info
+        }
+
+        protected void enterApplication(final Boolean success) {
+            mAuthTask = null;
             showProgress(false);
+
+            if (success) {
+                goMainScreen();
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
+        }
+
+        protected void onCancelled() {
+            mAuthTask = null;
+            // showProgress(false);
+        }
+
+        public void signUser() {
+            getSignUpFields();
+            try {
+                UserInfo ui = UserInfo.getInstance();
+                ui.initializeUserInfo("cristian123", "calonicoo@gmail.com", "Cristian", "Calonico",
+                        "Argentina", "06/06/1990", "docker1234", "", "");
+                Jsonator jnator = new Jsonator();
+                String toSendJson = jnator.writeUserSignUpInfo();
+                Log.d("ManualSignInActivity", "JSON to send: "+toSendJson);
+                ConexionRest conn = new ConexionRest(this);
+                String signUrl = conn.getBaseUrl() + "/users";
+                conn.generatePost(toSendJson, signUrl, null);
+            }
+            catch(Exception e){
+                Log.e("ManualSignInActivity", "Manual log in error: ", e);
+            }
+        }
+
+        @Override
+        public void executeUpdate(String servResponse) {
+            Log.d("ConexionRest", "Answer from server: " + servResponse);
         }
     }
 }

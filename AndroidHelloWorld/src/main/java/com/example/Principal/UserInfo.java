@@ -8,16 +8,22 @@ public class UserInfo {
     private static UserInfo instancia = null;
 	private Boolean wasInitialized;
 
-    private String email, userName, userId, birthdate;
+    private String email, firstName, lastName, country, userId, birthdate;
+    private String password, fbToken, appServerToken;
     /**
      * NOT FOR USE! Exists only to prevent instantiation.
      */
     protected UserInfo() {
         // Exists only to prevent instantiation.
         email = "fiuber@example.com";
-        userName = "Fiuber Fiuber";
+        firstName = "Fiuber";
+        lastName = "Fiuber";
         userId= "Fiuber0";
         birthdate= "09/01/2017";
+        country="Turkmenistan";
+        fbToken = "";
+        password = "";
+        appServerToken = "";
         wasInitialized = false;
     }
 
@@ -40,12 +46,37 @@ public class UserInfo {
     }
 
     /**
-     * Retrieves user userName. If UserInfo wasn't initialized,
+     * Retrieves user firstName. If UserInfo wasn't initialized,
      * returns default value.
      */
-    public String getUserName(){
-        return userName;
+    public String getFirstName(){
+        return firstName;
     }
+
+    /**
+     * Retrieves user lastName. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public String getLastName(){
+        return lastName;
+    }
+
+    /**
+     * Retrieves user country. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public String getCountry(){
+        return country;
+    }
+
+    /**
+     * Retrieves user password. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public String getPassword(){
+        return password;
+    }
+
 
     /**
      * Retrieves user birthdate. If UserInfo wasn't initialized,
@@ -64,6 +95,22 @@ public class UserInfo {
     }
 
     /**
+     * Retrieves user fbToken. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public String getFbToken() {
+        return fbToken;
+    }
+
+    /**
+     * Retrieves user appServerToken. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public String getAppServerToken() {
+        return appServerToken;
+    }
+
+    /**
      * Returns true if the UserInfo was already initialized, or
      * false otherwise.
      */
@@ -75,11 +122,16 @@ public class UserInfo {
      * Initialize the UserInfo struct with the given parameters.
      *
      */
-    public void initializeUserInfo(String mail, String name, String id, String birthdate){
+    public void initializeUserInfo(String id, String mail, String fName, String lName, String country, String birthdate, String password, String fbToken, String appServToken){
         email = mail;
-        userName = name;
+        firstName = fName;
+        lastName = lName;
         userId = id;
+        this.country = country;
         this.birthdate = birthdate;
+        this.fbToken = fbToken;
+        this.password = password;
+        appServerToken = appServToken;
         wasInitialized = true;
     }
 
@@ -92,7 +144,7 @@ public class UserInfo {
      */
     public Boolean infoWillChange(String mailNew, String nameNew, String idNew, String birthdateNew){
         Boolean areTheSame = email.equals(mailNew);
-        areTheSame &= userName.equals(nameNew);
+        areTheSame &= firstName.equals(nameNew);
         areTheSame &= birthdate.equals(birthdateNew);
         areTheSame &= userId.equals(idNew);
 
@@ -106,9 +158,11 @@ public class UserInfo {
      */
     public void seppuku(){
         email = "fiuber@example.com";
-        userName = "Fiuber Fiuber";
+        firstName = "Fiuber Fiuber";
         userId= "Fiuber0";
         birthdate= "09/01/2017";
         wasInitialized = false;
+        fbToken = "";
+        appServerToken = "";
     }
 }
