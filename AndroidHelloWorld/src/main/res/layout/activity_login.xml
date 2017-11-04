@@ -4,17 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@drawable/appborder"
     tools:context="com.example.Principal.LoginActivity">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" />
 
     <ImageView
         android:id="@+id/imageView"
         android:adjustViewBounds="true"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="5.25"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/fiuber_logo" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" />
 
     <fragment
         android:id="@+id/fragment2"
@@ -22,7 +32,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        tools:layout="@layout/fragment_login"
         android:layout_weight="1"
-        />
+        tools:layout="@layout/fragment_login" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="16sp"
+        android:textColor="@color/col_plain_text"
+        android:text="Don't have a Facebook account? " />
+
+    <Button
+        android:id="@+id/signBtn"
+        android:layout_width="152dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.50"
+        android:background="@drawable/urgentborder"
+        android:text="Sign in"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5" />
 </LinearLayout>

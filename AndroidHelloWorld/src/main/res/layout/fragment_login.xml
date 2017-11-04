@@ -12,6 +12,9 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1.5"
-        />
+        android:background="@drawable/fbborder"
+        android:elevation="1dp"
+        tools:ignore="HardcodedText" />
+
 
 </LinearLayout>
