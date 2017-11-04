@@ -72,6 +72,26 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
     }
 
     /**
+     * Generates a POST request to the app-server for creating a new user.
+     * @param jsonRequest The string in Json format for the POST
+     * @param urlRequest The URL for making the request
+     * @param txtVw TextView to update with the app-server response
+     */
+    public void generatePut(String jsonRequest, String urlRequest, TextView txtVw){
+        if(this.getStatus() == AsyncTask.Status.RUNNING) {
+            Log.w("Fiuber ConexionRest", "cannot PUT: other task running");
+            return;
+        }
+
+        toSendText = jsonRequest;
+        Log.i("Fiuber ConexionRest", "Json is:" + toSendText);
+        appUrlString = urlRequest;
+        restMethod = "PUT";
+        resultTxtView = txtVw;
+        this.execute();
+    }
+
+    /**
      * Generates a DELETE request to the app-server for removing a user data.
      * @param urlRequest The URL for making the request
      * @param txtVw TextView to update with the app-server response
@@ -147,7 +167,8 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
                 lector.close();
             }
             else {
-                Log.e("Fiuber ConexionRest", "cannot connect, error code: " + String.valueOf(rsp));
+                Log.e("Fiuber ConexionRest", "cannot connect, error code: " + String.valueOf(rsp) +
+                        "\nand message: " + conn.getResponseMessage());
             }
         }
         catch (Exception e) {
@@ -169,13 +190,16 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
             conn.setRequestMethod(restMethod);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 1.5; es-Es) HTTP");
             UserInfo ui = UserInfo.getInstance();
-            if(ui.wasInitialized())
+            if(ui.wasInitialized()) {
+                Log.d("ConexionRest", "user token is: " + ui.getAppServerToken());
                 conn.addRequestProperty("UserToken", ui.getAppServerToken());
+
+            }
 
             if(restMethod.equals("GET")) {
                 outputLine = this.readFromConnection(conn);
             }
-            else if(restMethod.equals("POST")){
+            else if(restMethod.equals("POST") || restMethod.equals("PUT")){
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
 

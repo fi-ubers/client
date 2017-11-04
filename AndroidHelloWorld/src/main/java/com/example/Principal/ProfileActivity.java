@@ -14,35 +14,50 @@ import com.facebook.login.widget.ProfilePictureView;
 
 
 public class ProfileActivity extends Activity {
-    EditText  userNameSurname, userMail, userBirthdate;
+    EditText  userName, userSurname, userMail, userBirthdate, userCountry;
     TextView userUsID;
-	Button submitBtn;
+	Button submitBtn, cancelBtn, carsBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
 
-		userNameSurname = (EditText) findViewById(R.id.userNameSurname);
-		userMail = (EditText) findViewById(R.id.userMail);
-		userBirthdate = (EditText) findViewById(R.id.userBirthdate);
+		userName = (EditText) findViewById(R.id.profileName);
+		userSurname = (EditText) findViewById(R.id.profileSurname);
+		userMail = (EditText) findViewById(R.id.profileMail);
+		userCountry = (EditText) findViewById(R.id.profileCountry);
 		userUsID = (TextView) findViewById(R.id.userUsID);
+		userBirthdate = (EditText) findViewById(R.id.profileBirthdate);
 
-		UserInfo uInfo = UserInfo.getInstance();
+		UserInfo ui = UserInfo.getInstance();
 
 		// Sanity check
-		if(!uInfo.wasInitialized())
+		if(!ui.wasInitialized())
 			Log.w("ProfileActivity", "UserInfo not initialized!");
 
-		userNameSurname.setText(uInfo.getFirstName());
-		userMail.setText(uInfo.getEmail());
-		userBirthdate.setText(uInfo.getBirthdate());
-		userUsID.setText("  " + uInfo.getUserId());
+		userName.setText(ui.getFirstName());
+		userSurname.setText(ui.getLastName());
+		userMail.setText(ui.getEmail());
+		userBirthdate.setText(ui.getBirthdate());
+		userCountry.setText(ui.getCountry());
+		userUsID.setText("  " + ui.getUserId());
+
+		carsBtn = (Button) findViewById(R.id.profileCarsBtn);
+		if(ui.isDriver()){
+			Log.d("ProfileActivity", "User is a driver!");
+			carsBtn.setClickable(true);
+			carsBtn.setVisibility(View.VISIBLE);
+			// TODO: Link carsBtn with a CarsActivity or something like that
+		}
 
 		if(AccessToken.getCurrentAccessToken() == null) {
-			// TODO: Do something with profile picture if user has not logged in with FB
+			// IF USER HAS NO FB ACCOUNT, USE DEFAULT!!
+			ProfilePictureView profilePictureView;
+			profilePictureView = (ProfilePictureView) findViewById(R.id.usProfilePicture);
+			profilePictureView.setProfileId("107457569994960");
 		}
 		else{
-			  // IF here, user logged in with FB
+			// IF here, user logged in with FB
 			Profile curProfile = Profile.getCurrentProfile();
 			ProfilePictureView profilePictureView;
 			profilePictureView = (ProfilePictureView) findViewById(R.id.usProfilePicture);
@@ -54,17 +69,45 @@ public class ProfileActivity extends Activity {
 		submitBtn.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				String newName = userNameSurname.getText().toString();
+				String newName = userName.getText().toString();
+				String newSurname = userSurname.getText().toString();
 				String newMail = userMail.getText().toString();
 				String newBth = userBirthdate.getText().toString();
-				String newId = userUsID.getText().toString();
+				String newCountry = userCountry.getText().toString();
+				String newId = userUsID.getText().toString().replaceAll(" ","");;
 				UserInfo ui = UserInfo.getInstance();
-				if(ui.infoWillChange(newMail, newName, newId, newBth)){
-					String prevFbTkn = UserInfo.getInstance().getFbToken();
-					String prevAppSTkn = UserInfo.getInstance().getAppServerToken();
-					// TODO: Post changes to app server
+				if(ui.infoWillChange(newMail, newName, newSurname, newId, newBth, newCountry)){
+					// Check if all inserted fields are valid
+					UserInfoValidator uiv = new UserInfoValidator();
+					boolean fieldsOk = true;
+					fieldsOk &= uiv.checkFieldShowError(userName, "name", "This user name is invalid");
+					fieldsOk &= uiv.checkFieldShowError(userSurname, "name", "This user surname is invalid");
+					fieldsOk &= uiv.checkFieldShowError(userMail, "email", "This user email is invalid");
+					fieldsOk &= uiv.checkFieldShowError(userCountry, "name", "This country is invalid");
+					fieldsOk &= uiv.checkFieldShowError(userBirthdate, "birthdate", "This date is invalid");
+
+					if(!fieldsOk) return;
+					// Fields are ok, so change info
+					String prevFbTkn = ui.getFbToken();
+					String prevAppSTkn = ui.getAppServerToken();
+					String prevPssw = ui.getPassword();
 					ui.seppuku();
-					ui.initializeUserInfo(newId, newMail, newName, "", "", newBth, "", prevFbTkn, prevAppSTkn);
+					ui.initializeUserInfo(newId, newMail, newName, newSurname,
+							newCountry, newBth, prevPssw, prevFbTkn, prevAppSTkn);
+					// PUT changes to app server
+					try {
+						Jsonator jnator = new Jsonator();
+						String toSendJson = jnator.writeUserSignUpInfo(true);
+						Log.d("ProfileInActivity", "JSON to send: "+toSendJson);
+						ConexionRest conn = new ConexionRest(null);
+						String signUrl = conn.getBaseUrl() + "/users/" + Integer.toString(ui.getIntegerId());
+						Log.d("ProfileInActivity", "URL to put: " + signUrl);
+						conn.generatePut(toSendJson, signUrl, null);
+					}
+					catch(Exception e){
+						Log.e("ProfileInActivity", "Sunmitting PUT error: ", e);
+					}
+
 				}
 
 				ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, MainActivity.class);
@@ -72,6 +115,12 @@ public class ProfileActivity extends Activity {
 			}
 		});
 
-
+		cancelBtn = (Button) findViewById(R.id.profileCancelBtn);
+		cancelBtn.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, MainActivity.class);
+			}
+		});
 	}
 }

@@ -23,6 +23,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -154,26 +155,13 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
     }
 
     private boolean isUserIdValid(String userId) {
-        boolean idOk = userId.length() > 1;
-        // Next line checks that userId has at least one letter
-        idOk &= (userId.matches(".*[a-z].*") || userId.matches(".*[A-Z].*"));
-        return idOk;
-    /*    boolean emailOk = email.contains("@");
-        emailOk &= email.contains(".");
-
-        int aPosition = email.indexOf("@");
-        emailOk &= (aPosition >= 2);
-
-        int dotPosition = email.indexOf(".");
-        emailOk &= (dotPosition >= 3);
-
-        emailOk &= ((dotPosition - aPosition)  >= 2);
-
-        return emailOk;*/
+        UserInfoValidator uiv = new UserInfoValidator();
+        return uiv.isUserIdValid(userId);
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 3;
+        UserInfoValidator uiv = new UserInfoValidator();
+        return uiv.isPasswordValid(password);
     }
 
     /**
@@ -334,19 +322,56 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
      * the user.
      */
     public class UserSignupTask implements RestUpdate{
-        // TODO: Handle registration against app server
-        UserSignupTask() {
+        private TextView fNameSignUp, lNameSignUp, emailSignUp, birthdateSignUp;
+        private TextView countrySignUp, idSignUp, passwordSignUp;
 
+        UserSignupTask() {
+            fNameSignUp = (TextView) findViewById(R.id.fNameSignUp);
+            lNameSignUp = (TextView) findViewById(R.id.lNameSignUp);
+            emailSignUp = (TextView) findViewById(R.id.emailSignUp);
+            birthdateSignUp = (TextView) findViewById(R.id.birthdateSignUp);
+            countrySignUp = (TextView) findViewById(R.id.countrySignUp);
+            idSignUp = (TextView) findViewById(R.id.idSignUp);
+            passwordSignUp = (TextView) findViewById(R.id.passwordSignUp);
         }
 
         /* Checks if the userIdSignIn:password pair was registered correctly*/
-        private Boolean userIsRegistered(String servResponse){
+        private Boolean userWasRegistered(String servResponse){
             Jsonator jnator = new Jsonator();
             return jnator.userSignedUpIsOk(servResponse);
         }
 
-        void getSignUpFields(){
-            // TODO: Fill UserInfo with sign up info
+        boolean getSignUpFields(){
+            // Store values at the time of the login attempt.
+            String fName = fNameSignUp.getText().toString();
+            String lName = lNameSignUp.getText().toString();
+            String mail = emailSignUp.getText().toString();
+            String bth = birthdateSignUp.getText().toString();
+            String country = countrySignUp.getText().toString();
+            String userId = idSignUp.getText().toString();
+            String password = passwordSignUp.getText().toString();
+
+            // Check all fields are ok
+            UserInfoValidator uiv = new UserInfoValidator();
+            boolean fieldsOk = true;
+            fieldsOk &= uiv.checkFieldShowError(fNameSignUp, "name", "This user name is invalid");
+            fieldsOk &= uiv.checkFieldShowError(lNameSignUp, "name", "This user surname is invalid");
+            fieldsOk &= uiv.checkFieldShowError(emailSignUp, "email", "This user email is invalid");
+            fieldsOk &= uiv.checkFieldShowError(countrySignUp, "name", "This country is invalid");
+            fieldsOk &= uiv.checkFieldShowError(birthdateSignUp, "birthdate", "This date is invalid");
+            fieldsOk &= uiv.checkFieldShowError(passwordSignUp, "password", getString(R.string.error_invalid_password));
+            fieldsOk &= uiv.checkFieldShowError(idSignUp, "userid", getString(R.string.error_invalid_email));
+
+            if(!fieldsOk) return false;
+
+            // Initialize user info
+            UserInfo ui = UserInfo.getInstance();
+            ui.initializeUserInfo(userId, mail, fName, lName, country, bth, password, "", "");
+
+            CheckBox driverChckBox = (CheckBox) findViewById(R.id.driverChckBox);
+            if(driverChckBox.isChecked())
+                ui.setAsDriver();
+            return true;
         }
 
         protected void enterApplication(final Boolean success) {
@@ -356,8 +381,8 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             if (success) {
                 goMainScreen();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                passwordSignUp.setError(getString(R.string.error_incorrect_password));
+                passwordSignUp.requestFocus();
             }
         }
 
@@ -367,13 +392,12 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         }
 
         public void signUser() {
-            getSignUpFields();
+            if(!getSignUpFields())
+                return;
             try {
                 UserInfo ui = UserInfo.getInstance();
-                ui.initializeUserInfo("cristian123", "calonicoo@gmail.com", "Cristian", "Calonico",
-                        "Argentina", "06/06/1990", "docker1234", "", "");
                 Jsonator jnator = new Jsonator();
-                String toSendJson = jnator.writeUserSignUpInfo();
+                String toSendJson = jnator.writeUserSignUpInfo(false);
                 Log.d("ManualSignInActivity", "JSON to send: "+toSendJson);
                 ConexionRest conn = new ConexionRest(this);
                 String signUrl = conn.getBaseUrl() + "/users";
@@ -386,7 +410,15 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
 
         @Override
         public void executeUpdate(String servResponse) {
-            Log.d("ConexionRest", "Answer from server: " + servResponse);
+            if(userWasRegistered(servResponse)) {
+                UserInfo ui = UserInfo.getInstance();
+                mAuthTask = new UserLoginTask(ui.getUserId(), ui.getPassword());
+                mAuthTask.logUser();
+            }
+            else{
+                idSignUp.setError("User ID already taken");
+                idSignUp.requestFocus();
+            }
         }
     }
 }

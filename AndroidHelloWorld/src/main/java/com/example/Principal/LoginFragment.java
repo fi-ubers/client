@@ -34,7 +34,7 @@ public class LoginFragment extends Fragment {
 
         callbackManager = CallbackManager.Factory.create();
         fbLoginBtn = (LoginButton) view.findViewById(R.id.fbLoginBtn);
-        fbLoginBtn.setReadPermissions(Arrays.asList("email", "user_friends", "user_birthday", "public_profile"));
+        fbLoginBtn.setReadPermissions(Arrays.asList("email", "user_friends", "user_birthday", "public_profile", "user_location"));
         fbLoginBtn.setFragment(this);
 
         // Facebook login button

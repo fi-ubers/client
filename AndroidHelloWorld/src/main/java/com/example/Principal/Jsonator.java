@@ -63,7 +63,7 @@ public class Jsonator {
     public Boolean userLoggedInIsOk(String jsonResponse){
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
-            Log.i("Fiuber Jsonator", "Received response:"+jsonResponse);
+            Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
             if(objJson.getInt("code") == 200)
                 return true;
             return false;
@@ -80,7 +80,7 @@ public class Jsonator {
 
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
-            Log.i("Fiuber Jsonator", "Received response:"+jsonResponse);
+            Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
             String appTkn = objJson.getString("token");
 			JSONObject uiJson = new JSONObject(objJson.getString("user"));
 
@@ -90,9 +90,14 @@ public class Jsonator {
 			String country = uiJson.getString("country");
 			String bth = uiJson.getString("birthdate");
 			String userId = uiJson.getString("username");
+            String typeUser = uiJson.getString("type");
+            int intId = uiJson.getInt("_id");
 
 			UserInfo ui = UserInfo.getInstance();
 			ui.initializeUserInfo(userId, mail, fName, lName, country, bth, "", "", appTkn);
+            ui.setIntegerId(intId);
+            if(typeUser.toLowerCase().equals("driver"))
+                ui.setAsDriver();
         }
         catch (Exception e) {
             System.out.println(e);
@@ -100,7 +105,7 @@ public class Jsonator {
         }
     }
 
-    public String writeUserSignUpInfo(){
+    public String writeUserSignUpInfo(boolean isEditProfile){
         UserInfo ui = UserInfo.getInstance();
         if(!ui.wasInitialized())
             return "";
@@ -108,17 +113,28 @@ public class Jsonator {
         JSONObject objJson = new JSONObject();
 
         try {
-            objJson.put("type", "passenger");
+            if(ui.isDriver())
+                objJson.put("type", "driver");
+            else
+                objJson.put("type", "passenger");
             objJson.put("username", ui.getUserId());
             objJson.put("password", ui.getPassword());
 
             JSONObject innerFb = new JSONObject();
             innerFb.put("userId", ui.getUserId());
-            innerFb.put("fbtoken", ui.getFbToken());
-
-            objJson.put("fbAuth", innerFb);
             objJson.put("firstname", ui.getFirstName());
             objJson.put("lastname", ui.getLastName());
+
+            if(isEditProfile) {
+                objJson.put("_ref", "Sarasa");
+                objJson.put("_id", ui.getIntegerId());
+                innerFb.put("authToken", ui.getFbToken());
+                objJson.put("fb", innerFb);
+            }
+            else{
+                innerFb.put("fbtoken", ui.getFbToken());
+                objJson.put("fbAuth", innerFb);
+            }
             objJson.put("country", ui.getCountry());
             objJson.put("email", ui.getEmail());
             objJson.put("birthdate", ui.getBirthdate());
@@ -140,7 +156,7 @@ public class Jsonator {
     public Boolean userSignedUpIsOk(String jsonResponse){
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
-            Log.i("Fiuber Jsonator", "Received response:"+jsonResponse);
+            Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
             if(objJson.getInt("code") == 201)
                 return true;
             return false;
@@ -151,5 +167,6 @@ public class Jsonator {
             return false;
         }
     }
+
 
 }

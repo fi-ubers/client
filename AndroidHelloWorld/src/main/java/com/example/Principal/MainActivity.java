@@ -30,26 +30,27 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Log.i("Fiuber MainActivity", "Main activity started!");
-		if(AccessToken.getCurrentAccessToken() == null) {
+		if (AccessToken.getCurrentAccessToken() == null) {
 			// If here, either user has logged in manually or
 			// haven't logged in at all. If user has logged in,
 			// UserInfo must have been initialized. If it's not,
 			// then user has never signed in.
-			if(!UserInfo.getInstance().wasInitialized()) {
+			if (!UserInfo.getInstance().wasInitialized()) {
 				Log.e("Fiuber MainActivity", "Token missed!");
 				ActivityChanger.getInstance().gotoLogInScreen(this);
-				}
+			}
 			// If here, user already signed in manually.
 			Log.i("Fiuber MainActivity", "User has logged in manually");
-			}
-		else {
+		} else {
 			Log.i("Fiuber MainActivity", "User has logged in with FB");
 			// If here, the user has logged in using Facebook.
 			// Let's initialize UserInfo based on that
+			FbLogger flogger = new FbLogger();
+			flogger.initializeUserInfoFacebook();
+
 			// TODO: check if it's first time, or if user's just logging in
 			// if(!userInAppServer())
 			//		RegisterInAppServer();
-					initializeUserInfoFacebook();
 			// else
 			//		initializeUserFromAppServer();
 			// TODO: Move all of this outside
@@ -58,31 +59,31 @@ public class MainActivity extends Activity {
 			ProfilePictureView profilePictureView;
 			profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
 			profilePictureView.setProfileId(curProfile.getId());
-
+			Log.d("MainActivity", "Profile id is:" + curProfile.getId());
 			((TextView) findViewById(R.id.fbUsrName)).setText("Token: " + AccessToken.getCurrentAccessToken().getToken());
 			//((TextView) findViewById(R.id.fbUsrName)).setText(UserInfo.getInstance().getFirstName());
 		}
 
 		restApiBtn = (Button) findViewById(R.id.restApiBtn);
-		restApiBtn.setOnClickListener(new View.OnClickListener(){
+		restApiBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view){
+			public void onClick(View view) {
 				ActivityChanger.getInstance().gotoActivity(MainActivity.this, RestApiActivity.class);
 			}
 		});
 
-        anActBtn = (Button) findViewById(R.id.anActBtn);
-        anActBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
-            }
-        });
+		anActBtn = (Button) findViewById(R.id.anActBtn);
+		anActBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
+			}
+		});
 
 		editProfBtn = (Button) findViewById(R.id.editProfBtn);
-		editProfBtn.setOnClickListener(new View.OnClickListener(){
+		editProfBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view){
+			public void onClick(View view) {
 				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ProfileActivity.class);
 			}
 		});
@@ -99,36 +100,100 @@ public class MainActivity extends Activity {
 		ActivityChanger.getInstance().gotoLogInScreen(this);
 	}
 
-	private void initializeUserInfoFacebook(){
-		// New shit
-		GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-			@Override
-			public void onCompleted(JSONObject object, GraphResponse response) {
 
-				final JSONObject json = response.getJSONObject();
 
-				try {
-					if(json != null){
-						String name = json.getString("name");
-						String mail = json.getString("email");
-						String id = json.getString("id");
-						String bth = json.getString("birthday");
-						String fbTkn = AccessToken.getCurrentAccessToken().getToken();
-						UserInfo ui = UserInfo.getInstance();
-						ui.initializeUserInfo(id, mail, name, "", "", bth, "", fbTkn, "");
-						//web.loadData(text, "text/html", "UTF-8");
-					}
+// --------------------------------------------------------------------------------------------------------
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+	/**
+	 * Auxiliar class to handle logins with Faceboook
+	 */
+	public class FbLogger implements RestUpdate {
+		private int step;
+
+		FbLogger(){
+			step = 0;
+		}
+
+		public void logUser() {
+			try {
+				step = 1;
+				Jsonator jnator = new Jsonator();
+				UserInfo ui = UserInfo.getInstance();
+				String toSendJson = jnator.writeUserLoginCredentials(ui.getUserId(), " ", ui.getFbToken());
+				ConexionRest conn = new ConexionRest(this);
+				String urlReq = conn.getBaseUrl() + "/users/login";
+				Log.d("MainActivity", "JSON to send: "+ toSendJson);
+				conn.generatePost(toSendJson, urlReq, null);
 			}
-		});
-		Bundle parameters = new Bundle();
-		parameters.putString("fields", "id,name,link,email,picture,birthday");
-		request.setParameters(parameters);
-		request.executeAsync();
-		// Till here
+			catch(Exception e){
+				Log.e("MainActivity", "FB log in error: ", e);
+			}
+		}
+
+		protected Boolean checkUserLog(String servResponse) {
+			Jsonator jnator = new Jsonator();
+			if(jnator.userLoggedInIsOk(servResponse)){
+				String prevFbToken = UserInfo.getInstance().getFbToken();
+				jnator.readUserLoggedInInfo(servResponse);
+				UserInfo ui = UserInfo.getInstance();
+
+				ui.initializeUserInfo(ui.getUserId(), ui.getEmail(), ui.getFirstName(),
+						ui.getLastName(), ui.getCountry(), ui.getBirthdate(), "",
+						prevFbToken, ui.getAppServerToken());
+				return true;
+			}
+			else
+				return false;
+		}
+
+		@Override
+		public void executeUpdate(String servResponse) {
+			if(step == 1) {
+				// Acabo de intentar el primer login
+				Log.d("ManualSignInActivity", "Response from server: " + servResponse);
+				if (!this.checkUserLog(servResponse)) {
+					step = 2;
+					// TODO: Register user
+					}
+				}
+			if(step == 2){
+				// TODO: Check if it was registered ok and login again
+				}
+
+		}
+
+		public void initializeUserInfoFacebook() {
+			GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+				@Override
+				public void onCompleted(JSONObject object, GraphResponse response) {
+
+					final JSONObject json = response.getJSONObject();
+					Log.d("MainActivity", "SuperFB Json:" + json.toString());
+
+					try {
+						if (json != null) {
+							String[] name = json.getString("name").split(" ");
+							String mail = json.getString("email");
+							String id = json.getString("id");
+							String bth = json.getString("birthday");
+							String fbTkn = AccessToken.getCurrentAccessToken().getToken();
+							UserInfo ui = UserInfo.getInstance();
+
+							ui.initializeUserInfo(id, mail, name[0], name[1], "Argentina", bth, "", fbTkn, "");
+							//web.loadData(text, "text/html", "UTF-8");
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			Bundle parameters = new Bundle();
+			parameters.putString("fields", "id,name,link,email,location,picture,birthday");
+			request.setParameters(parameters);
+			request.executeAsync();
+			// Till here
+		}
 	}
 
 }

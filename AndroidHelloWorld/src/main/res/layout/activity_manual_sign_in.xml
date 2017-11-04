@@ -1,151 +1,209 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
 
-    android:background="@drawable/appborder"
-    tools:context="com.example.Principal.ManualSignInActivity">
-
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutsignlog"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/email_login_form"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/apphighlightbck"
         android:orientation="vertical">
-
-        <AutoCompleteTextView
-            android:id="@+id/userIdSignIn"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textColorHint="#ffffff"
-            android:textColor="#ffffff"
-            android:hint="@string/prompt_user_id"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            />
-
-        <EditText
-            android:id="@+id/passwordSignIn"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="@string/prompt_password"
-            android:imeActionId="@+id/login"
-            android:textColorHint="#ffffff"
-            android:textColor="#ffffff"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"/>
-
-
-
-        <Button
-            android:id="@+id/signInBtn"
-            style="?android:textAppearanceSmall"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp"
-            android:text="@string/action_sign_in"
-            android:background="@drawable/urgentborder"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/layoutsignup"
-        android:layout_weight="6"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView2"
+        <!-- Login progress -->
+        <ProgressBar
+            android:id="@+id/login_progress"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="16sp"
-            android:textColor="@color/col_plain_text"
-            android:text="New to Fiuber? Create an account! " />
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
-        <Space
+        <LinearLayout
+            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/apphighlightbck"
+            android:orientation="vertical">
 
-        <AutoCompleteTextView
-            android:id="@+id/emailSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="@string/prompt_user_id"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            />
+            <AutoCompleteTextView
+                android:id="@+id/userIdSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textColorHint="#ffffff"
+                android:textColor="#ffffff"
+                android:hint="@string/prompt_user_id"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                />
 
-        <EditText
-            android:id="@+id/passwordSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="@string/prompt_password"
-            android:imeActionId="@+id/login"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            />
+            <EditText
+                android:id="@+id/passwordSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="@string/prompt_password"
+                android:imeActionId="@+id/login"
+                android:textColorHint="#ffffff"
+                android:textColor="#ffffff"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                />
 
-        <Space
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"/>
+
+
+
+            <Button
+                android:id="@+id/signInBtn"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in"
+                android:background="@drawable/urgentborder"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/layoutsignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
 
-        <Button
-            android:id="@+id/signUpBtn"
-            style="?android:textAppearanceSmall"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.75"
-            android:layout_marginTop="16dp"
-            android:text="Sign up!"
-            android:background="@drawable/urgentborder"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:textColor="@color/col_plain_text"
+                android:text="New to Fiuber? Create an account! " />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                />
+
+            <AutoCompleteTextView
+                android:id="@+id/fNameSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Name"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                />
+            <AutoCompleteTextView
+                android:id="@+id/lNameSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Surname"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                />
+            <AutoCompleteTextView
+                android:id="@+id/emailSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                />
+            <AutoCompleteTextView
+                android:id="@+id/birthdateSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Birthdate (dd/mm/yyyy)"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                />
+            <AutoCompleteTextView
+                android:id="@+id/countrySignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Country"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                />
+
+            <AutoCompleteTextView
+                android:id="@+id/idSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="@string/prompt_user_id"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                />
+
+            <EditText
+                android:id="@+id/passwordSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="@string/prompt_password"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+            <CheckBox
+                android:id="@+id/driverChckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I'm a good and responsible driver!"
+                android:clickable="true"
+                />
+
+            <Button
+                android:id="@+id/signUpBtn"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.75"
+                android:layout_marginTop="16dp"
+                android:text="Sign up!"
+                android:background="@drawable/urgentborder"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

@@ -7,14 +7,17 @@ package com.example.Principal;
 public class UserInfo {
     private static UserInfo instancia = null;
 	private Boolean wasInitialized;
-
+    private int integerId;
     private String email, firstName, lastName, country, userId, birthdate;
+    private boolean isDriver;
     private String password, fbToken, appServerToken;
     /**
      * NOT FOR USE! Exists only to prevent instantiation.
      */
     protected UserInfo() {
         // Exists only to prevent instantiation.
+        isDriver = false;
+        integerId = -1;
         email = "fiuber@example.com";
         firstName = "Fiuber";
         lastName = "Fiuber";
@@ -95,6 +98,21 @@ public class UserInfo {
     }
 
     /**
+     * Retrieves user integerId. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public int getIntegerId(){
+        return integerId;
+    }
+
+    /**
+     * Sets value of user integerId.
+     */
+    public void setIntegerId(int id){
+        integerId = id;
+    }
+
+    /**
      * Retrieves user fbToken. If UserInfo wasn't initialized,
      * returns default value.
      */
@@ -116,6 +134,14 @@ public class UserInfo {
      */
     public Boolean wasInitialized(){
         return wasInitialized;
+    }
+
+    /**
+     * Returns true if the user is a driver, or
+     * false otherwise.
+     */
+    public Boolean isDriver(){
+        return isDriver;
     }
 
     /**
@@ -142,13 +168,23 @@ public class UserInfo {
      * current on the UserInfo struct).
      *
      */
-    public Boolean infoWillChange(String mailNew, String nameNew, String idNew, String birthdateNew){
+    public Boolean infoWillChange(String mailNew, String nameNew, String surnameNew, String idNew, String birthdateNew, String countryNew){
         Boolean areTheSame = email.equals(mailNew);
         areTheSame &= firstName.equals(nameNew);
         areTheSame &= birthdate.equals(birthdateNew);
         areTheSame &= userId.equals(idNew);
+        areTheSame &= lastName.equals(surnameNew);
+        areTheSame &= country.equals(countryNew);
 
         return (!areTheSame);
+    }
+
+    /**
+     * Sets the current user as driver instead of
+     * passenger. Basically a role change.
+     */
+    public void setAsDriver(){
+        isDriver = true;
     }
 
     /**
@@ -157,12 +193,17 @@ public class UserInfo {
      *
      */
     public void seppuku(){
+        isDriver = false;
+        integerId = -1;
         email = "fiuber@example.com";
-        firstName = "Fiuber Fiuber";
+        firstName = "Fiuber";
+        lastName = "Fiuber";
         userId= "Fiuber0";
         birthdate= "09/01/2017";
-        wasInitialized = false;
+        country="Turkmenistan";
         fbToken = "";
+        password = "";
         appServerToken = "";
+        wasInitialized = false;
     }
 }
