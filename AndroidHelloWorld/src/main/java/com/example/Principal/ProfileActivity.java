@@ -13,10 +13,18 @@ import com.facebook.Profile;
 import com.facebook.login.widget.ProfilePictureView;
 
 
+/**
+ * An Activity that allows a user to watch and edit their profile
+ * (i.e. their data).
+ */
 public class ProfileActivity extends Activity {
     EditText  userName, userSurname, userMail, userBirthdate, userCountry;
     TextView userUsID;
 	Button submitBtn, cancelBtn, carsBtn;
+
+	/**
+	 * Activity onCreate method.
+	 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,7 +65,7 @@ public class ProfileActivity extends Activity {
 			profilePictureView.setProfileId("107457569994960");
 		}
 		else{
-			// IF here, user logged in with FB
+			// If here, user logged in with FB
 			Profile curProfile = Profile.getCurrentProfile();
 			ProfilePictureView profilePictureView;
 			profilePictureView = (ProfilePictureView) findViewById(R.id.usProfilePicture);
@@ -91,9 +99,11 @@ public class ProfileActivity extends Activity {
 					String prevFbTkn = ui.getFbToken();
 					String prevAppSTkn = ui.getAppServerToken();
 					String prevPssw = ui.getPassword();
+					int prevIntId = ui.getIntegerId();
 					ui.seppuku();
 					ui.initializeUserInfo(newId, newMail, newName, newSurname,
 							newCountry, newBth, prevPssw, prevFbTkn, prevAppSTkn);
+					ui.setIntegerId(prevIntId);
 					// PUT changes to app server
 					try {
 						Jsonator jnator = new Jsonator();

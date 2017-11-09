@@ -107,6 +107,7 @@ public class UserInfo {
 
     /**
      * Sets value of user integerId.
+     * @param id The user's integer id
      */
     public void setIntegerId(int id){
         integerId = id;
