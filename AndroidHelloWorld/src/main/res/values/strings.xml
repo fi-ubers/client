@@ -9,6 +9,7 @@
     <string name="title_activity_select_trip">New trip</string>
     <string name="title_activity_chat">Driver-Passenger Chat</string>
     <string name="title_activity_manual_sign_in">Sign in</string>
+    <string name="title_activity_cars">Your cars</string>
 
     <!-- Strings related to login -->
     <string name="prompt_user_id">User ID</string>

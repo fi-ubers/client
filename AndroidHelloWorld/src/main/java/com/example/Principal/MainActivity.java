@@ -54,6 +54,12 @@ public class MainActivity extends Activity {
 			}
 			// If here, user already signed in manually.
 			Log.i("Fiuber MainActivity", "User has logged in manually");
+			// IF USER HAS NO FB ACCOUNT, USE DEFAULT!!
+			ProfilePictureView profilePictureView;
+			profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
+			profilePictureView.setProfileId("107457569994960");
+			UserInfo ui = UserInfo.getInstance();
+			((TextView) findViewById(R.id.fbUsrName)).setText(ui.getFirstName() + " " + ui.getLastName());
 		} else {
 			Log.i("Fiuber MainActivity", "User has logged in with FB");
 			// If here, the user has logged in using Facebook.

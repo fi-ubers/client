@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android= "http://schemas.android.com/apk/res/android"
+              xmlns:tools= "http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="10dp"
+              tools:context=".MainActivity"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            >
+
+            <EditText
+                android:id="@+id/inputModel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Model"
+                />
+            <EditText
+                android:id="@+id/inputNumber"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:hint="Number"
+                />
+            <Button
+                android:id="@+id/btAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:background="@color/col_std_btn_bck"
+                android:textColor="@color/col_std_btn_text"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/listv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+</LinearLayout>

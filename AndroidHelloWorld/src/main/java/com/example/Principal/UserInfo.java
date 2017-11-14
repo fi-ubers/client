@@ -1,5 +1,7 @@
 package com.example.Principal;
 
+import java.util.ArrayList;
+
 /**
  * Singleton class that represents the data of the user that
  * has logged into the application.
@@ -10,6 +12,7 @@ public class UserInfo {
     private int integerId;
     private String email, firstName, lastName, country, userId, birthdate;
     private boolean isDriver;
+    private ArrayList<CarInfo> cars;
     private String password, fbToken, appServerToken;
     /**
      * NOT FOR USE! Exists only to prevent instantiation.
@@ -28,6 +31,7 @@ public class UserInfo {
         password = "";
         appServerToken = "";
         wasInitialized = false;
+        cars = null;
     }
 
     /**
@@ -145,6 +149,10 @@ public class UserInfo {
         return isDriver;
     }
 
+    public ArrayList<CarInfo> getCars(){
+        return cars;
+    }
+
     /**
      * Initialize the UserInfo struct with the given parameters.
      *
@@ -182,10 +190,14 @@ public class UserInfo {
 
     /**
      * Sets the current user as driver instead of
-     * passenger. Basically a role change.
+     * passenger. Basically a role change. if newCarsList
+     * is not null, also updates the user cars' list.
+     * @param newCarsList {@link ArrayList} of the {@link CarInfo} to set to the driver
      */
-    public void setAsDriver(){
+    public void setAsDriver(ArrayList<CarInfo> newCarsList){
         isDriver = true;
+        if(newCarsList != null)
+            this.cars = newCarsList;
     }
 
     /**
@@ -206,5 +218,8 @@ public class UserInfo {
         password = "";
         appServerToken = "";
         wasInitialized = false;
+        cars = null;
     }
+
+
 }

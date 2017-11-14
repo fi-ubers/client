@@ -12,6 +12,8 @@ import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.login.widget.ProfilePictureView;
 
+import java.util.ArrayList;
+
 
 /**
  * An Activity that allows a user to watch and edit their profile
@@ -55,7 +57,12 @@ public class ProfileActivity extends Activity {
 			Log.d("ProfileActivity", "User is a driver!");
 			carsBtn.setClickable(true);
 			carsBtn.setVisibility(View.VISIBLE);
-			// TODO: Link carsBtn with a CarsActivity or something like that
+			carsBtn.setOnClickListener(new View.OnClickListener(){
+				@Override
+				public void onClick(View view){
+					ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, CarsActivity.class);
+				}
+			});
 		}
 
 		if(AccessToken.getCurrentAccessToken() == null) {
@@ -100,10 +107,13 @@ public class ProfileActivity extends Activity {
 					String prevAppSTkn = ui.getAppServerToken();
 					String prevPssw = ui.getPassword();
 					int prevIntId = ui.getIntegerId();
+					boolean wasDriver = ui.isDriver();
+					ArrayList<CarInfo> cars = ui.getCars();
 					ui.seppuku();
 					ui.initializeUserInfo(newId, newMail, newName, newSurname,
 							newCountry, newBth, prevPssw, prevFbTkn, prevAppSTkn);
 					ui.setIntegerId(prevIntId);
+					if(wasDriver) ui.setAsDriver(cars);
 					// PUT changes to app server
 					try {
 						Jsonator jnator = new Jsonator();
