@@ -8,7 +8,6 @@ import org.json.*;
  * A class for reading and writing Json strings. Used by the
  * {@link ConexionRest} for REST messages.
  */
-
 public class Jsonator {
     /**
      * Generates a Json string request for creating a new user.
@@ -60,6 +59,11 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Checks if the user's login was successful. It should be called
+     * after performing the login request.
+     * @param jsonResponse The app-server's response to the login request
+     */
     public Boolean userLoggedInIsOk(String jsonResponse){
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
@@ -75,6 +79,13 @@ public class Jsonator {
         }
     }
 
+    /**
+     * Reads user's data from the app-server's response and
+     * initializes {@link UserInfo} with it. This function
+     * should be called after validating that the user has
+     * correctly logged in (i.e. after calling userLoggedInIsOk).
+     * @param jsonResponse The app-server's response to the login request
+     */
     public void readUserLoggedInInfo(String jsonResponse){
         if(!this.userLoggedInIsOk(jsonResponse)) return;
 
@@ -105,6 +116,14 @@ public class Jsonator {
         }
     }
 
+    /**
+     * Writes user's data from {@link UserInfo} into a String
+     * JSON-formatted. Beware there are two different JSON formats
+     * due to the ugly-specified REST API on the shared-server side,
+     * so the boolean parameter is used to alternate between them.
+     * @param isEditProfile Should be true if the "edit profile"
+     *                      format is required
+     */
     public String writeUserSignUpInfo(boolean isEditProfile){
         UserInfo ui = UserInfo.getInstance();
         if(!ui.wasInitialized())
@@ -153,6 +172,11 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Checks if the user's sign up was successful. It should be called
+     * after performing the signing request.
+     * @param jsonResponse The app-server's response to the sign up request
+     */
     public Boolean userSignedUpIsOk(String jsonResponse){
         try {
             JSONObject objJson = new JSONObject(jsonResponse);

@@ -7,7 +7,7 @@ import org.robolectric.RobolectricTestRunner;
 
 
 import static org.junit.Assert.*;
-//import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by ale on 9/7/17.

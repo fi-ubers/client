@@ -14,6 +14,11 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONObject;
 
@@ -23,13 +28,21 @@ import org.json.JSONObject;
  */
 public class MainActivity extends Activity {
 	Button restApiBtn, anActBtn;
-	Button editProfBtn;
+	Button editProfBtn, chatBtn;
 
+	/**
+	 * Activity onCreate method.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Log.i("Fiuber MainActivity", "Main activity started!");
+
+/*		TODO: Put this on the right place
+		if (FirebaseAuth.getInstance().getCurrentUser() != null)
+			AuthUI.getInstance().signOut(this);*/
+
 		if (AccessToken.getCurrentAccessToken() == null) {
 			// If here, either user has logged in manually or
 			// haven't logged in at all. If user has logged in,
@@ -72,6 +85,14 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		chatBtn = (Button) findViewById(R.id.chatBtn);
+		chatBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ChatActivity.class);
+			}
+		});
+
 		anActBtn = (Button) findViewById(R.id.anActBtn);
 		anActBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -92,6 +113,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * Simple method for loging out.
+	 * @param view The current {@link View}
 	 */
 	public void logout(View view) {
 		Log.i("Fiuber Main activity", "Logging out user");
@@ -99,7 +121,6 @@ public class MainActivity extends Activity {
 		LoginManager.getInstance().logOut();
 		ActivityChanger.getInstance().gotoLogInScreen(this);
 	}
-
 
 
 // --------------------------------------------------------------------------------------------------------
@@ -110,6 +131,9 @@ public class MainActivity extends Activity {
 	public class FbLogger implements RestUpdate {
 		private int step;
 
+		/**
+		 * Class constructor
+		 */
 		FbLogger(){
 			step = 0;
 		}

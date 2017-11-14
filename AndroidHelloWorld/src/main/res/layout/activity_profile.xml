@@ -15,7 +15,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/apphighlightbck"
+
             android:layout_weight="6">
 
             <com.facebook.login.widget.ProfilePictureView
@@ -24,14 +24,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
 
-                />
+                >
+
+            </com.facebook.login.widget.ProfilePictureView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="4dp"/>
+
         </FrameLayout>
 
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25" />
 
         <TextView
             android:id="@+id/textView3"
@@ -104,7 +106,7 @@
             android:layout_weight="1"
             android:text="alemgarcia95@hotmail.com"
             android:maxLines="1"
-            android:inputType="textAutoComplete"
+            android:inputType="textEmailAddress"
             android:textAlignment="center"
             android:textSize="18sp" />
 

@@ -60,7 +60,17 @@
         android:layout_weight="1"
         android:background="@color/col_std_btn_bck"
         android:textColor="@color/col_std_btn_text"
-        android:text="TODO" />
+        android:text="MAP" />
+
+    <Button
+        android:id="@+id/chatBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:background="@color/col_std_btn_bck"
+        android:textColor="@color/col_std_btn_text"
+        android:text="CHAT" />
 
     <Button
         android:id="@+id/closeSessionBtn"

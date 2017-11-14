@@ -27,20 +27,18 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * A login screen that offers login via userIdSignIn/password.
+ * A login screen that offers login and sign up via userId/password.
  */
 public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cursor> {
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+    // Keep track of the login task to ensure we can cancel it if requested
     private UserLoginTask mAuthTask = null;
-
     // UI references (log in)
     private AutoCompleteTextView mUserIdView;
     private EditText mPasswordView;
@@ -49,7 +47,9 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
     // (sign up)
     private Button signUpBtn;
 
-
+    /**
+     * Activity onCreate method.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +90,9 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         });
     }
 
+    /**
+     * Initializes {@link android.app.LoaderManager}.
+     */
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
@@ -108,21 +111,18 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         // Reset errors.
         mUserIdView.setError(null);
         mPasswordView.setError(null);
-
         // Store values at the time of the login attempt.
         String userId = mUserIdView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
-
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
-
         // Check for a valid userIdSignIn address.
         if (TextUtils.isEmpty(userId)) {
             mUserIdView.setError(getString(R.string.error_field_required));
@@ -133,7 +133,6 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             focusView = mUserIdView;
             cancel = true;
         }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -148,17 +147,25 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
     }
 
     /**
-     * Private method for goint to MainActivity.
+     * Private method for going to MainActivity.
      */
     private void goMainScreen(){
         ActivityChanger.getInstance().gotoMenuScreen(this);
     }
 
+    /**
+     * Checks if the userId field of the logging in user is valid.
+     * @param userId The user's userId
+     */
     private boolean isUserIdValid(String userId) {
         UserInfoValidator uiv = new UserInfoValidator();
         return uiv.isUserIdValid(userId);
     }
 
+    /**
+     * Checks if the password field of the logging in user is valid.
+     * @param password The user's password
+     */
     private boolean isPasswordValid(String password) {
         UserInfoValidator uiv = new UserInfoValidator();
         return uiv.isPasswordValid(password);
@@ -246,7 +253,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask implements RestUpdate{
+    public class UserLoginTask implements RestUpdate {
 
         private final String mUserId;
         private final String mPassword;
@@ -256,14 +263,22 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             mPassword = password;
         }
 
-        /* Checks if the userIdSignIn:password pair has been already registered.*/
-        private Boolean userIsRegistered(String servResponse){
+        /**
+         * Checks if the userIdSignIn:password pair has been already registered.
+         * @param servResponse The app-server's response to the login request
+         */
+        private Boolean userIsRegistered(String servResponse) {
             Jsonator jnator = new Jsonator();
             return jnator.userLoggedInIsOk(servResponse);
         }
 
+        /**
+         * Checks if the user has successfully logged in, and initializes
+         * {@link UserInfo} with their data.
+         * @param servResponse The app-server's response to the login request
+         */
         protected Boolean checkUserLog(String servResponse) {
-            if(userIsRegistered(servResponse)){
+            if (userIsRegistered(servResponse)) {
                 Jsonator jnator = new Jsonator();
                 jnator.readUserLoggedInInfo(servResponse);
                 UserInfo ui = UserInfo.getInstance();
@@ -271,16 +286,27 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
                 ui.initializeUserInfo(ui.getUserId(), ui.getEmail(), ui.getFirstName(),
                         ui.getLastName(), ui.getCountry(), ui.getBirthdate(), mPassword, "", ui.getAppServerToken());
                 return true;
-            }
-            else
+            } else
                 return false;
         }
 
+        /**
+         * Transition to {@link MainActivity}.
+         * @param success True if login was successful, false otherwise
+         * */
         protected void enterApplication(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
 
             if (success) {
+                // Try to create a firebase account
+                UserInfo ui = UserInfo.getInstance();
+                try {
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(ui.getEmail(), ui.getPassword());
+                }
+                catch (Exception e){
+                    Log.e("ManualSignInActivity", "Error creating Firebase account: ", e);
+                }
                 goMainScreen();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -288,11 +314,20 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             }
         }
 
+        /**
+         * Aborts if user cancels login.
+         * */
         protected void onCancelled() {
             mAuthTask = null;
            // showProgress(false);
         }
 
+        /**
+         * Attempts to perform a log in with the userId and password
+         * stored on this class. If the login request was successful,
+         * the executeUpdate method will initialize {@link UserInfo}
+         * and go to {@link MainActivity}.
+         */
         public void logUser() {
             try {
                 Jsonator jnator = new Jsonator();
@@ -307,6 +342,12 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             }
         }
 
+        /**
+         * Checks if the user was successfully logged in, and enters
+         * the application in that case. This function initializes
+         * {@link UserInfo} with the app-server received data.
+         * @param servResponse The app-server's response to the login request
+         */
         @Override
         public void executeUpdate(String servResponse) {
             Log.d("ManualSignInActivity", "Response from server: "+ servResponse);
@@ -325,6 +366,9 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
         private TextView fNameSignUp, lNameSignUp, emailSignUp, birthdateSignUp;
         private TextView countrySignUp, idSignUp, passwordSignUp;
 
+        /**
+         * Class constructor.
+         * */
         UserSignupTask() {
             fNameSignUp = (TextView) findViewById(R.id.fNameSignUp);
             lNameSignUp = (TextView) findViewById(R.id.lNameSignUp);
@@ -335,12 +379,21 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             passwordSignUp = (TextView) findViewById(R.id.passwordSignUp);
         }
 
-        /* Checks if the userIdSignIn:password pair was registered correctly*/
+        /**
+         * Checks if the userIdSignIn:password pair was registered correctly
+         * @param servResponse The app-server's response to the sign up request
+         */
         private Boolean userWasRegistered(String servResponse){
             Jsonator jnator = new Jsonator();
             return jnator.userSignedUpIsOk(servResponse);
         }
 
+        /**
+         * Gets sign up data of user and use it to initialize
+         * {@link UserInfo}. This function runs a validation on
+         * all fields using {@link UserInfoValidator}. Returns
+         * false if this validation failed, or true otherwise.
+         */
         boolean getSignUpFields(){
             // Store values at the time of the login attempt.
             String fName = fNameSignUp.getText().toString();
@@ -374,10 +427,13 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             return true;
         }
 
+        /**
+         * Transition to {@link MainActivity}.
+         * @param success True if login was successful, false otherwise
+         * */
         protected void enterApplication(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
             if (success) {
                 goMainScreen();
             } else {
@@ -386,11 +442,21 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             }
         }
 
+        /**
+         * Aborts if user cancels login.
+         * */
         protected void onCancelled() {
             mAuthTask = null;
             // showProgress(false);
         }
 
+        /**
+         * Attempts a new user sign up, previously reading and
+         * validating user data via {@link UserInfoValidator}.
+         * This function initializes {@link UserInfo} if everything
+         * was OK and sends the request to app-server. Transition
+         * to {@link MainActivity} is made on executeUpdate method.
+         * */
         public void signUser() {
             if(!getSignUpFields())
                 return;
@@ -408,6 +474,11 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             }
         }
 
+        /**
+         * Checks if the user has successfully signed up, and log
+         * them in via {@link UserLoginTask}.
+         * @param servResponse The app-server's response to the sign up request
+         * */
         @Override
         public void executeUpdate(String servResponse) {
             if(userWasRegistered(servResponse)) {

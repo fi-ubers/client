@@ -14,12 +14,12 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:adjustViewBounds="true"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="5.25"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/fiuber_logo" />
+        android:layout_weight="5.25"
+        android:adjustViewBounds="true"
+        android:src="@drawable/fiuber_logo"/>
 
     <Space
         android:layout_width="match_parent"
