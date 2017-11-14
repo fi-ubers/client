@@ -19,6 +19,7 @@
             android:layout_weight="6">
 
             <com.facebook.login.widget.ProfilePictureView
+                android:paddingTop="16dp"
                 android:id="@+id/usProfilePicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

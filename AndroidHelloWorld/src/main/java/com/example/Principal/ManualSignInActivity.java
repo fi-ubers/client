@@ -423,7 +423,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
 
             CheckBox driverChckBox = (CheckBox) findViewById(R.id.driverChckBox);
             if(driverChckBox.isChecked())
-                ui.setAsDriver();
+                ui.setAsDriver(null);
             return true;
         }
 

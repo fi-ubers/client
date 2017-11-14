@@ -3,6 +3,9 @@ package com.example.Principal;
 import android.util.Log;
 import org.json.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 /**
  * A class for reading and writing Json strings. Used by the
@@ -25,7 +28,6 @@ public class Jsonator {
             objJson.put("user", inner);
         }
         catch (Exception e) {
-            System.out.println(e);
             Log.e("Fiuber Jsonator", "exception", e);
         }
 
@@ -52,7 +54,6 @@ public class Jsonator {
             objJson.put("fbAuth", innerFb);
         }
         catch (Exception e) {
-            System.out.println(e);
             Log.e("Fiuber Jsonator", "exception", e);
         }
 
@@ -107,11 +108,26 @@ public class Jsonator {
 			UserInfo ui = UserInfo.getInstance();
 			ui.initializeUserInfo(userId, mail, fName, lName, country, bth, "", "", appTkn);
             ui.setIntegerId(intId);
-            if(typeUser.toLowerCase().equals("driver"))
-                ui.setAsDriver();
+            // Retrieve cars o.o
+            if(typeUser.toLowerCase().equals("driver")) {
+                JSONArray carsArray = uiJson.getJSONArray("cars");
+                Log.d("Jsonator", "Parsed cars array:" + carsArray.toString());
+                int carsAmount = carsArray.length();
+                int i;
+                ArrayList<CarInfo> userCars = new ArrayList<>(Arrays.asList(new CarInfo[] {}));
+
+                for(i = 0; i < carsAmount; i++){
+                    JSONObject carJson = carsArray.getJSONObject(i);
+                    // Create CarInfo
+                    CarInfo thisCar = this.readCarInfo(carJson.toString(), false);
+                    if(thisCar != null)
+                        userCars.add(thisCar);
+                }
+                ui.setAsDriver(userCars);
+                Log.d("Jsonator", "UserInfo read cars are: " + ui.getCars().size());
+                }
         }
         catch (Exception e) {
-            System.out.println(e);
             Log.e("Fiuber Jsonator", "exception", e);
         }
     }
@@ -165,7 +181,6 @@ public class Jsonator {
 
         }
         catch (Exception e) {
-            System.out.println(e);
             Log.e("Fiuber Jsonator", "exception", e);
         }
 
@@ -186,11 +201,56 @@ public class Jsonator {
             return false;
         }
         catch (Exception e) {
-            System.out.println(e);
             Log.e("Fiuber Jsonator", "exception", e);
             return false;
         }
     }
 
 
+    public CarInfo readCarInfo(String jsonResponse, boolean isPost){
+        try {
+            Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+            if(isPost)
+                objJson = new JSONObject(objJson.getString("car"));
+            int carId;
+            if(isPost)
+                carId = objJson.getInt("_id");
+            else
+                carId = objJson.getInt("id");
+            JSONObject carProps = objJson.getJSONArray("properties").getJSONObject(0);
+            String carModel = carProps.getString("name");
+            String carNumber = carProps.getString("value");
+            // Create CarInfo
+            CarInfo thisCar = new CarInfo(carModel, carNumber, carId);
+            return thisCar;
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+            return null;
+        }
+    }
+
+
+    public String writeCarInfo(CarInfo car){
+        JSONObject objJson = new JSONObject();
+        UserInfo ui = UserInfo.getInstance();
+        try {
+            objJson.put("owner", ui.getIntegerId());
+            objJson.put("id", car.getId());
+            objJson.put("_ref", "Sarasa");
+
+            JSONObject innerProp = new JSONObject();
+            innerProp.put("name", car.getModel());
+            innerProp.put("value", car.getNumber());
+            JSONArray propArray = new JSONArray();
+            propArray.put(innerProp);
+            objJson.put("properties", propArray);
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+        }
+
+        return objJson.toString();
+    }
 }

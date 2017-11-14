@@ -155,6 +155,7 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
             int rsp = conn.getResponseCode();
             Boolean rspIsOk = (rsp == HttpURLConnection.HTTP_OK);
             rspIsOk = rspIsOk || ((rsp == HttpURLConnection.HTTP_CREATED) && (restMethod == "POST"));
+            rspIsOk = rspIsOk || ((rsp == HttpURLConnection.HTTP_NO_CONTENT) && (restMethod == "DELETE"));
             if (rspIsOk) {
                 BufferedReader lector = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
