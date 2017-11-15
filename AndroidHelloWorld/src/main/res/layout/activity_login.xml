@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/appborder"
-    tools:context="com.example.Principal.LoginActivity">
+    tools:context="com.example.android.LoginActivity">
 
     <Space
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/fragment2"
-        android:name="com.example.Principal.LoginFragment"
+        android:name="com.example.android.LoginFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/appborder"
-    tools:context="com.example.Principal.RestApiActivity">
+    tools:context="com.example.android.RestApiActivity">
 
 
     <EditText

@@ -4,19 +4,18 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
-        applicationId "com.example.android"
+        applicationId 'com.example.android'
         minSdkVersion 19
         targetSdkVersion 19
     }
-
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -26,12 +25,13 @@ android {
 
 dependencies {
     // compile 'com.android.support:appcompat-v7:19.1.0'
-//    compile 'com.android.support:appcompat-v7:23.4.0'
+    //    compile 'com.android.support:appcompat-v7:23.4.0'
     //noinspection GradleCompatible
     compile 'com.android.support:design:23.0.1'
     compile 'com.facebook.android:facebook-android-sdk:4.8.0'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.android.gms:play-services-places:11.0.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-auth:11.0.4'
     compile 'com.google.firebase:firebase-core:11.0.4'

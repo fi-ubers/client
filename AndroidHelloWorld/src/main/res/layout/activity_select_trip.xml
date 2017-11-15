@@ -1,3 +1,8 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map"
@@ -5,4 +10,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/appborder"
-    tools:context="com.example.Principal.SelectTripActivity" />
+    tools:context="com.example.android.SelectTripActivity" />
+
+    <EditText
+        android:id="@+id/searchDest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="64dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="19dp"
+        android:layout_alignTop="@id/map"
+        android:layout_alignParentEnd="true"
+        android:hint="Search a destination"
+        android:background="@drawable/searchborder"
+        android:inputType="textAutoComplete"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:drawableLeft="@drawable/places_ic_search"
+        android:alpha="0.8"
+        android:textSize="21sp" />
+
+<!--
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/place_autocomplete_fragment"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="64dp"
+              android:layout_alignBottom="@id/map"
+              android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        />
+-->
+</RelativeLayout>

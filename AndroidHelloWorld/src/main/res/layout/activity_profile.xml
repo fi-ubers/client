@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/appborder"
-        tools:context="com.example.Principal.ProfileActivity">
+        tools:context="com.example.android.ProfileActivity">
 
         <FrameLayout
             android:layout_width="match_parent"
