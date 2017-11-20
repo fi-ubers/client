@@ -14,6 +14,8 @@ public class UserInfo {
     private boolean isDriver;
     private ArrayList<CarInfo> cars;
     private String password, fbToken, appServerToken;
+    private UserStatus status;
+
     /**
      * NOT FOR USE! Exists only to prevent instantiation.
      */
@@ -32,6 +34,7 @@ public class UserInfo {
         appServerToken = "";
         wasInitialized = false;
         cars = null;
+        status = UserStatus.NO_STATE;
     }
 
     /**
@@ -149,8 +152,28 @@ public class UserInfo {
         return isDriver;
     }
 
+    /**
+     * Retrieves user list of cars. If UserInfo wasn't initialized,
+     * returns default value.
+     */
     public ArrayList<CarInfo> getCars(){
         return cars;
+    }
+
+    /**
+     * Retrieves user {@link UserStatus}. If UserInfo wasn't initialized,
+     * returns default value.
+     */
+    public UserStatus getUserStatus(){
+        return status;
+    }
+
+    /**
+     * Sets the user {@link UserStatus} to the received value.
+     * @param status {@link UserStatus} to use for the user.
+     */
+    public void setUserStatus(UserStatus status){
+        this.status = status;
     }
 
     /**
@@ -219,6 +242,7 @@ public class UserInfo {
         appServerToken = "";
         wasInitialized = false;
         cars = null;
+        status = UserStatus.NO_STATE;
     }
 
 

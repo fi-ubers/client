@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:background="@color/col_plain_text"
+                android:layout_height="wrap_content">
+
+
+  <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/mapInfotrip"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/appborder"
+            android:layout_marginTop="84dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            tools:context="com.example.android.TripInfoActivity" />
+
+  <TextView
+      android:id="@+id/origText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="12dp"
+      android:text="Pickup location: Bolivar 1234"
+      android:textAlignment="center"
+      android:gravity="left"
+      android:textColor="#ffffff"
+      android:maxLines="1"
+      android:textSize="18sp" />
+
+  <TextView
+      android:id="@+id/destText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="32dp"
+      android:text="Destination: Paseo Colon 850"
+      android:textAlignment="center"
+      android:gravity="left"
+      android:textColor="#ffffff"
+      android:maxLines="1"
+      android:textSize="18sp" />
+
+  <TextView
+      android:id="@+id/distTrip"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="52dp"
+      android:textColor="#ffffff"
+      android:text="Distance: 850km ($11.1)"
+      android:textAlignment="center"
+      android:gravity="left"
+      android:maxLines="1"
+      android:textStyle="bold"
+      android:textSize="18sp" />
+
+  <Button
+      android:id="@+id/cancelTripBtn"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@+id/mapInfotrip"
+      android:layout_marginBottom="6dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:background="@drawable/urgentborder"
+      android:text="CONFIRM TRIP"
+      android:textAllCaps="false"
+      android:textColor="#ffffff"
+      android:textSize="18sp"
+      android:textStyle="bold"/>
+
+</RelativeLayout>

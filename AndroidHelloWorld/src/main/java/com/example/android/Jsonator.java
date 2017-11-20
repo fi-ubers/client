@@ -104,7 +104,7 @@ public class Jsonator {
 			String userId = uiJson.getString("username");
             String typeUser = uiJson.getString("type");
             int intId = uiJson.getInt("_id");
-
+            // TODO: Get user UserStatus and set it to ui
 			UserInfo ui = UserInfo.getInstance();
 			ui.initializeUserInfo(userId, mail, fName, lName, country, bth, "", "", appTkn);
             ui.setIntegerId(intId);

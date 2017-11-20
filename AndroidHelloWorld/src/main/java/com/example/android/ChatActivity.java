@@ -18,6 +18,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 /**
@@ -83,7 +84,7 @@ public class ChatActivity extends Activity {
 				showAllOldMessages(chatName);
 
 		// TODO: move this to wherever it belongs
-		//FirebaseMessaging.getInstance().subscribeToTopic(chatName);
+		FirebaseMessaging.getInstance().subscribeToTopic("EugeKapa");
 
 	}
 

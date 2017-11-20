@@ -15,29 +15,10 @@
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_LOG_LEVEL" value="debug" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31c28a03-bf35-48d4-bf1c-6f9ee987204f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ActivityChanger.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/CarInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/CarsActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ChatActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ConexionRest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/Fiuber.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/Jsonator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/LoginActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/LoginFragment.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/MainActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ManualSignInActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/MyInstanceIdService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/MyService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ProfileActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/RestApiActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/RestUpdate.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/SelectTripActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/UserInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/UserInfoValidator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/test/java/com/example/Principal/JsonatorTest.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" />
@@ -49,17 +30,20 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_AndroidHelloWorld_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_AndroidHelloWorld_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/AndroidHelloWorld.iml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/AndroidHelloWorld.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/build.gradle" afterPath="$PROJECT_DIR$/AndroidHelloWorld/build.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ChatActivity.java" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ChatActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/Jsonator.java" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/Jsonator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfo.java" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_cars.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_cars.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_chat.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_chat.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_login.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_login.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_rest.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_rest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_select_trip.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_select_trip.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/fragment_login.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/fragment_login.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidHelloWorld/src/release/res/values/google_maps_api.xml" afterPath="$PROJECT_DIR$/AndroidHelloWorld/src/release/res/values/google_maps_api.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
     </list>
     <ignored path="client.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -102,102 +86,125 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="SelectTripActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2370">
+              <caret line="197" column="26" selection-start-line="197" selection-start-column="26" selection-end-line="197" selection-end-column="26" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#7178#7179#0" expanded="false" />
+                <element signature="e#7233#7234#0" expanded="false" />
+                <element signature="e#10126#10127#0" expanded="false" />
+                <element signature="e#10160#10161#0" expanded="false" />
+                <element signature="e#10194#10195#0" expanded="false" />
+                <element signature="e#10230#10231#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ChatActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ChatActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1020">
+              <caret line="86" column="66" selection-start-line="86" selection-start-column="66" selection-end-line="86" selection-end-column="66" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#4132#4133#0" expanded="false" />
+                <element signature="e#4161#4162#0" expanded="false" />
+                <element signature="e#4331#4332#0" expanded="false" />
+                <element signature="e#4374#4375#0" expanded="false" />
+                <element signature="e#4449#4450#0" expanded="false" />
+                <element signature="e#4476#4477#0" expanded="false" />
+                <element signature="e#4616#4617#0" expanded="false" />
+                <element signature="e#4655#4656#0" expanded="false" />
+                <element signature="e#4729#4730#0" expanded="false" />
+                <element signature="e#4756#4757#0" expanded="false" />
+                <element signature="e#4922#4923#0" expanded="false" />
+                <element signature="e#4961#4962#0" expanded="false" />
+                <element signature="e#5044#5045#0" expanded="false" />
+                <element signature="e#5071#5072#0" expanded="false" />
+                <element signature="e#5219#5220#0" expanded="false" />
+                <element signature="e#5258#5259#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="activity_select_trip.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_select_trip.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+            <state relative-caret-position="660">
+              <caret line="44" column="34" selection-start-line="44" selection-start-column="34" selection-end-line="44" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="destinations_item.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml">
+      <file leaf-file-name="activity_profile.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state relative-caret-position="94">
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="destination_input_box.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destination_input_box.xml">
+      <file leaf-file-name="fragment_otherinfo.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/fragment_otherinfo.xml">
+          <provider selected="true" editor-type-id="android-designer2">
+            <state />
+          </provider>
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="94">
+              <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_trip_other_info.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_trip_other_info.xml">
+          <provider selected="true" editor-type-id="android-designer2">
+            <state />
+          </provider>
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_manual_sign_in.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="52" column="36" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
+            <state relative-caret-position="1545">
+              <caret line="103" column="56" selection-start-line="103" selection-start-column="42" selection-end-line="103" selection-end-column="56" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CarsActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/CarsActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="51" selection-end-column="11" />
-              <folding>
-                <element signature="e#1216#1486#0" expanded="true" />
-                <element signature="e#1485#1486#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SelectTripActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1620">
-              <caret line="268" column="30" selection-start-line="268" selection-start-column="30" selection-end-line="268" selection-end-column="30" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3959#6206#0" expanded="true" />
-                <element signature="e#5020#5775#0" expanded="true" />
-                <element signature="e#5774#5775#0" expanded="true" />
-                <element signature="e#5827#6148#0" expanded="true" />
-                <element signature="e#6147#6148#0" expanded="true" />
-                <element signature="e#6205#6206#0" expanded="true" />
-                <element signature="e#7111#7887#0" expanded="true" />
-                <element signature="e#7886#7887#0" expanded="true" />
-                <element signature="e#8281#8282#0" expanded="true" />
-                <element signature="e#8315#8316#0" expanded="true" />
-                <element signature="e#8349#8350#0" expanded="true" />
-                <element signature="e#8385#8386#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FetchAddressService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="52" column="74" selection-start-line="52" selection-start-column="74" selection-end-line="52" selection-end-column="74" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml">
-          <provider editor-type-id="android-manifest">
+      <file leaf-file-name="activity_chat.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_chat.xml">
+          <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="503">
-              <caret line="101" column="53" selection-start-line="101" selection-start-column="53" selection-end-line="101" selection-end-column="53" />
+            <state relative-caret-position="225">
+              <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -212,6 +219,7 @@
         <option value="JUnit3 Test Class" />
         <option value="JUnit4 Test Class" />
         <option value="layoutResourceFile_vertical" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -2249,22 +2257,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/urgentborder.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/fbborder.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/appborder.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_rest.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/pictureborder.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/LoginActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ActivityChanger.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/debug/res/values/google_maps_api.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/colors.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/apphighlightbck.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/RestUpdate.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/RestApiActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ConexionRest.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/UserInfoValidator.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/LoginFragment.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/test/java/com/example/Principal/JsonatorTest.java" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/item_in_message.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/item_out_message.xml" />
@@ -2274,7 +2266,6 @@
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/MyService.java" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ChatActivity.java" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/MainActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ActivityCars.java" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/cars_item.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/ManualSignInActivity.java" />
@@ -2287,19 +2278,36 @@
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/Jsonator.java" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/build.gradle" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/Principal/SelectTripActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/google-services.json" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/release/res/values/google_maps_api.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressIntentService.java" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/searchborder.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_cars.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_chat.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java" />
-        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_select_trip.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destination_input_box.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/OtherUsersInfo.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_choose_driver.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/OtherInfoFragment.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserStatus.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfo.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/Jsonator.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_chat.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_cars.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ChatActivity.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/PathInfo.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/TripInfoActivity.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_trip_info.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/infoborder.xml" />
         <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/normalborder.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_select_trip.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/fragment_otherinfo.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_choose_passenger.xml" />
+        <option value="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_trip_other_info.xml" />
       </list>
     </option>
   </component>
@@ -2369,6 +2377,8 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -2769,8 +2779,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2780,7 +2788,7 @@
     <property name="show.do.not.ask.upgrade.gradle.plugin" value="2.2.0" />
     <property name="device.picker.selection" value="1101313b2d1e8200" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/AndroidHelloWorld/src/test/java" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="settings.editor.selected.configurable" value="gradle.compiler" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
   </component>
@@ -2797,26 +2805,27 @@
       <recent name="junit.framework.TestCase" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.android" />
       <recent name="com.example.Principal" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout" />
       <recent name="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable" />
+      <recent name="$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout" />
     </key>
     <key name="android.template.parentActivityClass">
       <recent name="" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.AndroidHelloWorld">
-    <configuration default="false" name="JsonatorTest.generarGet" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="JsonatorTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="AndroidHelloWorld" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="ALTERNATIVE_JRE_PATH" value="/usr/lib/jvm/java-8-oracle/jre" />
       <option name="PACKAGE_NAME" value="com.example.android" />
       <option name="MAIN_CLASS_NAME" value="com.example.android.JsonatorTest" />
-      <option name="METHOD_NAME" value="generarGet" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -2829,15 +2838,15 @@
       <patterns />
       <method />
     </configuration>
-    <configuration default="false" name="JsonatorTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+    <configuration default="false" name="JsonatorTest.generarGet" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="AndroidHelloWorld" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="/usr/lib/jvm/java-8-oracle/jre" />
       <option name="PACKAGE_NAME" value="com.example.android" />
       <option name="MAIN_CLASS_NAME" value="com.example.android.JsonatorTest" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="METHOD_NAME" value="generarGet" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -2872,17 +2881,16 @@
       <method />
     </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="/usr/lib/jvm/java-8-oracle/jre" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -2942,54 +2950,6 @@
       </Profilers>
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
-      <method />
-    </configuration>
-    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
-      <module name="" />
-      <option name="TESTING_TYPE" value="0" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="EXTRA_OPTIONS" value="" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
-      <Auto>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Auto>
-      <Hybrid>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Hybrid>
-      <Java />
-      <Native>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Native>
-      <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
-      </Profilers>
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3168,17 +3128,10 @@
     </configuration>
     <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Android App.AndroidHelloWorld" />
-      <item index="1" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest.generarGet" />
-      <item index="2" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest" />
+      <item index="1" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest" />
+      <item index="2" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest.generarGet" />
       <item index="3" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest.writeUser" />
     </list>
-    <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest.writeUser" />
-        <item index="1" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest" />
-        <item index="2" class="java.lang.String" itemvalue="Android JUnit.JsonatorTest.generarGet" />
-      </list>
-    </recent_temporary>
     <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
       <option name="MAIN_CLASS_NAME" />
       <option name="HTML_FILE_NAME" />
@@ -3248,22 +3201,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-4" width="1303" height="668" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30994153" sideWeight="0.45258963" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.64717346" sideWeight="0.4310757" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.64717346" sideWeight="0.42788845" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24940239" sideWeight="0.5116279" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7348928" sideWeight="0.46613547" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.02534113" sideWeight="0.5306773" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.67641324" sideWeight="0.18247011" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25925925" sideWeight="0.81752986" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988048" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294347" sideWeight="0.6525896" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294347" sideWeight="0.49721116" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294347" sideWeight="0.49402392" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.56920075" sideWeight="0.4693227" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31075698" sideWeight="0.4883721" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30996016" sideWeight="0.4883721" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988048" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988048" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -3357,96 +3310,11 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/fbborder.xml" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/colors.xml" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/RestUpdate.java" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/RestApiActivity.java" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/LoginFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="36" column="126" selection-start-line="36" selection-start-column="126" selection-end-line="36" selection-end-column="126" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/test/java/com/example/android/JsonatorTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
-          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/fiuber_logo.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/bubble_in.9.png" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/bubble_out.9.png" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/item_out_message.xml" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfoValidator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/item_in_message.xml" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="189" column="39" selection-start-line="189" selection-start-column="39" selection-end-line="189" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/MyInstanceIdService.java" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/MyService.java" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ChatActivity.java" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_login.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="52" column="8" selection-start-line="52" selection-start-column="7" selection-end-line="57" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="136" column="0" selection-start-line="136" selection-start-column="0" selection-end-line="136" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/build/intermediates/manifests/full/debug/AndroidManifest.xml" />
     <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/CarInfo.java" />
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/Jsonator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="256" column="0" selection-start-line="256" selection-start-column="0" selection-end-line="256" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/appborder.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3454,34 +3322,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67">
-          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="71" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ManualSignInActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="47" column="29" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2525#2526#0" expanded="false" />
-            <element signature="e#2571#2572#0" expanded="false" />
-            <element signature="e#3067#3068#0" expanded="false" />
-            <element signature="e#3127#3128#0" expanded="false" />
-            <element signature="e#5088#5089#0" expanded="false" />
-            <element signature="e#5154#5155#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3494,7 +3334,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3502,7 +3341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="271">
           <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3510,7 +3348,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3518,7 +3355,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="47" selection-start-line="18" selection-start-column="47" selection-end-line="18" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3526,52 +3362,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="31" column="65" selection-start-line="31" selection-start-column="65" selection-end-line="31" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="161" column="20" selection-start-line="161" selection-start-column="20" selection-end-line="161" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ProfileActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="134" column="13" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
-          <folding>
-            <element signature="e#2664#5014#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="34" column="56" selection-start-line="34" selection-start-column="56" selection-end-line="34" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="12" column="74" selection-start-line="12" selection-start-column="74" selection-end-line="12" selection-end-column="74" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="61" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3579,7 +3369,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3587,40 +3376,229 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="14" column="12" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_cars.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="61" selection-start-line="0" selection-start-column="14" selection-end-line="1" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/cars_input_box.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ConexionRest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="46" column="34" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
-          <folding />
+        <state relative-caret-position="1650">
+          <caret line="121" column="46" selection-start-line="121" selection-start-column="4" selection-end-line="121" selection-end-column="46" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/cars_item.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/CarsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="51" selection-end-column="11" />
+        </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destination_input_box.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="52" column="36" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/OtherUsersInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ProfileActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="70" column="12" selection-start-line="70" selection-start-column="12" selection-end-line="71" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/fragment_login.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="53" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserStatus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/Jsonator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="103" column="57" selection-start-line="103" selection-start-column="57" selection-end-line="103" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ManualSignInActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="338" column="13" selection-start-line="338" selection-start-column="13" selection-end-line="338" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/LoginFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="36" column="126" selection-start-line="36" selection-start-column="126" selection-end-line="36" selection-end-column="126" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="66" column="44" selection-start-line="66" selection-start-column="44" selection-end-line="66" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/OtherInfoFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="44" column="56" selection-start-line="44" selection-start-column="56" selection-end-line="44" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/item_in_message.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-112">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_main.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="31" column="19" selection-start-line="13" selection-start-column="4" selection-end-line="31" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_login.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="12" column="42" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1365">
+          <caret line="91" column="59" selection-start-line="91" selection-start-column="59" selection-end-line="91" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="18" />
+          <folding>
+            <element signature="e#1475#1476#0" expanded="false" />
+            <element signature="e#1503#1504#0" expanded="false" />
+            <element signature="e#1649#1650#0" expanded="false" />
+            <element signature="e#1681#1682#0" expanded="false" />
+            <element signature="e#1825#1826#0" expanded="false" />
+            <element signature="e#1856#1857#0" expanded="false" />
+            <element signature="e#1998#1999#0" expanded="false" />
+            <element signature="e#2028#2029#0" expanded="false" />
+            <element signature="e#2172#2173#0" expanded="false" />
+            <element signature="e#2203#2204#0" expanded="false" />
+            <element signature="e#2350#2351#0" expanded="false" />
+            <element signature="e#2382#2383#0" expanded="false" />
+            <element signature="e#2522#2523#0" expanded="false" />
+            <element signature="e#2551#2552#0" expanded="false" />
+            <element signature="e#2694#2695#0" expanded="false" />
+            <element signature="e#2726#2727#0" expanded="false" />
+            <element signature="e#2857#2858#0" expanded="false" />
+            <element signature="e#2887#2888#0" expanded="false" />
+            <element signature="e#3030#3031#0" expanded="false" />
+            <element signature="e#3060#3061#0" expanded="false" />
+            <element signature="e#3217#3218#0" expanded="false" />
+            <element signature="e#3254#3255#0" expanded="false" />
+            <element signature="e#3396#3397#0" expanded="false" />
+            <element signature="e#3433#3434#0" expanded="false" />
+            <element signature="e#3553#3554#0" expanded="false" />
+            <element signature="e#3584#3585#0" expanded="false" />
+            <element signature="e#3740#3741#0" expanded="false" />
+            <element signature="e#3767#3768#0" expanded="false" />
+            <element signature="e#3927#3928#0" expanded="false" />
+            <element signature="e#3956#3957#0" expanded="false" />
+            <element signature="e#4147#4148#0" expanded="false" />
+            <element signature="e#4183#4184#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="53" column="66" selection-start-line="53" selection-start-column="66" selection-end-line="53" selection-end-column="66" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#4600#4601#0" expanded="false" />
+            <element signature="e#4617#4618#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/PathInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="64" column="30" selection-start-line="64" selection-start-column="30" selection-end-line="64" selection-end-column="30" />
+          <folding>
+            <element signature="e#1245#1246#0" expanded="false" />
+            <element signature="e#1272#1273#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/UserInfoValidator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/TripInfoActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1575">
+          <caret line="143" column="80" selection-start-line="143" selection-start-column="80" selection-end-line="143" selection-end-column="80" />
         </state>
       </provider>
     </entry>
@@ -3629,49 +3607,91 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state relative-caret-position="225">
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="101" column="53" selection-start-line="101" selection-start-column="53" selection-end-line="101" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ConexionRest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="121" column="46" selection-start-line="121" selection-start-column="4" selection-end-line="121" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/FetchAddressService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="52" column="74" selection-start-line="52" selection-start-column="74" selection-end-line="52" selection-end-column="74" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destinations_item.xml">
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_manual_sign_in.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state relative-caret-position="1545">
+          <caret line="103" column="56" selection-start-line="103" selection-start-column="42" selection-end-line="103" selection-end-column="56" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_trip_info.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="53" column="34" selection-start-line="53" selection-start-column="34" selection-end-line="53" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/ChatActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1020">
+          <caret line="86" column="66" selection-start-line="86" selection-start-column="66" selection-end-line="86" selection-end-column="66" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#4132#4133#0" expanded="false" />
+            <element signature="e#4161#4162#0" expanded="false" />
+            <element signature="e#4331#4332#0" expanded="false" />
+            <element signature="e#4374#4375#0" expanded="false" />
+            <element signature="e#4449#4450#0" expanded="false" />
+            <element signature="e#4476#4477#0" expanded="false" />
+            <element signature="e#4616#4617#0" expanded="false" />
+            <element signature="e#4655#4656#0" expanded="false" />
+            <element signature="e#4729#4730#0" expanded="false" />
+            <element signature="e#4756#4757#0" expanded="false" />
+            <element signature="e#4922#4923#0" expanded="false" />
+            <element signature="e#4961#4962#0" expanded="false" />
+            <element signature="e#5044#5045#0" expanded="false" />
+            <element signature="e#5071#5072#0" expanded="false" />
+            <element signature="e#5219#5220#0" expanded="false" />
+            <element signature="e#5258#5259#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2370">
+          <caret line="197" column="26" selection-start-line="197" selection-start-column="26" selection-end-line="197" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#7178#7179#0" expanded="false" />
+            <element signature="e#7233#7234#0" expanded="false" />
+            <element signature="e#10126#10127#0" expanded="false" />
+            <element signature="e#10160#10161#0" expanded="false" />
+            <element signature="e#10194#10195#0" expanded="false" />
+            <element signature="e#10230#10231#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/normalborder.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/cars_input_box.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="43" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_cars.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="54" selection-start-line="5" selection-start-column="54" selection-end-line="5" selection-end-column="54" />
         </state>
       </provider>
     </entry>
@@ -3680,53 +3700,64 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state relative-caret-position="660">
+          <caret line="44" column="34" selection-start-line="44" selection-start-column="34" selection-end-line="44" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/destination_input_box.xml">
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/cars_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_choose_passenger.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_profile.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="52" column="36" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
+        <state relative-caret-position="94">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/CarsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="51" selection-end-column="11" />
-          <folding>
-            <element signature="e#1216#1486#0" expanded="true" />
-            <element signature="e#1485#1486#0" expanded="true" />
-          </folding>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/activity_trip_other_info.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/java/com/example/android/SelectTripActivity.java">
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/drawable/infoborder.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1620">
-          <caret line="268" column="30" selection-start-line="268" selection-start-column="30" selection-end-line="268" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3959#6206#0" expanded="true" />
-            <element signature="e#5020#5775#0" expanded="true" />
-            <element signature="e#5774#5775#0" expanded="true" />
-            <element signature="e#5827#6148#0" expanded="true" />
-            <element signature="e#6147#6148#0" expanded="true" />
-            <element signature="e#6205#6206#0" expanded="true" />
-            <element signature="e#7111#7887#0" expanded="true" />
-            <element signature="e#7886#7887#0" expanded="true" />
-            <element signature="e#8281#8282#0" expanded="true" />
-            <element signature="e#8315#8316#0" expanded="true" />
-            <element signature="e#8349#8350#0" expanded="true" />
-            <element signature="e#8385#8386#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="90">
+          <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidHelloWorld/src/main/res/layout/fragment_otherinfo.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="94">
+          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>

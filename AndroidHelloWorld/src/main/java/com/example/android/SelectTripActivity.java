@@ -2,37 +2,25 @@ package com.example.android;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -49,15 +38,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 public class SelectTripActivity extends FragmentActivity implements OnMapReadyCallback {
-
+    // Curious and useful fact: 0.1 degrees in latitude/longitude are equivalent
+    // to 11 km of the Earth surface
     private GoogleMap mMap;
     private MapHandler mapHandler;
     Location lastLoc;
     EditText searchDest;
     Marker origMarker, destMarker;
+    private Button confirmTripBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +70,16 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         searchDest = (EditText) findViewById(R.id.searchDest);
         origMarker = null;
         destMarker = null;
+
+        confirmTripBtn = (Button) findViewById(R.id.confirmTripBtn);
+        confirmTripBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if((origMarker == null) || (destMarker == null))
+                    return; // TODO: Show nice dialog
+                mapHandler.createPathInfo();
+            }
+        });
     }
 
 
@@ -98,56 +98,68 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
-        searchDest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = new Dialog(SelectTripActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.destination_input_box);
-                final EditText destSearchName = (EditText) dialog.findViewById(R.id.searchDestTxt);
-                final ListView destList = (ListView) dialog.findViewById(R.id.destList);
-                int[] colors = {0, 0xFFFFFFFF, 0};
-                destList.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
-                destList.setDividerHeight(1);
-                List<String> initialList = new ArrayList<>();
-                final ArrayAdapter mAdapter = new ArrayAdapter(SelectTripActivity.this, R.layout.destinations_item, initialList);
-                destList.setAdapter(mAdapter);
+        UserInfo ui = UserInfo.getInstance();
 
-                Button bt = (Button) dialog.findViewById(R.id.btSearchDest);
-                bt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Update list!
-                        String desiredDest = destSearchName.getText().toString();
-                        mAdapter.clear();
-                        try {
-                            FetchAddressService addServ = new FetchAddressService(SelectTripActivity.this, destList, mapHandler);
-                            addServ.execute(desiredDest);
+        if (ui.isDriver()) {
+            // Driver cannot mark destinations
+            searchDest.setClickable(false);
+            searchDest.setVisibility(View.INVISIBLE);
+        } else {
+            searchDest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Dialog dialog = new Dialog(SelectTripActivity.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.destination_input_box);
+                    final EditText destSearchName = (EditText) dialog.findViewById(R.id.searchDestTxt);
+                    final ListView destList = (ListView) dialog.findViewById(R.id.destList);
+                    int[] colors = {0, 0xFFFFFFFF, 0};
+                    destList.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+                    destList.setDividerHeight(2);
+                    List<String> initialList = new ArrayList<>();
+                    final ArrayAdapter mAdapter = new ArrayAdapter(SelectTripActivity.this, R.layout.destinations_item, initialList);
+                    destList.setAdapter(mAdapter);
+
+                    Button bt = (Button) dialog.findViewById(R.id.btSearchDest);
+                    bt.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Update list!
+                            String desiredDest = destSearchName.getText().toString();
+                            if(desiredDest.length() == 0)   return;
+                            // Add country to make it more specific
+                            String country = UserInfo.getInstance().getCountry();
+                            if(country.length() > 1)
+                                if(!desiredDest.contains(country))
+                                    desiredDest = desiredDest + ", " + country;
+                            mAdapter.clear();
+                            try {
+                                FetchAddressService addServ = new FetchAddressService(SelectTripActivity.this, destList, mapHandler);
+                                addServ.execute(desiredDest);
+                            } catch (Exception e) {
+                                Log.e("SelectTripActivity", "Exception: ", e);
+                            }
+
                         }
-                        catch (Exception e){
-                            Log.e("SelectTripActivity", "Exception: ", e);
+                    });
+
+                    destList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            mapHandler.pickFoundDestination(position);
+                            dialog.dismiss();
                         }
+                    });
 
-                        destSearchName.setText("");
-                    }
-                });
-
-                destList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mapHandler.pickFoundDestination(position);
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
-            }
-        });
+                    dialog.show();
+                }
+            });
+        }
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
-
+                marker.hideInfoWindow();
             }
 
             @Override
@@ -174,15 +186,24 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         lastLoc = location;
-
-                        // Add origin and destination markers
                         LatLng origin = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
-                        origMarker = mMap.addMarker(new MarkerOptions().position(origin).draggable(true).title("Pick me here!"));
+                        // Add origin and destination marker if user aint driver
+                        if(!UserInfo.getInstance().isDriver()) {
+                            origMarker = mMap.addMarker(new MarkerOptions().position(origin).draggable(true).title("Pick me here!"));
+                            mapHandler.addTextToMarker(origMarker);
 
+                      //      LatLng dest = new LatLng(lastLoc.getLatitude() + 0.01, lastLoc.getLongitude() + 0.01);
+                      //      destMarker = mMap.addMarker(new MarkerOptions().position(dest).draggable(true).title("Destination")
+                       //             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        //    mapHandler.addTextToMarker(destMarker);
+                        }
                         mapHandler.drawNearest();
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-
+                        // Creates a border of around 1km
+                        LatLngBounds border = new LatLngBounds(new LatLng(origin.latitude - 0.0455, origin.longitude - 0.0455),
+                                                    new LatLng(origin.latitude + 0.0455, origin.longitude + 0.0455));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(border, 0));
                     }
+                    // TODO: Add handler when location == null
                 }
             });
 
@@ -231,6 +252,10 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         }
 
         public void pickFoundDestination(int destOffset){
+            // Sanity check
+            if(UserInfo.getInstance().isDriver())
+                return;
+
             Address addr = this.destinations.get(destOffset);
             LatLng dest = new LatLng(addr.getLatitude(), addr.getLongitude());
             if(destMarker == null) {
@@ -250,18 +275,27 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
         public void drawNearest(){
             Iterator<NearUserInfo> it = nearest.iterator();
+            UserInfo ui = UserInfo.getInstance();
 
             while(it.hasNext()){
                 NearUserInfo anUser = it.next();
                 LatLng pos = anUser.getLocation();
                 String name = anUser.getName();
-
-                Bitmap img = BitmapFactory.decodeResource(getResources(), R.drawable.car_marker);
+                Bitmap img;
+                if(ui.isDriver())
+                    img = BitmapFactory.decodeResource(getResources(), R.drawable.passenger_marker);
+                else
+                    img = BitmapFactory.decodeResource(getResources(), R.drawable.car_marker);
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(img);
-
                 mMap.addMarker(new MarkerOptions().position(pos).draggable(false).title(name)
                         .icon(bitmapDescriptor));
             }
+        }
+
+        public void addTextToMarker(Marker mMarker){
+            if(mMarker == null) return;
+            FetchAddressService addServ= new FetchAddressService(SelectTripActivity.this, mMarker);
+            addServ.execute((String) null);
         }
 
         public void drawPath(ArrayList<LatLng> pathPoints){
@@ -274,9 +308,20 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             path.setColor(Color.BLUE);
             path.setWidth(15);
 
-
+            addTextToMarker(origMarker);
+            addTextToMarker(destMarker);
         }
 
+        public void createPathInfo() {
+            PathInfo pi = PathInfo.getInstance();
+            pi.setPath(path.getPoints());
+            String origTxt = origMarker.getSnippet();
+            String destTxt = destMarker.getSnippet();
+            pi.setAddresses(origTxt, destTxt);
+
+            ActivityChanger.getInstance().gotoActivity(SelectTripActivity.this, TripInfoActivity.class);
+			pi.setDistance(11.2);
+        }
     }
 
 }

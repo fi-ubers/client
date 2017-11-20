@@ -12,6 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,23 +30,43 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 	private Context context;
 	private SelectTripActivity.MapHandler mHandler;
 	private ListView destList;
+	private boolean coordFromAddress;
+	private Marker mMarker;
+	private LatLng coords;
 
 	public FetchAddressService(Context context, ListView destList, SelectTripActivity.MapHandler mHandler){
 		this.destList = destList;
 		this.mHandler = mHandler;
 		this.context = context;
+		coordFromAddress = true;
+	}
+
+	public FetchAddressService(Context context, Marker coords){
+		this.context = context;
+		this.mMarker = coords;
+		coordFromAddress = false;
+		this.coords = mMarker.getPosition();
 	}
 
 	@Override
 	protected void onPostExecute(List<Address> aVoid){
 		Iterator<Address> it = aVoid.iterator();
-		ArrayAdapter<String> mAdapter = (ArrayAdapter<String>) destList.getAdapter();
-		while(it.hasNext()) {
-			Address addr = it.next();
-			Log.d("SelectTripActivity", "Place is: (" + addr.getLatitude() + ", " + addr.getLongitude() + ")");
-			mAdapter.add(addr.getAddressLine(0));
+		if(coordFromAddress) {
+			ArrayAdapter<String> mAdapter = (ArrayAdapter<String>) destList.getAdapter();
+			while (it.hasNext()) {
+				Address addr = it.next();
+				Log.d("SelectTripActivity", "Place is: (" + addr.getLatitude() + ", " + addr.getLongitude() + ")");
+				mAdapter.add(addr.getAddressLine(0));
+			}
+			mHandler.setFoundDestinations(aVoid);
+		} else {
+			while (it.hasNext()) {
+				Address addr = it.next();
+				String addrStr = addr.getAddressLine(0).split(",")[0];
+				Log.d("SelectTripActivity", "Address is: " + addrStr);
+				mMarker.setSnippet(addrStr);
+			}
 		}
-		mHandler.setFoundDestinations(aVoid);
 	}
 
 	@Override
@@ -52,7 +76,10 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 			//FetchAddressService addServ = new FetchAddressService();
 			Geocoder gc = new Geocoder(this.context, Locale.getDefault());
 			if(gc.isPresent())
-				foundDestinations = gc.getFromLocationName(voids[0], 10);
+				if(coordFromAddress)
+					foundDestinations = gc.getFromLocationName(voids[0], 10);
+				else
+					foundDestinations = gc.getFromLocation(coords.latitude, coords.longitude, 1);
 			Log.d("FetchAddressService", "Found: " + foundDestinations.size() + " places");
 
 			// destList.refreshDrawableState();
