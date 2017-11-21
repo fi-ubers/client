@@ -50,6 +50,8 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 
 	@Override
 	protected void onPostExecute(List<Address> aVoid){
+		if((aVoid == null) || (aVoid.size() == 0))
+			return;
 		Iterator<Address> it = aVoid.iterator();
 		if(coordFromAddress) {
 			ArrayAdapter<String> mAdapter = (ArrayAdapter<String>) destList.getAdapter();

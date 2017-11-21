@@ -83,9 +83,6 @@ public class ChatActivity extends Activity {
 				// User is already signed in, show list of messages
 				showAllOldMessages(chatName);
 
-		// TODO: move this to wherever it belongs
-		FirebaseMessaging.getInstance().subscribeToTopic("EugeKapa");
-
 	}
 
 	/**

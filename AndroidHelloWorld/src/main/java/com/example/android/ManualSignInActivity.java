@@ -307,6 +307,13 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
                 catch (Exception e){
                     Log.e("ManualSignInActivity", "Error creating Firebase account: ", e);
                 }
+
+                // Stores on file User credentials
+                String PREFS_FILE = "AuthFile";
+                getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit()
+                        .putString("UserId", ui.getUserId())
+                        .putString("Password", ui.getPassword())
+                        .apply();
                 goMainScreen();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

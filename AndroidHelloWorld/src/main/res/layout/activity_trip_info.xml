@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:background="@color/col_plain_text"
+                android:background="@drawable/appborder"
                 android:layout_height="wrap_content">
 
 
@@ -27,7 +27,7 @@
       android:text="Pickup location: Bolivar 1234"
       android:textAlignment="center"
       android:gravity="left"
-      android:textColor="#ffffff"
+      android:textColor="@color/col_plain_text"
       android:maxLines="1"
       android:textSize="18sp" />
 
@@ -41,7 +41,7 @@
       android:text="Destination: Paseo Colon 850"
       android:textAlignment="center"
       android:gravity="left"
-      android:textColor="#ffffff"
+      android:textColor="@color/col_plain_text"
       android:maxLines="1"
       android:textSize="18sp" />
 
@@ -52,7 +52,7 @@
       android:layout_marginRight="10dp"
       android:layout_marginLeft="10dp"
       android:layout_marginTop="52dp"
-      android:textColor="#ffffff"
+      android:textColor="@color/col_plain_text"
       android:text="Distance: 850km ($11.1)"
       android:textAlignment="center"
       android:gravity="left"

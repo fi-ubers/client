@@ -2,6 +2,7 @@ package com.example.android;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,11 +14,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -75,8 +78,14 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         confirmTripBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if((origMarker == null) || (destMarker == null))
-                    return; // TODO: Show nice dialog
+                if(origMarker == null) {
+                    Toast.makeText(getApplicationContext(), "Please turn on your GPS and reload", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(destMarker == null){
+                    Toast.makeText(getApplicationContext(), "Select a destination first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mapHandler.createPathInfo();
             }
         });
@@ -108,6 +117,13 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             searchDest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(origMarker == null) {
+                        Toast.makeText(getApplicationContext(), "Please, turn on your GPS and reload", Toast.LENGTH_SHORT).show();
+                        InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        im.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        return;
+                    }
+
                     final Dialog dialog = new Dialog(SelectTripActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.destination_input_box);
@@ -203,7 +219,9 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
                                                     new LatLng(origin.latitude + 0.0455, origin.longitude + 0.0455));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(border, 0));
                     }
-                    // TODO: Add handler when location == null
+                    else {
+                        Toast.makeText(getApplicationContext(), "Please, turn on your GPS and reload", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -256,6 +274,10 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             if(UserInfo.getInstance().isDriver())
                 return;
 
+            if(origMarker == null) {
+                Toast.makeText(getApplicationContext(), "Please, turn on your GPS and reload", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Address addr = this.destinations.get(destOffset);
             LatLng dest = new LatLng(addr.getLatitude(), addr.getLongitude());
             if(destMarker == null) {

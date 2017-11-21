@@ -14,6 +14,9 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
 
@@ -54,7 +57,7 @@ public class MainActivity extends Activity {
 			profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
 			profilePictureView.setProfileId("107457569994960");
 			UserInfo ui = UserInfo.getInstance();
-			((TextView) findViewById(R.id.fbUsrName)).setText(ui.getFirstName() + " " + ui.getLastName());
+			((TextView) findViewById(R.id.fbUsrName)).setText(ui.getFirstName());
 		} else {
 			Log.i("Fiuber MainActivity", "User has logged in with FB");
 			// If here, the user has logged in using Facebook.
@@ -78,7 +81,11 @@ public class MainActivity extends Activity {
 			//((TextView) findViewById(R.id.fbUsrName)).setText(UserInfo.getInstance().getFirstName());
 		}
 
+		FirebaseMessaging.getInstance().subscribeToTopic(UserInfo.getInstance().getUserId());
+
 		restApiBtn = (Button) findViewById(R.id.restApiBtn);
+		restApiBtn.setVisibility(View.INVISIBLE);
+		restApiBtn.setClickable(false);
 		restApiBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -120,6 +127,10 @@ public class MainActivity extends Activity {
 		Log.i("Fiuber Main activity", "Logging out user");
 		UserInfo.getInstance().seppuku();
 		LoginManager.getInstance().logOut();
+		if (FirebaseAuth.getInstance().getCurrentUser() != null)
+			AuthUI.getInstance().signOut(this);
+		String PREFS_FILE = "AuthFile";
+		getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit().clear().apply();
 		ActivityChanger.getInstance().gotoLogInScreen(this);
 	}
 
