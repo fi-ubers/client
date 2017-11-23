@@ -14,7 +14,7 @@ public class PathInfo {
 	private static PathInfo instance = null;
 	private List<LatLng> destinations;
 	private String origAddress, destAddress;
-	private double distance;
+	private double distance, cost;
 
 	/**
 	 * NOT FOR USE! Exists only to prevent instantiation.
@@ -25,6 +25,7 @@ public class PathInfo {
 		destAddress = "";
 		distance = -1.0;
 		destinations = null;
+		cost = -1.0;
 	}
 
 	/**
@@ -64,5 +65,13 @@ public class PathInfo {
 
 	public double getDistance(){
 		return this.distance;
+	}
+
+	public double getCost(){
+		return cost;
+	}
+
+	public void setCost(double cost){
+		this.cost = cost;
 	}
 }

@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:background="@drawable/appborder"
+                android:background="#eeedee"
                 android:layout_height="wrap_content">
 
 
@@ -12,9 +12,9 @@
             android:layout_height="match_parent"
             android:background="@drawable/appborder"
             android:layout_marginTop="84dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
             tools:context="com.example.android.TripInfoActivity" />
 
   <TextView
@@ -66,8 +66,8 @@
       android:layout_height="wrap_content"
       android:layout_alignBottom="@+id/mapInfotrip"
       android:layout_marginBottom="6dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginRight="16dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
       android:background="@drawable/urgentborder"
       android:text="CONFIRM TRIP"
       android:textAllCaps="false"

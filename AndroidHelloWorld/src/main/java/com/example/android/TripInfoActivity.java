@@ -1,5 +1,6 @@
 package com.example.android;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -52,6 +54,7 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_info);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapInfotrip);
@@ -64,6 +67,18 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 		destTxt.setText("To: " + pi.getDestAddress());
     }
 
+	/**
+	 * Overrided method for returning to parent {@link Activity}.
+	 * @param item {@link MenuItem} clicked on {@link android.app.ActionBar}
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		ActivityChanger.getInstance().gotoActivity(TripInfoActivity.this, SelectTripActivity.class);
+		finish();
+		return true;
+
+	}
 
     /**
      * Manipulates the map once available.
@@ -141,7 +156,8 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 				setSnippet(PathInfo.getInstance().getOrigAddress());
 
 		TextView cstDst = (TextView) findViewById(R.id.distTrip);
-		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km ($11.8)");
+		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km ($" +
+				PathInfo.getInstance().getCost() + ")");
     }
 
 }

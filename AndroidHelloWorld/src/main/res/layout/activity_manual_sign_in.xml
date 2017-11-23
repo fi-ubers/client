@@ -127,6 +127,7 @@
                 android:inputType="textAutoComplete"
                 android:maxLines="1"
                 />
+
             <AutoCompleteTextView
                 android:id="@+id/emailSignUp"
                 android:layout_width="match_parent"
@@ -136,15 +137,38 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 />
-            <AutoCompleteTextView
-                android:id="@+id/birthdateSignUp"
+
+
+
+            <LinearLayout
+                android:id="@+id/birthLinear"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Birthdate (dd/mm/yyyy)"
-                android:inputType="textAutoComplete"
-                android:maxLines="1"
-                />
+                android:orientation="horizontal">
+
+                <AutoCompleteTextView
+                    android:id="@+id/birthdateSignUp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:hint="Birthdate (dd/mm/yyyy)"
+                    android:inputType="textAutoComplete"
+                    android:maxLines="1"
+                    />
+
+                <ImageView
+                    android:id="@+id/setBthBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/calendar_icon"
+                    />
+
+            </LinearLayout>
+
             <AutoCompleteTextView
                 android:id="@+id/countrySignUp"
                 android:layout_width="match_parent"
@@ -165,6 +189,7 @@
                 android:maxLines="1"
                 />
 
+
             <EditText
                 android:id="@+id/passwordSignUp"
                 android:layout_width="match_parent"
@@ -183,13 +208,31 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"/>
 
-            <CheckBox
-                android:id="@+id/driverChckBox"
+            <LinearLayout
+                android:id="@+id/typeLinear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="I'm a good and responsible driver!"
-                android:clickable="true"
-                />
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioBtnPassenger"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="I'm a passenger!"/>
+
+
+                <RadioButton
+                    android:id="@+id/radioBtnDriver"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:text="I'm a driver!"/>
+
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/signUpBtn"

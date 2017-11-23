@@ -28,18 +28,18 @@ public enum UserStatus {
 	}
 
 	public boolean tripCreationEnabled(){
-		return (this.code == 1);
+		return (this == P_IDLE);
 	}
 
 	public boolean chatEnabled(){
-		boolean isEnabled = (this.code == 13);
-		isEnabled |= (this.code == 14);
-		isEnabled |= (this.code == 4);
-		isEnabled |= (this.code == 5);
+		boolean isEnabled = (this == D_GOING_TO_PIKCUP);
+		isEnabled |= (this == D_TRAVELLING);
+		isEnabled |= (this == P_TRAVELLING);
+		isEnabled |= (this == P_WAITING_DRIVER);
 		return isEnabled;
 	}
 
 	public boolean chooseTripEnabled(){
-		return (this.code == 11);
+		return (this == D_ON_DUTY);
 	}
 }

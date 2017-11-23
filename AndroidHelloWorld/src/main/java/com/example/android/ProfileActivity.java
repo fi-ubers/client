@@ -1,8 +1,11 @@
 package com.example.android;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +34,8 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		userName = (EditText) findViewById(R.id.profileName);
 		userSurname = (EditText) findViewById(R.id.profileSurname);
@@ -131,6 +136,7 @@ public class ProfileActivity extends Activity {
 				}
 
 				ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, MainActivity.class);
+				finish();
 
 			}
 		});
@@ -140,7 +146,21 @@ public class ProfileActivity extends Activity {
 			@Override
 			public void onClick(View view){
 				ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, MainActivity.class);
+				finish();
 			}
 		});
+	}
+
+	/**
+	 * Overrided method for returning to parent {@link Activity}.
+	 * @param item {@link MenuItem} clicked on {@link android.app.ActionBar}
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		ActivityChanger.getInstance().gotoActivity(ProfileActivity.this, MainActivity.class);
+		finish();
+		return true;
+
 	}
 }

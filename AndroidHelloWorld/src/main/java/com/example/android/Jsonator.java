@@ -1,6 +1,10 @@
 package com.example.android;
 
+import android.graphics.Path;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.*;
 
 import java.util.ArrayList;
@@ -252,5 +256,69 @@ public class Jsonator {
         }
 
         return objJson.toString();
+    }
+
+    public String writeDirectionsInfo(LatLng orig, LatLng dest){
+        UserInfo ui = UserInfo.getInstance();
+        if((!ui.wasInitialized()) || ui.isDriver())
+            return "";
+
+        JSONObject objJson = new JSONObject();
+        JSONObject origJson = new JSONObject();
+        JSONObject destJson = new JSONObject();
+
+        try {
+
+            origJson.put("lat", orig.latitude);
+            origJson.put("lng", orig.longitude);
+
+            destJson.put("lat", dest.latitude);
+            destJson.put("lng", dest.longitude);
+
+            objJson.put("origin", origJson);
+            objJson.put("destination", destJson);
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+        }
+
+        return objJson.toString();
+    }
+
+    public ArrayList<LatLng> readDirectionsPath(String jsonResponse){
+        ArrayList<LatLng> pathPoints = new ArrayList<>();
+        try {
+            Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+            if(objJson.getInt("code") != 200)
+                return null;
+
+            objJson = objJson.getJSONObject("directions");
+            double distance = objJson.getDouble("distance");
+            PathInfo.getInstance().setDistance(distance / 1000.0); // in km
+			// TODO: get real cost
+			PathInfo.getInstance().setCost(11.9);
+
+            double origLat = objJson.getJSONObject("origin").getDouble("lat");
+            double origLong = objJson.getJSONObject("origin").getDouble("lng");
+            LatLng firstPoint = new LatLng(origLat, origLong);
+            pathPoints.add(firstPoint);
+
+            JSONArray path = objJson.getJSONArray("path");
+            int i;
+            for(i = 0; i < path.length(); i++){
+                JSONObject nextPointJson = path.getJSONObject(i);
+                double lng = nextPointJson.getJSONObject("coords").getDouble("lng");
+                double lat = nextPointJson.getJSONObject("coords").getDouble("lat");
+                LatLng nextPoint = new LatLng(lat, lng);
+                pathPoints.add(nextPoint);
+            }
+
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+            return null;
+        }
+        return pathPoints;
     }
 }

@@ -93,7 +93,12 @@
         <activity
             android:name="com.example.android.ProfileActivity"
             android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_edit_profile"/>
+            android:label="@string/title_activity_edit_profile" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"
+                />
+        </activity>
         <activity
             android:name="com.example.android.ChatActivity"
             android:label="@string/title_activity_chat"/>

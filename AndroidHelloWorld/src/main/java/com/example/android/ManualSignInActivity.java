@@ -4,11 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 
 import android.os.Build;
@@ -17,6 +20,7 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -24,7 +28,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +53,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
     private View mLoginFormView;
     // (sign up)
     private Button signUpBtn;
+    private ImageView setBthBtn;
 
     /**
      * Activity onCreate method.
@@ -54,6 +62,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_sign_in);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         // Set up the login form.
         mUserIdView = (AutoCompleteTextView) findViewById(R.id.userIdSignIn);
         populateAutoComplete();
@@ -80,6 +89,45 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
 
         mProgressView = findViewById(R.id.login_progress);
 
+        setBthBtn = (ImageView) findViewById(R.id.setBthBtn);
+        setBthBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(ManualSignInActivity.this);
+                dialog.setTitle("Select your birthdate");
+                dialog.setContentView(R.layout.date_input_box);
+                TextView txtMessage=(TextView)dialog.findViewById(R.id.txtmessage);
+                txtMessage.setText("Please select your birthdate");
+                txtMessage.setTextColor(Color.parseColor("#ff2222"));
+                final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
+
+                Button btConfirm =(Button) dialog.findViewById(R.id.confirmDate);
+                btConfirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String year = String.format("%04d", datePicker.getYear());
+                        String month = String.format("%02d", datePicker.getMonth()+1);
+                        String day = String.format("%02d", datePicker.getDayOfMonth());
+                        String date = day + "/" + month + "/" + year;
+                        Log.i("ManualSignInActivity", "Date is: " + date);
+                        ((TextView) findViewById(R.id.birthdateSignUp)).setText(date);
+                        dialog.dismiss();
+                    }
+                });
+
+                Button btCancel = (Button) dialog.findViewById(R.id.cancelDate);
+                btCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+
+        });
+
         signUpBtn = (Button) findViewById(R.id.signUpBtn);
         signUpBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -88,7 +136,37 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
                 ust.signUser();
             }
         });
+
+		final RadioButton radioBtnDriver = (RadioButton) findViewById(R.id.radioBtnDriver);
+		final RadioButton radioBtnPassenger = (RadioButton) findViewById(R.id.radioBtnPassenger);
+		radioBtnDriver.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				radioBtnDriver.setChecked(true);
+				radioBtnPassenger.setChecked(false);
+			}
+		});
+		radioBtnPassenger.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				radioBtnPassenger.setChecked(true);
+				radioBtnDriver.setChecked(false);
+			}
+		});
     }
+
+	/**
+	 * Overrided method for returning to parent {@link Activity}.
+	 * @param item {@link MenuItem} clicked on {@link android.app.ActionBar}
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		ActivityChanger.getInstance().gotoActivity(ManualSignInActivity.this, LoginActivity.class);
+		finish();
+		return true;
+
+	}
 
     /**
      * Initializes {@link android.app.LoaderManager}.
@@ -372,7 +450,6 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
     public class UserSignupTask implements RestUpdate{
         private TextView fNameSignUp, lNameSignUp, emailSignUp, birthdateSignUp;
         private TextView countrySignUp, idSignUp, passwordSignUp;
-
         /**
          * Class constructor.
          * */
@@ -384,6 +461,7 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             countrySignUp = (TextView) findViewById(R.id.countrySignUp);
             idSignUp = (TextView) findViewById(R.id.idSignUp);
             passwordSignUp = (TextView) findViewById(R.id.passwordSignUp);
+
         }
 
         /**
@@ -428,8 +506,8 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             UserInfo ui = UserInfo.getInstance();
             ui.initializeUserInfo(userId, mail, fName, lName, country, bth, password, "", "");
 
-            CheckBox driverChckBox = (CheckBox) findViewById(R.id.driverChckBox);
-            if(driverChckBox.isChecked())
+            RadioButton radioBtnDriver = (RadioButton) findViewById(R.id.radioBtnDriver);
+            if(radioBtnDriver.isChecked())
                 ui.setAsDriver(null);
             return true;
         }

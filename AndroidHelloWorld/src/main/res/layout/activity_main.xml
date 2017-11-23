@@ -13,8 +13,8 @@
 
 
 
-    <TextView
-        android:id="@+id/centerSpace"
+    <Button
+        android:id="@+id/editProfBtn"
         android:layout_width="144dp"
         android:layout_height="144dp"
         android:background="@drawable/centralroundedborder"
@@ -52,13 +52,13 @@
     <!-- De aca para abajo -->
     <LinearLayout
         android:layout_width="128dp"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="216dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="82dp"
         android:orientation="vertical"
         android:layout_height="match_parent">
-
+<!---
         <Button
             android:id="@+id/editProfBtn"
             android:layout_width="128dp"
@@ -70,7 +70,7 @@
             android:text="Profile"
             android:alpha="0.9"
             />
-
+-->
         <Button
             android:id="@+id/anActBtn"
             android:layout_width="128dp"
@@ -80,6 +80,7 @@
             android:background="@drawable/roundedborder"
             android:textColor="#dee8f1"
             android:text="New trip"
+            android:textSize="20sp"
             android:layout_marginTop="5dp"
             android:alpha="0.9"
             />
@@ -93,6 +94,7 @@
             android:background="@drawable/roundedborder"
             android:textColor="#dee8f1"
             android:text="Chat"
+            android:textSize="20sp"
             android:alpha="0.9"
             android:layout_marginTop="5dp"
             />
@@ -105,6 +107,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/roundedborder"
             android:textColor="#dee8f1"
+            android:textSize="20sp"
             android:text="REST API"
             android:alpha="0.9"
             android:layout_marginTop="5dp"
@@ -122,6 +125,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/urgentborder"
         android:textColor="#ffffff"
+        android:textSize="22sp"
         android:text="   Sign out   "
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

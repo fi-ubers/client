@@ -12,6 +12,7 @@ import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -60,6 +61,7 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // TODO: Generate this via app-server
         ArrayList<NearUserInfo> nu = new ArrayList<>();
@@ -75,6 +77,10 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         destMarker = null;
 
         confirmTripBtn = (Button) findViewById(R.id.confirmTripBtn);
+        if(UserInfo.getInstance().isDriver()){
+            confirmTripBtn.setEnabled(false);
+            confirmTripBtn.setVisibility(View.INVISIBLE);
+        }
         confirmTripBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +97,18 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         });
     }
 
+    /**
+     * Overrided method for returning to parent {@link Activity}.
+     * @param item {@link MenuItem} clicked on {@link android.app.ActionBar}
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Log.d("ProfileActivity", "Back button pressed on actionBar");
+        ActivityChanger.getInstance().gotoActivity(SelectTripActivity.this, MainActivity.class);
+        finish();
+        return true;
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -187,11 +205,22 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             public void onMarkerDragEnd(Marker marker) {
                 if((origMarker == null) || (destMarker == null))
                     return;
-                // TODO: Get path from app-server
-                ArrayList<LatLng> pathPoints = new ArrayList<>();
-                pathPoints.add(origMarker.getPosition());
-                pathPoints.add(destMarker.getPosition());
-                mapHandler.drawPath(pathPoints);
+                mapHandler.generatePath(origMarker.getPosition(), destMarker.getPosition());
+            }
+        });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if(UserInfo.getInstance().isDriver())
+                    return;
+                if(destMarker == null) {
+                    destMarker = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Destination")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                }
+                else
+                    destMarker.setPosition(latLng);
+                mapHandler.generatePath(origMarker.getPosition(), destMarker.getPosition());
             }
         });
 
@@ -252,15 +281,17 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
 // -----------------------------------------------------------------------------------------------------
 
-    public class MapHandler{
+    public class MapHandler implements RestUpdate {
         private ArrayList<NearUserInfo> nearest;
         private List<Address> destinations;
         private Polyline path;
+        private Marker infoMarker;
 
         public MapHandler(ArrayList<NearUserInfo> nearest){
             this.nearest = nearest;
             destinations = null;
             path = null;
+            infoMarker = null;
         }
 
 
@@ -288,11 +319,7 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
                 destMarker.setPosition(dest);
 
             Log.d("SelectTripActivity", "MapHandler using " + destinations.size() + " destinations");
-            // TODO: Get path from app-server
-            ArrayList<LatLng> pathPoints = new ArrayList<>();
-            pathPoints.add(origMarker.getPosition());
-            pathPoints.add(dest);
-            mapHandler.drawPath(pathPoints);
+            generatePath(origMarker.getPosition(), dest);
         }
 
         public void drawNearest(){
@@ -320,7 +347,7 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             addServ.execute((String) null);
         }
 
-        public void drawPath(ArrayList<LatLng> pathPoints){
+        private void drawPath(ArrayList<LatLng> pathPoints){
             if(path != null)
                 path.remove();
             PolylineOptions pathOptions = new PolylineOptions();
@@ -328,7 +355,17 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
             path.setPoints(pathPoints);
             path.setColor(Color.BLUE);
-            path.setWidth(15);
+            path.setWidth(12);
+            origMarker.showInfoWindow();
+
+            int middle = pathPoints.size()/2;
+            LatLng middlePoint = pathPoints.get(middle);
+            Bitmap img = BitmapFactory.decodeResource(getResources(), R.drawable.info_marker);
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(img);
+            String distance = PathInfo.getInstance().getDistance() + "km";
+            infoMarker = mMap.addMarker(new MarkerOptions().position(middlePoint).draggable(false)
+                    .title(distance).icon(bitmapDescriptor));
+            infoMarker.showInfoWindow();
 
             addTextToMarker(origMarker);
             addTextToMarker(destMarker);
@@ -342,7 +379,33 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             pi.setAddresses(origTxt, destTxt);
 
             ActivityChanger.getInstance().gotoActivity(SelectTripActivity.this, TripInfoActivity.class);
-			pi.setDistance(11.2);
+        }
+
+        public void generatePath(LatLng orig, LatLng dest){
+            if(infoMarker != null)
+                infoMarker.remove();
+            if(path != null)
+                path.remove();
+            try {
+                Jsonator jnator = new Jsonator();
+                String toSendJson = jnator.writeDirectionsInfo(orig, dest);
+                Log.d("SelectTripActivity", "JSON to send: " + toSendJson);
+                ConexionRest conn = new ConexionRest(this);
+                String dirUrl = conn.getBaseUrl() + "/directions";
+                Log.d("SelectTripActivity", "URL to POST directions: " + dirUrl);
+                conn.generatePost(toSendJson, dirUrl, null);
+            }
+            catch(Exception e){
+                Log.e("SelectTripActivity", "Sunmitting PUT error: ", e);
+            }
+        }
+
+        @Override
+        public void executeUpdate(String servResponse) {
+            Log.d("SelectTripActivity", "Received path: " + servResponse);
+            Jsonator jnator = new Jsonator();
+            ArrayList<LatLng> pathPoints = jnator.readDirectionsPath(servResponse);
+            drawPath(pathPoints);
         }
     }
 

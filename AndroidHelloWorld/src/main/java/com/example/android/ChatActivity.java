@@ -3,6 +3,7 @@ package com.example.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -36,7 +37,7 @@ public class ChatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		// TODO: Give dedicated chats to pairs passenger-driver
 		final String chatName = "chat";
 
@@ -82,6 +83,19 @@ public class ChatActivity extends Activity {
 			else
 				// User is already signed in, show list of messages
 				showAllOldMessages(chatName);
+
+	}
+
+	/**
+	 * Overrided method for returning to parent {@link Activity}.
+	 * @param item {@link MenuItem} clicked on {@link android.app.ActionBar}
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		ActivityChanger.getInstance().gotoActivity(ChatActivity.this, MainActivity.class);
+		finish();
+		return true;
 
 	}
 

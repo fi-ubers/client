@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -35,6 +36,7 @@ public class CarsActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cars);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		listView = (ListView) findViewById(R.id.listv);
 
@@ -80,6 +82,19 @@ public class CarsActivity extends Activity {
 				editNumber.setText("");
 			}
 		});
+
+	}
+
+	/**
+	 * Overrided method for returning to parent {@link Activity}.
+	 * @param item {@link MenuItem} clicked on {@link android.app.ActionBar}
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		ActivityChanger.getInstance().gotoActivity(CarsActivity.this, ProfileActivity.class);
+		finish();
+		return true;
 
 	}
 
