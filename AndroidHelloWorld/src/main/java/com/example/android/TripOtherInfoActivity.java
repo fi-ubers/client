@@ -59,7 +59,18 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
 		superTripBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				// TODO: Change this when status works
+				try {
+					TripActionsHandler tah = new TripActionsHandler();
+					ConexionRest conn = new ConexionRest(tah);
+					String tripId = PathInfo.getInstance().getTripId();
+					String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+					Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
+					conn.generatePost("{ \"action\": \"accept\" }", tripUrl, null);
+				}
+				catch(Exception e){
+					Log.e("ChoosePassengerActivity", "GET trips error: ", e);
+				}
 			}
 		});
     }
@@ -161,5 +172,18 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
 
     }
 
+// ----------------------------------------------------------------------------------------------------
+
+	public class TripActionsHandler implements RestUpdate{
+
+		public TripActionsHandler(){
+
+		}
+
+		@Override
+		public void executeUpdate(String servResponse) {
+			Log.d("TripOtherInfoActivity", "Received response:" + servResponse);
+		}
+	}
 
 }

@@ -192,7 +192,8 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 		@Override
 		public void executeUpdate(String servResponse) {
 			Log.d("TripInfoActivity", "Received response: " + servResponse);
-			// TODO; Return to MainActivity and change user status when status works
+			// TODO: Retrieve trip id
+			// TODO: Return to MainActivity and change user status when status works
 		}
 	}
 

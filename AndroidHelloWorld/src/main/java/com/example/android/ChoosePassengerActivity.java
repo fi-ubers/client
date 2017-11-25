@@ -82,7 +82,7 @@ public class ChoosePassengerActivity extends Activity {
 				try {
 					TripsHandler th = new TripsHandler(TripsHandler.GET_TRIPS_LIST);
 					ConexionRest conn = new ConexionRest(th);
-					String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount;
+					String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount + "&filter=proposed";
 					Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
 					conn.generateGet(tripUrl, null);
 				}
@@ -112,7 +112,7 @@ public class ChoosePassengerActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		Log.d("ProfileActivity", "Back button pressed on actionBar");
-		ActivityChanger.getInstance().gotoActivity(ChoosePassengerActivity.this, MainActivity.class);
+		ActivityChanger.getInstance().gotoActivity(ChoosePassengerActivity.this, SelectTripActivity.class);
 		finish();
 		return true;
 
@@ -139,6 +139,7 @@ public class ChoosePassengerActivity extends Activity {
 		}
 
 		private void getTripsList(String servResponse){
+			int itemChecked = listView.getCheckedItemPosition();
 			listView.clearChoices();
 			Log.d("ChoosePassengerActivity", "GET trips response:" + servResponse);
 			Jsonator jnator = new Jsonator();
@@ -153,6 +154,7 @@ public class ChoosePassengerActivity extends Activity {
 				String fromTo =  "From: " + addrO + "\nTo: " + addrD;
 				mAdapter.add(fromTo);
 			}
+			listView.setItemChecked(itemChecked, true);
 			return;
 		}
 
@@ -186,6 +188,7 @@ public class ChoosePassengerActivity extends Activity {
 					pi.setDuration(trip.getDuration());
 					pi.setCost(trip.getCost());
 					pi.setTripJson(trip.getTripJson());
+					pi.setTripId(trip.getTripId());
 					ActivityChanger.getInstance().gotoActivity(ChoosePassengerActivity.this, TripOtherInfoActivity.class);
 				}
 			});

@@ -16,6 +16,7 @@ public class PathInfo {
 	private String origAddress, destAddress;
 	private double distance, cost, duration;
 	private String tripJson;
+	private String tripId;
 
 	/**
 	 * NOT FOR USE! Exists only to prevent instantiation.
@@ -25,6 +26,7 @@ public class PathInfo {
 		origAddress = "";
 		destAddress = "";
 		tripJson = "";
+		tripId = "";
 		distance = -1.0;
 		destinations = null;
 		cost = -1.0;
@@ -91,5 +93,13 @@ public class PathInfo {
 
 	public void setTripJson(String tripJson){
 		this.tripJson = tripJson;
+	}
+
+	public String getTripId(){
+		return tripId;
+	}
+
+	public void setTripId(String tripId){
+		this.tripId = tripId;
 	}
 }

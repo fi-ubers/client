@@ -507,8 +507,13 @@ public class ManualSignInActivity extends Activity implements LoaderCallbacks<Cu
             ui.initializeUserInfo(userId, mail, fName, lName, country, bth, password, "", "");
 
             RadioButton radioBtnDriver = (RadioButton) findViewById(R.id.radioBtnDriver);
-            if(radioBtnDriver.isChecked())
+            if(radioBtnDriver.isChecked()) {
                 ui.setAsDriver(null);
+                ui.setUserStatus(UserStatus.D_ON_DUTY);
+            }
+            else
+                ui.setUserStatus(UserStatus.P_IDLE);
+
             return true;
         }
 

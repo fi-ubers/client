@@ -39,7 +39,21 @@ public enum UserStatus {
 		return isEnabled;
 	}
 
-	public boolean chooseTripEnabled(){
+	public boolean choosePassengerEnabled(){
 		return (this == D_ON_DUTY);
+	}
+
+	public boolean tripOtherInfoEnabled(){
+		boolean isEnabled = (this == D_GOING_TO_PIKCUP);
+		isEnabled |= (this == P_WAITING_CONFIRMATION);
+		isEnabled |= (this == D_WAITING_COFIRMATION);
+		isEnabled |= (this == P_WAITING_DRIVER);
+		return isEnabled;
+	}
+
+	public boolean tripEnRouteEnabled(){
+		boolean isEnabled = (this == D_TRAVELLING);
+		isEnabled |= (this == P_TRAVELLING);
+		return isEnabled;
 	}
 }

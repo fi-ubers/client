@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
 					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
 				}
 			});
-		} else if(uSta.chooseTripEnabled()){
+		} else if(uSta.choosePassengerEnabled()){
 			anActBtn.setText("Find trips");
 			anActBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -125,12 +125,20 @@ public class MainActivity extends Activity {
 					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
 				}
 			});
-		} else if(uSta.chooseTripEnabled()){
+		} else if(uSta.tripOtherInfoEnabled()){
 			anActBtn.setText("Trip info");
 			anActBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, TripOtherInfoActivity.class);
+				}
+			});
+		} else if(uSta.tripEnRouteEnabled()){
+			anActBtn.setText("Trip on course");
+			anActBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, TripInfoActivity.class);
 				}
 			});
 		}

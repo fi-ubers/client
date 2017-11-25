@@ -78,23 +78,29 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
         confirmTripBtn = (Button) findViewById(R.id.confirmTripBtn);
         if(UserInfo.getInstance().isDriver()){
-            confirmTripBtn.setEnabled(false);
-            confirmTripBtn.setVisibility(View.INVISIBLE);
+            confirmTripBtn.setText("FIND TRIPS");
+            confirmTripBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityChanger.getInstance().gotoActivity(SelectTripActivity.this, ChoosePassengerActivity.class);
+                }
+            });
+        } else {
+            confirmTripBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (origMarker == null) {
+                        Toast.makeText(getApplicationContext(), "Please turn on your GPS and reload", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (destMarker == null) {
+                        Toast.makeText(getApplicationContext(), "Select a destination first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    mapHandler.createPathInfo();
+                }
+            });
         }
-        confirmTripBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(origMarker == null) {
-                    Toast.makeText(getApplicationContext(), "Please turn on your GPS and reload", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(destMarker == null){
-                    Toast.makeText(getApplicationContext(), "Select a destination first", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mapHandler.createPathInfo();
-            }
-        });
     }
 
     /**
