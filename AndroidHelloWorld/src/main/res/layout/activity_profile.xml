@@ -4,18 +4,18 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/appborder"
-        tools:context="com.example.Principal.ProfileActivity">
+        tools:context="com.example.android.ProfileActivity">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
+            android:background="@drawable/profile_border"
             android:layout_weight="6">
 
             <com.facebook.login.widget.ProfilePictureView

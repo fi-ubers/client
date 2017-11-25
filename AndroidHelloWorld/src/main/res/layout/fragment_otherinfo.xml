@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmOtherLinear"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/infoborder"
+    tools:context="com.example.android.OtherInfoFragment">
+
+    <com.facebook.login.widget.ProfilePictureView
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="12dp"
+        android:id="@+id/otherProfilePicture"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:visibility="invisible"
+        />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/otherUsrName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/tripOrigin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/tripDestination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            />
+
+            <Button
+            android:id="@+id/otherBtnConfirm"
+            android:layout_width="match_parent"
+            android:text="View trip on map"
+            android:layout_height="36dp"
+            android:visibility="invisible"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="12dp"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
+            android:background="@drawable/normalborder"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:alpha="0.8"
+            android:textStyle="bold"/>
+
+        </LinearLayout>
+
+</LinearLayout>
+
+

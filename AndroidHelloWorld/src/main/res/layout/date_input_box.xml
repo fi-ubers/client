@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtmessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="16sp"
+        />
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/confirmDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/col_imp_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:textSize="18sp"
+            android:text="Confirm" />
+
+        <Button
+            android:id="@+id/restartDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:clickable="false"
+            android:background="@color/col_imp_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:visibility="invisible"
+            android:text="Reset" />
+
+        <Button
+            android:id="@+id/cancelDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/col_imp_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:text="Cancel" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

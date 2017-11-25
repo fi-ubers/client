@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:background="#eeedee"
+                xmlns:tools= "http://schemas.android.com/tools"
+                android:layout_height="wrap_content">
+
+  <fragment
+      android:id="@+id/fragmentOther"
+      android:name="com.example.android.OtherInfoFragment"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="4dp"
+      android:layout_marginRight="4dp"
+      android:layout_marginLeft="4dp"
+      android:alpha="0.9"
+      tools:layout="@layout/fragment_otherinfo" />
+
+
+  <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/mapInfoOther"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/appborder"
+            android:layout_marginTop="116dp"
+            tools:context="com.example.android.TripInfoActivity" />
+<!---
+  <TextView
+      android:id="@+id/origText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="16dp"
+      android:text="Pickup location: Bolivar 1234"
+      android:textAlignment="center"
+      android:gravity="left"
+      android:maxLines="1"
+      android:textColor="#ffffff"
+      android:textSize="18sp" />
+
+  <TextView
+      android:id="@+id/destText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="36dp"
+      android:text="Destination: Paseo Colon 850"
+      android:textAlignment="center"
+      android:gravity="left"
+      android:textColor="#ffffff"
+      android:maxLines="1"
+      android:textSize="18sp" />
+
+  <TextView
+      android:id="@+id/distTrip"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="56dp"
+      android:text="Distance: 850km ($11.1)"
+      android:textAlignment="center"
+      android:gravity="left"
+      android:maxLines="1"
+      android:textColor="#ffffff"
+      android:textStyle="bold"
+      android:textSize="18sp" />
+-->
+  <Button
+      android:id="@+id/superTripBtn"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@+id/mapInfoOther"
+      android:layout_marginBottom="6dp"
+      android:layout_marginLeft="6dp"
+      android:layout_marginRight="6dp"
+      android:background="@drawable/normalborder"
+      android:text="TAKE THIS TRIP!"
+      android:textAllCaps="false"
+      android:textColor="#ffffff"
+      android:textSize="18sp"
+      android:alpha="0.9"
+      android:textStyle="bold"/>
+
+</RelativeLayout>

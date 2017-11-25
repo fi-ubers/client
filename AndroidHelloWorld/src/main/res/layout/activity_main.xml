@@ -1,86 +1,136 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relMap"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingBottom="8dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/appborder"
-    tools:context="com.example.Principal.MainActivity" >
+    android:paddingTop="8dp"
+    android:background="@drawable/mapone"
+    tools:context="com.example.android.MainActivity" >
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:orientation="horizontal">
 
-        <com.facebook.login.widget.ProfilePictureView
-            android:id="@+id/userProfilePicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+    <Button
+        android:id="@+id/editProfBtn"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:background="@drawable/centralroundedborder"
+        android:text=""
+        android:layout_marginTop="31dp"
+        android:layout_centerHorizontal="true"
+        android:alpha="0.9"
+        android:layout_alignParentTop="true"
+        />
 
-        <TextView
+    <com.facebook.login.widget.ProfilePictureView
+        android:id="@+id/userProfilePicture"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="64dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        >
+
+    </com.facebook.login.widget.ProfilePictureView>
+
+    <TextView
             android:id="@+id/fbUsrName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:text="Cosme"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#dee8f1"
+            android:textSize="18sp"
+            android:layout_below="@+id/userProfilePicture"
+            android:layout_alignParentStart="true"/>
+
+
+    <!-- De aca para abajo -->
+    <LinearLayout
+        android:layout_width="128dp"
+        android:layout_marginTop="216dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="82dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+<!---
+        <Button
+            android:id="@+id/editProfBtn"
+            android:layout_width="128dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/roundedborder"
+            android:textColor="#dee8f1"
+            android:text="Profile"
+            android:alpha="0.9"
+            />
+-->
+        <Button
+            android:id="@+id/anActBtn"
+            android:layout_width="128dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/roundedborder"
+            android:textColor="#dee8f1"
+            android:text="New trip"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:alpha="0.9"
+            />
+
+        <Button
+            android:id="@+id/chatBtn"
+            android:layout_width="128dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/roundedborder"
+            android:textColor="#dee8f1"
+            android:text="Chat"
+            android:textSize="20sp"
+            android:alpha="0.9"
+            android:layout_marginTop="5dp"
+            />
+
+        <Button
+            android:id="@+id/restApiBtn"
+            android:layout_width="128dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/roundedborder"
+            android:textColor="#dee8f1"
+            android:textSize="20sp"
+            android:text="REST API"
+            android:alpha="0.9"
+            android:layout_marginTop="5dp"
+            />
 
     </LinearLayout>
 
-    <!-- De aca para abajo -->
-    <Button
-        android:id="@+id/editProfBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:background="@color/col_std_btn_bck"
-        android:textColor="@color/col_std_btn_text"
-        android:text="EDIT PROFILE" />
 
-    <Button
-        android:id="@+id/restApiBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:background="@color/col_std_btn_bck"
-        android:textColor="@color/col_std_btn_text"
-        android:text="REST API" />
-
-    <Button
-        android:id="@+id/anActBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:background="@color/col_std_btn_bck"
-        android:textColor="@color/col_std_btn_text"
-        android:text="MAP" />
-
-    <Button
-        android:id="@+id/chatBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:background="@color/col_std_btn_bck"
-        android:textColor="@color/col_std_btn_text"
-        android:text="CHAT" />
 
     <Button
         android:id="@+id/closeSessionBtn"
         android:onClick="logout"
-        android:layout_width="wrap_content"
+        android:layout_width="128dp"
         android:layout_gravity="center_horizontal"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/col_imp_btn_bck"
-        android:textColor="@color/col_imp_btn_text"
-        android:text="CLOSE SESSION" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/urgentborder"
+        android:textColor="#ffffff"
+        android:textSize="22sp"
+        android:text="   Sign out   "
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 
-</LinearLayout>
+
+
+</RelativeLayout>

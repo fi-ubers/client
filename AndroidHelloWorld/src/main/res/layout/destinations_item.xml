@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/destItemText"
+        android:layout_width="match_parent"
+        android:textColor="@color/col_plain_text"
+        android:textSize="18dp"
+        android:layout_height="wrap_content" />

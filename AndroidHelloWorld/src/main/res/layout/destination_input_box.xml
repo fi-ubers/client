@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+    <EditText
+        android:id="@+id/searchDestTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/map"
+        android:layout_alignParentEnd="true"
+        android:hint="Search a destination"
+        android:inputType="textAutoComplete"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:drawableLeft="@drawable/places_ic_search"
+        android:alpha="0.75"
+        android:textSize="22sp" />
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/linearLYT"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btSearchDest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SEARCH"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/col_std_btn_bck"
+            android:textColor="@color/col_std_btn_text"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/destList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="48dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="16dp"
+        android:stackFromBottom="false"
+        android:transcriptMode="alwaysScroll" />
+
+
+
+</RelativeLayout>

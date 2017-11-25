@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.Principal.LoginFragment">
+    tools:context="com.example.android.LoginFragment">
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/fbLoginBtn"
