@@ -14,7 +14,8 @@ public class PathInfo {
 	private static PathInfo instance = null;
 	private List<LatLng> destinations;
 	private String origAddress, destAddress;
-	private double distance, cost;
+	private double distance, cost, duration;
+	private String tripJson;
 
 	/**
 	 * NOT FOR USE! Exists only to prevent instantiation.
@@ -23,6 +24,7 @@ public class PathInfo {
 		// Exists only to prevent instantiation.
 		origAddress = "";
 		destAddress = "";
+		tripJson = "";
 		distance = -1.0;
 		destinations = null;
 		cost = -1.0;
@@ -73,5 +75,21 @@ public class PathInfo {
 
 	public void setCost(double cost){
 		this.cost = cost;
+	}
+
+	public double getDuration(){
+		return duration;
+	}
+
+	public void setDuration(double duration){
+		this.duration = duration;
+	}
+
+	public String getTripJson(){
+		return tripJson;
+	}
+
+	public void setTripJson(String tripJson){
+		this.tripJson = tripJson;
 	}
 }

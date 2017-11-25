@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -206,6 +207,7 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
 
                 DataOutputStream  os = new DataOutputStream (conn.getOutputStream());
                 Log.d("Fiuber ConexionRest", "Trying to send request: " + toSendText);
+
 
                 os.writeBytes(toSendText);
                 os.close();

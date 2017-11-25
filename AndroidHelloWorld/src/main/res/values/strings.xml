@@ -11,6 +11,8 @@
     <string name="title_activity_manual_sign_in">Sign in</string>
     <string name="title_activity_cars">Your cars</string>
     <string name="title_activity_info_trip">Your trip info</string>
+    <string name="title_activity_other_info_trip">Trip info</string>
+    <string name="title_choose_passenger">Choose trip</string>
     <string name="google_maps_key">AIzaSyBDaVyTnBzeucCQzrRCtFPjwQjbWpwsqjk</string>
     <!-- Strings related to login -->
     <string name="prompt_user_id">User ID</string>

@@ -7,8 +7,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.json.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -36,6 +41,22 @@ public class Jsonator {
         }
 
         return objJson.toString();
+    }
+
+    private String normalizeString(String s){
+        String sn = s.replace("á", "\\u00e1");
+        sn = sn.replace("é", "\\u00e9");
+        sn = sn.replace("í", "\\u00ed");
+        sn = sn.replace("ó", "\\u00f3");
+        sn = sn.replace("ú", "\\u00fa");
+        sn = sn.replace("Á", "\\u00c1");
+        sn = sn.replace("É", "\\u00c9");
+        sn = sn.replace("Í", "\\u00cd");
+        sn = sn.replace("Ó", "\\u00d3");
+        sn = sn.replace("Ú", "\\u00da");
+        sn = sn.replace("ñ", "\\u00f1");
+        sn = sn.replace("Ñ", "\\u00d1");
+        return sn;
     }
 
     /**
@@ -188,7 +209,7 @@ public class Jsonator {
             Log.e("Fiuber Jsonator", "exception", e);
         }
 
-        return objJson.toString();
+        return normalizeString(objJson.toString());
     }
 
     /**
@@ -255,7 +276,7 @@ public class Jsonator {
             Log.e("Fiuber Jsonator", "exception", e);
         }
 
-        return objJson.toString();
+        return normalizeString(objJson.toString());
     }
 
     public String writeDirectionsInfo(LatLng orig, LatLng dest){
@@ -285,7 +306,7 @@ public class Jsonator {
         return objJson.toString();
     }
 
-    public ArrayList<LatLng> readDirectionsPath(String jsonResponse){
+    public ArrayList<LatLng> readDirectionsPath(String jsonResponse, boolean tripWasProposed){
         ArrayList<LatLng> pathPoints = new ArrayList<>();
         try {
             Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
@@ -293,9 +314,18 @@ public class Jsonator {
             if(objJson.getInt("code") != 200)
                 return null;
 
+            if(tripWasProposed) {
+                objJson = objJson.getJSONObject("trip");
+                String p_id = objJson.getString("passengerId");
+                OtherUsersInfo oui = new OtherUsersInfo(p_id, "", "");
+                UserInfo.getInstance().setOtherUser(oui);
+                }
+
             objJson = objJson.getJSONObject("directions");
+            PathInfo.getInstance().setTripJson(objJson.toString());
             double distance = objJson.getDouble("distance");
             PathInfo.getInstance().setDistance(distance / 1000.0); // in km
+			PathInfo.getInstance().setDuration(objJson.getDouble("duration"));
 			// TODO: get real cost
 			PathInfo.getInstance().setCost(11.9);
 
@@ -321,4 +351,117 @@ public class Jsonator {
         }
         return pathPoints;
     }
+
+	public String writeProposedTrip(){
+		UserInfo ui = UserInfo.getInstance();
+		if((!ui.wasInitialized()) || ui.isDriver())
+			return "";
+
+		return normalizeString(PathInfo.getInstance().getTripJson());
+
+	/*
+		JSONObject objJson = new JSONObject();
+		JSONObject origJson = new JSONObject();
+		JSONObject destJson = new JSONObject();
+		JSONArray pathJson = new JSONArray();
+
+		PathInfo pi = PathInfo.getInstance();
+
+		try {
+			List<LatLng> path =  pi.getPath();
+			LatLng origin = path.get(0);
+			origJson.put("lat", origin.latitude);
+			origJson.put("lng", origin.longitude);
+
+			LatLng destination = path.get(path.size() - 1);
+			destJson.put("lat", destination.latitude);
+			destJson.put("lng", destination.longitude);
+
+			objJson.put("origin", origJson);
+			objJson.put("destination", destJson);
+			objJson.put("destination_name", pi.getDestAddress());
+			objJson.put("origin_name", pi.getOrigAddress());
+			objJson.put("distance", pi.getDistance());
+			objJson.put("duration", pi.getDuration());
+			objJson.put("status", "OK");
+
+			Iterator<LatLng> it = path.iterator();
+			while(it.hasNext()){
+				LatLng nexPoint = it.next();
+				JSONObject pointJson = new JSONObject();
+				pointJson.put("duration", 0);
+				pointJson.put("distance", 0);
+				JSONObject coordsJson = new JSONObject();
+                coordsJson.put("lat", nexPoint.latitude);
+                coordsJson.put("lng", nexPoint.longitude);
+				pointJson.put("coords", coordsJson);
+				pathJson.put(pointJson);
+			}
+
+			objJson.put("path", pathJson);
+
+
+		}
+		catch (Exception e) {
+			Log.e("Fiuber Jsonator", "exception", e);
+		}
+
+        return normalizeString(objJson.toString());
+*/
+	}
+
+
+	public ArrayList<ProtoTrip> readTripsProposed(String jsonResponse) {
+        ArrayList<ProtoTrip> trips = new ArrayList<>();
+        try {
+            Log.d("Fiuber Jsonator", "Received response:" + jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+            if (objJson.getInt("code") != 200)
+                return null;
+
+            JSONArray tripsArray = objJson.getJSONArray("trips");
+            int i;
+            for (i = 0; i < tripsArray.length(); i++) {
+                JSONObject nextTrip = tripsArray.getJSONObject(i);
+                String tripId = nextTrip.getString("_id");
+                nextTrip = nextTrip.getJSONObject("directions");
+                Log.d("Jsonator", "Trip JSON:" + nextTrip.toString());
+                String orig = nextTrip.getString("origin_name");
+                String dest = nextTrip.getString("destination_name");
+                ProtoTrip nextProto = new ProtoTrip(orig, dest, tripId);
+                nextProto.setTripJson(nextTrip.toString());
+                nextProto.setDistance(nextTrip.getDouble("distance"));
+                nextProto.setDuration(nextTrip.getDouble("duration"));
+                // TODO: Get real cost
+                nextProto.setCost(12.3);
+                trips.add(nextProto);
+            }
+
+        } catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+            return null;
+        }
+        return trips;
+    }
+
+    public OtherUsersInfo readOtherUserInfo(String jsonResponse) {
+        try {
+            Log.d("Fiuber Jsonator", "Received response:" + jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+            if (objJson.getInt("code") != 200)
+                return null;
+
+            objJson = objJson.getJSONObject("user");
+            String userId = objJson.getString("_id");
+            String userName = objJson.getString("name") + " " + objJson.getString("surname");
+            // TODO: Get real picture!
+            String userPic = "107457569994960";
+            OtherUsersInfo oui = new OtherUsersInfo(userId, userName, userPic);
+            return oui;
+        } catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+            return null;
+        }
+    }
+
 }

@@ -91,6 +91,10 @@
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_info_trip"/>
         <activity
+            android:name="com.example.android.TripOtherInfoActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_other_info_trip"/>
+        <activity
             android:name="com.example.android.ProfileActivity"
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_edit_profile" >
@@ -106,6 +110,10 @@
             android:name="com.example.android.ManualSignInActivity"
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_manual_sign_in"/>
+        <activity
+            android:name="com.example.android.ChoosePassengerActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_choose_passenger"/>
         <activity
             android:name="com.example.android.CarsActivity"
             android:windowSoftInputMode="stateHidden"

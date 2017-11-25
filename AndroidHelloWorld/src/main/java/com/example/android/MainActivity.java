@@ -82,18 +82,21 @@ public class MainActivity extends Activity {
 		}
 
 		FirebaseMessaging.getInstance().subscribeToTopic(UserInfo.getInstance().getUserId());
-
+		// TODO: Delete on near future
 		restApiBtn = (Button) findViewById(R.id.restApiBtn);
-		restApiBtn.setVisibility(View.INVISIBLE);
-		restApiBtn.setClickable(false);
 		restApiBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				ActivityChanger.getInstance().gotoActivity(MainActivity.this, RestApiActivity.class);
+				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ChoosePassengerActivity.class);
 			}
 		});
 
 		chatBtn = (Button) findViewById(R.id.chatBtn);
+		// TODO: Uncomment when status works
+		/*if(!UserInfo.getInstance().getUserStatus().chatEnabled()){
+			chatBtn.setEnabled(false);
+			chatBtn.setVisibility(View.INVISIBLE);
+		}*/
 		chatBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -101,7 +104,38 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		// Overloeaded button for everything! Muahahaha
 		anActBtn = (Button) findViewById(R.id.anActBtn);
+		// TODO: Uncomment and put on the right place when status works
+		// Hint: put all of this in onRestart and/or onResume method
+/*
+		UserStatus uSta = UserInfo.getInstance().getUserStatus();
+		if(uSta.tripCreationEnabled()){
+			anActBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
+				}
+			});
+		} else if(uSta.chooseTripEnabled()){
+			anActBtn.setText("Find trips");
+			anActBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
+				}
+			});
+		} else if(uSta.chooseTripEnabled()){
+			anActBtn.setText("Trip info");
+			anActBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
+				}
+			});
+		}
+*/
+
 		anActBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

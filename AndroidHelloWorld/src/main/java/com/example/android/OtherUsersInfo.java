@@ -9,11 +9,14 @@ public class OtherUsersInfo {
 	private String name;
 	private LatLng location;
 	private String picture;
+	private String orig, dest;
 
 	public OtherUsersInfo(String userId, String name, String picture){
 		this.name = name;
 		this.picture = picture;
 		this.userId = userId;
+		orig = "";
+		dest = "";
 	}
 
 	public void updateLocation(LatLng location){
@@ -34,5 +37,18 @@ public class OtherUsersInfo {
 
 	public LatLng getLocation(){
 		return location;
+	}
+
+	public void setOriginDestination(String origin, String destination){
+		orig = origin;
+		dest = destination;
+	}
+
+	public String getDest(){
+		return dest;
+	}
+
+	public String getOrig(){
+		return orig;
 	}
 }

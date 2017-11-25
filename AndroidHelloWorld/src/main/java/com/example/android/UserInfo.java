@@ -15,6 +15,7 @@ public class UserInfo {
     private ArrayList<CarInfo> cars;
     private String password, fbToken, appServerToken;
     private UserStatus status;
+    private OtherUsersInfo other;
 
     /**
      * NOT FOR USE! Exists only to prevent instantiation.
@@ -34,6 +35,7 @@ public class UserInfo {
         appServerToken = "";
         wasInitialized = false;
         cars = null;
+        other = null;
         status = UserStatus.NO_STATE;
     }
 
@@ -245,5 +247,12 @@ public class UserInfo {
         status = UserStatus.NO_STATE;
     }
 
+    public OtherUsersInfo getOtherUser(){
+        return other;
+    }
+
+    public void setOtherUser(OtherUsersInfo other){
+        this.other = other;
+    }
 
 }

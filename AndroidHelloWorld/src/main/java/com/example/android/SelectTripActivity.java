@@ -103,7 +103,7 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        Log.d("ProfileActivity", "Back button pressed on actionBar");
+        Log.d("SelectTripActivity", "Back button pressed on actionBar");
         ActivityChanger.getInstance().gotoActivity(SelectTripActivity.this, MainActivity.class);
         finish();
         return true;
@@ -404,7 +404,7 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
         public void executeUpdate(String servResponse) {
             Log.d("SelectTripActivity", "Received path: " + servResponse);
             Jsonator jnator = new Jsonator();
-            ArrayList<LatLng> pathPoints = jnator.readDirectionsPath(servResponse);
+            ArrayList<LatLng> pathPoints = jnator.readDirectionsPath(servResponse, false);
             drawPath(pathPoints);
         }
     }

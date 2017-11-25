@@ -1,25 +1,14 @@
 package com.example.android;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Path;
-import android.graphics.drawable.GradientDrawable;
-import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,7 +17,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -40,18 +28,24 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class TripInfoActivity extends FragmentActivity implements OnMapReadyCallback {
     // Curious and useful fact: 0.1 degrees in latitude/longitude are equivalent
     // to 11 km of the Earth surface
     private GoogleMap mMap;
-    private Button cancelTripBtn;
+    private Button proposeTripBtn;
     private TextView origTxt, destTxt;
     Marker origMarker, destMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+		if(UserInfo.getInstance().isDriver())
+			Log.e("TripInfoActivity", "Critical bug: driver is here!");
+		// TODO: Uncomment when status works
+		/*
+		if(!UserInfo.getInstance().getUserStatus().tripCreationEnabled())
+			Log.e("TripInfoActivity", "Critical bug: passenger cannot create trip!");
+		*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_info);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,6 +59,17 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 		destTxt = (TextView) findViewById(R.id.destText);
 		origTxt.setText("From: " + pi.getOrigAddress());
 		destTxt.setText("To: " + pi.getDestAddress());
+
+
+
+		proposeTripBtn = (Button) findViewById(R.id.proposeTripBtn);
+		proposeTripBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				TripProposer tp = new TripProposer();
+				tp.submitTrip();
+			}
+		});
     }
 
 	/**
@@ -73,7 +78,7 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
-		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		Log.d("TripInfoActivity", "Back button pressed on actionBar");
 		ActivityChanger.getInstance().gotoActivity(TripInfoActivity.this, SelectTripActivity.class);
 		finish();
 		return true;
@@ -145,7 +150,7 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 
         path.setPoints(pathPoints);
         path.setColor(Color.BLUE);
-        path.setWidth(15);
+        path.setWidth(12);
 
 		LatLng dest = pathPoints.get(pathPoints.size() - 1);
 		LatLng orig = pathPoints.get(0);
@@ -159,5 +164,36 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km ($" +
 				PathInfo.getInstance().getCost() + ")");
     }
+
+
+// -----------------------------------------------------------------------------------------------
+
+	public class TripProposer implements RestUpdate{
+
+		public TripProposer(){
+
+		}
+
+		public void submitTrip(){
+			try {
+				Jsonator jnator = new Jsonator();
+				String toSendJson = jnator.writeProposedTrip();
+				Log.d("SelectTripActivity", "JSON to send: " + toSendJson);
+				ConexionRest conn = new ConexionRest(this);
+				String tripUrl = conn.getBaseUrl() + "/trips";
+				Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
+				conn.generatePost(toSendJson, tripUrl, null);
+			}
+			catch(Exception e){
+				Log.e("SelectTripActivity", "Sunmitting POST error: ", e);
+			}
+		}
+
+		@Override
+		public void executeUpdate(String servResponse) {
+			Log.d("TripInfoActivity", "Received response: " + servResponse);
+			// TODO; Return to MainActivity and change user status when status works
+		}
+	}
 
 }
