@@ -208,7 +208,7 @@ public class ChoosePassengerActivity extends Activity {
 				conn.generateGet(passUrl, null);
 			}
 			catch(Exception e){
-				Log.e("ChoosePassengerActivity", "GET trips error: ", e);
+				Log.e("ChoosePassengerActivity", "GET passenger error: ", e);
 			}
 
 		}

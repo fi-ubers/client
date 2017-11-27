@@ -2,6 +2,8 @@ package com.example.android;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,11 +44,10 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-		// TODO: Uncomment when status works
-		/*
-		if(!UserInfo.getInstance().getUserStatus().tripCreationEnabled())
-			Log.e("TripInfoActivity", "Critical bug: passenger cannot create trip!");
-		*/
+
+		if(!UserInfo.getInstance().getUserStatus().tripOtherInfoEnabled())
+			Log.e("TripInfoActivity", "Critical bug: user shouldnt be here!");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_other_info);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,23 +58,52 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
 
 
 		superTripBtn = (Button) findViewById(R.id.superTripBtn);
-		superTripBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				// TODO: Change this when status works
-				try {
-					TripActionsHandler tah = new TripActionsHandler();
-					ConexionRest conn = new ConexionRest(tah);
-					String tripId = PathInfo.getInstance().getTripId();
-					String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
-					Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
-					conn.generatePost("{ \"action\": \"accept\" }", tripUrl, null);
+		UserStatus st = UserInfo.getInstance().getUserStatus();
+		if(st == UserStatus.D_ON_DUTY) {
+			superTripBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					try {
+						TripActionsHandler tah = new TripActionsHandler(TripActionsHandler.D_TAKE_TRIP);
+						ConexionRest conn = new ConexionRest(tah);
+						String tripId = PathInfo.getInstance().getTripId();
+						String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+						Log.d("TripOtherInfoActivity", "URL to POST trip: " + tripUrl);
+						conn.generatePost("{ \"action\": \"accept\" }", tripUrl, null);
+					} catch (Exception e) {
+						Log.e("TripOtherInfoActivity", "GET trips error: ", e);
+					}
 				}
-				catch(Exception e){
-					Log.e("ChoosePassengerActivity", "GET trips error: ", e);
+			});
+		} else if((st == UserStatus.P_WAITING_CONFIRMATION) || (st == UserStatus.P_WAITING_DRIVER)){
+			superTripBtn.setText("CANCEL TRIP");
+			superTripBtn.setBackgroundResource(R.drawable.urgentborder);
+			superTripBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					// TODO: Cancel trip and restore user status
+					try {
+						TripActionsHandler tah = new TripActionsHandler(TripActionsHandler.P_CANCEL_TRIP);
+						ConexionRest conn = new ConexionRest(tah);
+						String tripId = PathInfo.getInstance().getTripId();
+						String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+						Log.d("TripOtherInfoActivity", "URL to cancel trip: " + tripUrl);
+						conn.generatePost("{ \"action\": \"cancel\" }", tripUrl, null);
+					} catch (Exception e) {
+						Log.e("TripOtherInfoActivity", "Cancel trip error: ", e);
+					}
+
 				}
-			}
-		});
+			});
+		} else if(st == UserStatus.D_GOING_TO_PIKCUP) {
+			superTripBtn.setEnabled(false);
+			superTripBtn.setVisibility(View.INVISIBLE);
+		} else if(st == UserStatus.D_WAITING_COFIRMATION){
+			superTripBtn.setEnabled(false);
+			superTripBtn.setBackgroundColor(Color.TRANSPARENT);
+			superTripBtn.setTextColor(Color.parseColor("#050f9f"));
+			superTripBtn.setText("Waiting passenger confirmation");
+		}
     }
 
 	/**
@@ -82,8 +113,11 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		Log.d("TripOtherInfoActivity", "Back button pressed on actionBar");
-		// TODO: Change this when status works
-		ActivityChanger.getInstance().gotoActivity(TripOtherInfoActivity.this, ChoosePassengerActivity.class);
+		UserStatus st = UserInfo.getInstance().getUserStatus();
+		if(st == UserStatus.D_ON_DUTY)
+			ActivityChanger.getInstance().gotoActivity(TripOtherInfoActivity.this, ChoosePassengerActivity.class);
+		else
+			ActivityChanger.getInstance().gotoActivity(TripOtherInfoActivity.this, MainActivity.class);
 		finish();
 		return true;
 
@@ -175,14 +209,29 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
 // ----------------------------------------------------------------------------------------------------
 
 	public class TripActionsHandler implements RestUpdate{
+		public static final int D_TAKE_TRIP = 1;
+		public static final int P_CANCEL_TRIP = 2;
 
-		public TripActionsHandler(){
+		private int tripMode;
 
+		public TripActionsHandler(int tMode){
+			tripMode = tMode;
 		}
 
 		@Override
 		public void executeUpdate(String servResponse) {
 			Log.d("TripOtherInfoActivity", "Received response:" + servResponse);
+			if(tripMode == D_TAKE_TRIP) {
+				UserInfo.getInstance().setUserStatus(UserStatus.D_WAITING_COFIRMATION);
+				ActivityChanger.getInstance().gotoActivity(TripOtherInfoActivity.this, MainActivity.class);
+				Toast.makeText(getApplicationContext(), "Trip taken! Wait for passenger confirmation.", Toast.LENGTH_SHORT).show();
+				finish();
+			} else if(tripMode == P_CANCEL_TRIP){
+				UserInfo.getInstance().setUserStatus(UserStatus.P_IDLE);
+				ActivityChanger.getInstance().gotoActivity(TripOtherInfoActivity.this, MainActivity.class);
+				Toast.makeText(getApplicationContext(), "You have canceled your trip.", Toast.LENGTH_SHORT).show();
+				finish();
+			}
 		}
 	}
 

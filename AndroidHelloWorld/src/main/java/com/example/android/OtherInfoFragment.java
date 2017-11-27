@@ -59,15 +59,21 @@ public class OtherInfoFragment extends Fragment {
 			otherProfilePicture.setProfileId(picString);
 		else
 			otherProfilePicture.setProfileId("107457569994960");
+		// TODO: if picString.equals("-1") set default pic
 		String nameString = uInfo.getName();
-		if((nameString != null) && (nameString.length() > 0))
+		if((nameString != null) && (nameString.length() > 0)) {
+			// If the other is driver, we add the rate ;)
+			double rate = uInfo.getDriverRate();
+			if(rate > 0)
+				nameString = nameString + " (" + rate + " stars)";
 			otherUsrName.setText(nameString);
+		}
 		String origString = uInfo.getOrig();
 		if((origString != null) && (origString.length() > 0))
-			tripOrigin.setText(origString);
+			tripOrigin.setText(origString.split(",")[0]);
 		String destString = uInfo.getDest();
 		if((destString != null) && (destString.length() > 0))
-			tripDestination.setText(destString);
+			tripDestination.setText(destString.split(",")[0]);
 
 		otherProfilePicture.setVisibility(View.VISIBLE);
 		if(enableBtn) {

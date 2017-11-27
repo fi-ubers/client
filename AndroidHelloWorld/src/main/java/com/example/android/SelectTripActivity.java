@@ -55,6 +55,10 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+		UserStatus st = UserInfo.getInstance().getUserStatus();
+		if((st != UserStatus.D_ON_DUTY) && (st != UserStatus.P_IDLE))
+			Log.e("TripInfoActivity", "Critical bug: user shouldnt be here!");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_trip);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

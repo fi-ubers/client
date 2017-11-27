@@ -27,6 +27,13 @@ public enum UserStatus {
 		return this.code;
 	}
 
+	public static UserStatus createFromCode(int code){
+		for(UserStatus type : UserStatus.values())
+			if(type.getCode() == code)
+				return type;
+		return UserStatus.NO_STATE;
+	}
+
 	public boolean tripCreationEnabled(){
 		return (this == P_IDLE);
 	}
@@ -45,6 +52,7 @@ public enum UserStatus {
 
 	public boolean tripOtherInfoEnabled(){
 		boolean isEnabled = (this == D_GOING_TO_PIKCUP);
+		isEnabled |= (this == D_ON_DUTY);
 		isEnabled |= (this == P_WAITING_CONFIRMATION);
 		isEnabled |= (this == D_WAITING_COFIRMATION);
 		isEnabled |= (this == P_WAITING_DRIVER);

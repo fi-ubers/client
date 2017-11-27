@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapEnRoute"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/appborder"
+    tools:context="com.example.android.SelectTripActivity" />
+
+    <Button
+        android:id="@+id/finishTripBtn"
+        android:layout_width="192dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mapEnRoute"
+        android:layout_marginBottom="6dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/urgentborder"
+        android:text="FINISH TRIP!"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:alpha="0.8"
+        android:textStyle="bold"/>
+
+</RelativeLayout>

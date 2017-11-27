@@ -1,11 +1,16 @@
 package com.example.android;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.facebook.AccessToken;
@@ -27,6 +32,7 @@ import org.json.JSONObject;
 public class MainActivity extends Activity {
 	Button restApiBtn, anActBtn;
 	Button editProfBtn, chatBtn;
+	private MyBroadcastReceiver mbr;
 
 	/**
 	 * Activity onCreate method.
@@ -36,10 +42,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Log.i("Fiuber MainActivity", "Main activity started!");
-
-/*		TODO: Put this on the right place
-		if (FirebaseAuth.getInstance().getCurrentUser() != null)
-			AuthUI.getInstance().signOut(this);*/
 
 		if (AccessToken.getCurrentAccessToken() == null) {
 			// If here, either user has logged in manually or
@@ -82,8 +84,13 @@ public class MainActivity extends Activity {
 		}
 
 		FirebaseMessaging.getInstance().subscribeToTopic(UserInfo.getInstance().getUserId());
+		mbr = new MyBroadcastReceiver();
+
+		Log.i("MainActivity", "User loaded state is:" + UserInfo.getInstance().getUserStatus().getCode());
 		// TODO: Delete on near future
 		restApiBtn = (Button) findViewById(R.id.restApiBtn);
+		restApiBtn.setEnabled(false);
+		restApiBtn.setVisibility(View.INVISIBLE);
 		restApiBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -92,23 +99,31 @@ public class MainActivity extends Activity {
 		});
 
 		chatBtn = (Button) findViewById(R.id.chatBtn);
-		// TODO: Uncomment when status works
-		/*if(!UserInfo.getInstance().getUserStatus().chatEnabled()){
-			chatBtn.setEnabled(false);
-			chatBtn.setVisibility(View.INVISIBLE);
-		}*/
-		chatBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ChatActivity.class);
-			}
-		});
-
 		// Overloeaded button for everything! Muahahaha
 		anActBtn = (Button) findViewById(R.id.anActBtn);
-		// TODO: Uncomment and put on the right place when status works
-		// Hint: put all of this in onRestart and/or onResume method
-/*
+
+		editProfBtn = (Button) findViewById(R.id.editProfBtn);
+
+		setButtons();
+
+	}
+
+	private void setButtons(){
+		// Set chat button
+		if(!UserInfo.getInstance().getUserStatus().chatEnabled()){
+			chatBtn.setEnabled(false);
+			chatBtn.setVisibility(View.INVISIBLE);
+		} else {
+			chatBtn.setEnabled(true);
+			chatBtn.setVisibility(View.VISIBLE);
+			chatBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, ChatActivity.class);
+				}
+			});
+		}
+		// Set super button overloaded
 		UserStatus uSta = UserInfo.getInstance().getUserStatus();
 		if(uSta.tripCreationEnabled()){
 			anActBtn.setOnClickListener(new View.OnClickListener() {
@@ -118,13 +133,17 @@ public class MainActivity extends Activity {
 				}
 			});
 		} else if(uSta.choosePassengerEnabled()){
-			anActBtn.setText("Find trips");
-			anActBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
-				}
-			});
+			if(UserInfo.getInstance().getCars().size() == 0){
+				Toast.makeText(getApplicationContext(), "You need to register a car first!", Toast.LENGTH_SHORT).show();
+			} else {
+				anActBtn.setText("Find trips");
+				anActBtn.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
+					}
+				});
+			}
 		} else if(uSta.tripOtherInfoEnabled()){
 			anActBtn.setText("Trip info");
 			anActBtn.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +153,8 @@ public class MainActivity extends Activity {
 				}
 			});
 		} else if(uSta.tripEnRouteEnabled()){
-			anActBtn.setText("Trip on course");
+			//anActBtn.setText("Trip on course");
+			anActBtn.setText("NOT IMPLEMENTED YET");
 			anActBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -142,23 +162,30 @@ public class MainActivity extends Activity {
 				}
 			});
 		}
-*/
 
-		anActBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				ActivityChanger.getInstance().gotoActivity(MainActivity.this, SelectTripActivity.class);
-			}
-		});
-
-		editProfBtn = (Button) findViewById(R.id.editProfBtn);
+		// Set profile button (center circle)
 		editProfBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ProfileActivity.class);
 			}
 		});
+	}
 
+	@Override
+	public void onResume(){
+		super.onResume();
+		setButtons();
+		IntentFilter intFil = new IntentFilter();
+		intFil.addAction("com.example.android.onMessageReceived");
+		registerReceiver(mbr, intFil);
+	}
+
+	@Override
+	public void onPause(){
+		super.onPause();
+		setButtons();
+		unregisterReceiver(mbr);
 	}
 
 	/**
@@ -179,6 +206,18 @@ public class MainActivity extends Activity {
 
 // --------------------------------------------------------------------------------------------------------
 
+	private class MyBroadcastReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Bundle extras = intent.getExtras();
+			String state = extras.getString("extra");
+			Toast.makeText(getApplicationContext(), state, Toast.LENGTH_SHORT).show();
+			setButtons();
+		}
+	}
+
+// --------------------------------------------------------------------------------------------------------
 	/**
 	 * Auxiliar class to handle logins with Faceboook
 	 */

@@ -118,7 +118,9 @@ public class Jsonator {
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
             Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
-            String appTkn = objJson.getString("token");
+			String appTkn = "";
+			if (objJson.has("token"))
+            	appTkn = objJson.getString("token");
 			JSONObject uiJson = new JSONObject(objJson.getString("user"));
 
 			String mail = uiJson.getString("email");
@@ -129,10 +131,15 @@ public class Jsonator {
 			String userId = uiJson.getString("username");
             String typeUser = uiJson.getString("type");
             int intId = uiJson.getInt("_id");
-            // TODO: Get user UserStatus and set it to ui
+			int stateCode = uiJson.getInt("state");
+			String tripId = uiJson.getString("tripId");
+            // Get trip data if any trip here
+			TripLoaderLoggin tll = new TripLoaderLoggin();
+			tll.getTripInfo(tripId);
 			UserInfo ui = UserInfo.getInstance();
 			ui.initializeUserInfo(userId, mail, fName, lName, country, bth, "", "", appTkn);
             ui.setIntegerId(intId);
+			ui.setUserStatus(UserStatus.createFromCode(stateCode));
             // Retrieve cars o.o
             if(typeUser.toLowerCase().equals("driver")) {
                 JSONArray carsArray = uiJson.getJSONArray("cars");
@@ -307,6 +314,7 @@ public class Jsonator {
     }
 
     public ArrayList<LatLng> readDirectionsPath(String jsonResponse, boolean tripWasProposed){
+        if(jsonResponse == null) return null;
         ArrayList<LatLng> pathPoints = new ArrayList<>();
         try {
             Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
@@ -316,8 +324,20 @@ public class Jsonator {
 
             if(tripWasProposed) {
                 objJson = objJson.getJSONObject("trip");
-                String p_id = objJson.getString("passengerId");
-                OtherUsersInfo oui = new OtherUsersInfo(p_id, "", "");
+                String oth_id;
+                double rate = -1.0;
+                if(UserInfo.getInstance().isDriver())
+                    oth_id = objJson.getString("passengerId");
+                else {
+                    oth_id = objJson.getString("driverId");
+                    // TODO: Get driver rate
+                    rate = 3.3;
+                }
+
+				Log.d("Jsonator", "Read other user id: " + oth_id);
+
+                OtherUsersInfo oui = new OtherUsersInfo(oth_id, "", "");
+                if(rate > 0)    oui.setDriverRate(rate);
                 UserInfo.getInstance().setOtherUser(oui);
                 }
 
@@ -328,6 +348,11 @@ public class Jsonator {
 			PathInfo.getInstance().setDuration(objJson.getDouble("duration"));
 			// TODO: get real cost
 			PathInfo.getInstance().setCost(11.9);
+            if(tripWasProposed){
+                String origin = objJson.getString("origin_name").split(",")[0];
+                String destination = objJson.getString("destination_name").split(",")[0];
+                PathInfo.getInstance().setAddresses(origin, destination);
+            }
 
             double origLat = objJson.getJSONObject("origin").getDouble("lat");
             double origLong = objJson.getJSONObject("origin").getDouble("lng");
@@ -463,5 +488,69 @@ public class Jsonator {
             return null;
         }
     }
+
+
+// --------------------------------------------------------------------------------------
+
+	public class TripLoaderLoggin implements RestUpdate{
+        private boolean retrieveTrip;
+
+		public TripLoaderLoggin(){
+            retrieveTrip = true;
+		}
+
+		public void getTripInfo(String tripId){
+			if((tripId == null) || (tripId.length() == 0))
+				return;
+			// Get trip info from app-server
+            PathInfo.getInstance().setTripId(tripId);
+			try {
+				ConexionRest conn = new ConexionRest(this);
+				String tripUrl = conn.getBaseUrl() + "/trips/" + tripId;
+				Log.d("TripLoaderLoggin", "URL to GET trip: " + tripUrl);
+				conn.generateGet(tripUrl, null);
+			}
+			catch(Exception e){
+				Log.e("TripLoaderLoggin", "GET trips error: ", e);
+			}
+		}
+
+		@Override
+		public void executeUpdate(String servResponse) {
+            if(servResponse == null)    return;
+            if(retrieveTrip) {
+                Log.d("TripLoaderLoggin", "Received response: " + servResponse);
+                Jsonator jnator = new Jsonator();
+                ArrayList<LatLng> selectedTrip = jnator.readDirectionsPath(servResponse, true);
+                PathInfo.getInstance().setPath(selectedTrip);
+                String otherId = UserInfo.getInstance().getOtherUser().getUserId();
+                if(otherId.equals("-1")) {
+                    // If here, there's no other user yet
+                    // TODO: Set profile pic to "-1"
+                    OtherUsersInfo oui = new OtherUsersInfo("-1", "No driver took this trip yet", "");
+                    PathInfo pi = PathInfo.getInstance();
+                    oui.setOriginDestination(pi.getOrigAddress(), pi.getDestAddress());
+                    UserInfo.getInstance().setOtherUser(oui);
+                    return;
+                }
+                    try {
+                        ConexionRest conn = new ConexionRest(this);
+                        String passUrl = conn.getBaseUrl() + "/users/" + otherId;
+                        Log.d("SelectTripActivity", "URL to GET passenger data: " + passUrl);
+                        conn.generateGet(passUrl, null);
+                        retrieveTrip = false;
+                    } catch (Exception e) {
+                        Log.e("ChoosePassengerActivity", "GET passenger error: ", e);
+                    }
+            } else {
+                Log.d("TripLoaderLoggin", "Received response: " + servResponse);
+                Jsonator jnator = new Jsonator();
+                OtherUsersInfo oui = jnator.readOtherUserInfo(servResponse);
+                PathInfo pi = PathInfo.getInstance();
+                oui.setOriginDestination(pi.getOrigAddress(), pi.getDestAddress());
+                UserInfo.getInstance().setOtherUser(oui);
+            }
+		}
+	}
 
 }

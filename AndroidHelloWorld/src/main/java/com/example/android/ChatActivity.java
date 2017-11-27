@@ -38,8 +38,15 @@ public class ChatActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		// TODO: Give dedicated chats to pairs passenger-driver
-		final String chatName = "chat";
+		// Create dedicated chat for the pair driver-passenger
+		int idMine = UserInfo.getInstance().getIntegerId();
+		String idOther = UserInfo.getInstance().getOtherUser().getUserId();
+		final String chatName;
+		// Chat name is "chat-<driver id>-<passenger id>"
+		if(UserInfo.getInstance().isDriver())
+			chatName = "chat-" + idMine + "-" + idOther;
+		else
+			chatName = "chat-" + idOther + "-" + idMine;
 
 		FirebaseApp.initializeApp(this);
 		fab = (ImageView) findViewById(R.id.sendBtn);

@@ -1,6 +1,7 @@
 package com.example.android;
 
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -26,6 +27,13 @@ public class MyService extends FirebaseMessagingService {
 		// Check if message contains a notification payload.
 		if (remoteMessage.getNotification() != null) {
 			Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+			// TODO: HERE
+			String capello = remoteMessage.getNotification().getBody();
+			Intent intent = new Intent();
+			intent.putExtra("extra", capello);
+			intent.setAction("com.example.android.onMessageReceived");
+			StatusUpdater supt = new StatusUpdater(intent);
+			supt.updateStatus();
 		}
 
 		// Also if you intend on generating your own notifications as a result of a received FCM
@@ -40,5 +48,40 @@ public class MyService extends FirebaseMessagingService {
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); notificationManager.notify(notificationId , notificationBuilder.build());
 */	}
 
+// ------------------------------------------------------------------------------------------
 
+	private class StatusUpdater implements RestUpdate{
+		Intent intent;
+
+		public StatusUpdater(Intent intent){
+			this.intent = intent;
+		}
+
+		public void updateStatus(){
+			try {
+				ConexionRest conn = new ConexionRest(this);
+				String urlReq = conn.getBaseUrl() + "/users/" + UserInfo.getInstance().getIntegerId();
+				Log.d("StatusUpdater", "Updating status at " + urlReq);
+				conn.generateGet(urlReq, null);
+			}
+			catch(Exception e){
+				Log.e("LoginActivity", "Manual log in error: ", e);
+			}
+		}
+
+		@Override
+		public void executeUpdate(String servResponse) {
+			UserInfo ui = UserInfo.getInstance();
+			String mPassword = ui.getPassword();
+			String mFbToken = ui.getFbToken();
+			String mAppToken = ui.getAppServerToken();
+
+			Jsonator jnator = new Jsonator();
+			jnator.readUserLoggedInInfo(servResponse);
+
+			ui.initializeUserInfo(ui.getUserId(), ui.getEmail(), ui.getFirstName(),
+					ui.getLastName(), ui.getCountry(), ui.getBirthdate(), mPassword, mFbToken, mAppToken);
+			sendBroadcast(intent);
+		}
+	}
 }

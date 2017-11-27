@@ -10,6 +10,7 @@ public class OtherUsersInfo {
 	private LatLng location;
 	private String picture;
 	private String orig, dest;
+	private double driverRate;
 
 	public OtherUsersInfo(String userId, String name, String picture){
 		this.name = name;
@@ -17,6 +18,7 @@ public class OtherUsersInfo {
 		this.userId = userId;
 		orig = "";
 		dest = "";
+		driverRate = -1.0;
 	}
 
 	public void updateLocation(LatLng location){
@@ -50,5 +52,13 @@ public class OtherUsersInfo {
 
 	public String getOrig(){
 		return orig;
+	}
+
+	public double getDriverRate(){
+		return driverRate;
+	}
+
+	public void setDriverRate(double rate){
+		driverRate = rate;
 	}
 }
