@@ -2,8 +2,11 @@ package com.example.android;
 
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.firebase.database.Transaction;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -14,8 +17,6 @@ public class MyService extends FirebaseMessagingService {
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		String TAG = "MyService";
-
-		// TODO(developer): Handle FCM messages here.
 		// Not getting messages here? See why this may be: https://goo.gl/39bRNJ
 		Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -27,7 +28,6 @@ public class MyService extends FirebaseMessagingService {
 		// Check if message contains a notification payload.
 		if (remoteMessage.getNotification() != null) {
 			Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-			// TODO: HERE
 			String capello = remoteMessage.getNotification().getBody();
 			Intent intent = new Intent();
 			intent.putExtra("extra", capello);
@@ -81,7 +81,24 @@ public class MyService extends FirebaseMessagingService {
 
 			ui.initializeUserInfo(ui.getUserId(), ui.getEmail(), ui.getFirstName(),
 					ui.getLastName(), ui.getCountry(), ui.getBirthdate(), mPassword, mFbToken, mAppToken);
-			sendBroadcast(intent);
+
+			if(ui.getUserStatus() == UserStatus.P_EXAMINING_DRIVER) {
+				// Delay update a bit
+				final Handler handler = new Handler();
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						String ouiDest = UserInfo.getInstance().getOtherUser().getDest();
+						while((ouiDest == null) || (ouiDest.length() < 1)){
+							SystemClock.sleep(1000);
+							ouiDest = UserInfo.getInstance().getOtherUser().getDest();
+						}
+						sendBroadcast(intent);
+					}
+				}, 3000);
+			} else
+				sendBroadcast(intent);
+
 		}
 	}
 }

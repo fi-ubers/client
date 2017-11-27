@@ -192,7 +192,7 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 		@Override
 		public void executeUpdate(String servResponse) {
 			Log.d("TripInfoActivity", "Received response: " + servResponse);
-			// TODO: Retrieve trip id
+			// No need to retrieve trip id
 			Toast.makeText(getApplicationContext(), "Trip created! One of our drivers will soon contact you.", Toast.LENGTH_SHORT).show();
 			UserInfo.getInstance().setUserStatus(UserStatus.P_WAITING_CONFIRMATION);
 			ActivityChanger.getInstance().gotoActivity(TripInfoActivity.this, MainActivity.class);

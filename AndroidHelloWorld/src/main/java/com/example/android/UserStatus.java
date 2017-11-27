@@ -64,4 +64,10 @@ public enum UserStatus {
 		isEnabled |= (this == P_TRAVELLING);
 		return isEnabled;
 	}
+
+	public boolean tripCanStart(){
+		boolean isEnabled = (this == D_GOING_TO_PIKCUP);
+		isEnabled |= (this == P_WAITING_DRIVER);
+		return isEnabled;
+	}
 }

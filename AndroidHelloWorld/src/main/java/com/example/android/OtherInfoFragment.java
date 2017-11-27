@@ -62,10 +62,6 @@ public class OtherInfoFragment extends Fragment {
 		// TODO: if picString.equals("-1") set default pic
 		String nameString = uInfo.getName();
 		if((nameString != null) && (nameString.length() > 0)) {
-			// If the other is driver, we add the rate ;)
-			double rate = uInfo.getDriverRate();
-			if(rate > 0)
-				nameString = nameString + " (" + rate + " stars)";
 			otherUsrName.setText(nameString);
 		}
 		String origString = uInfo.getOrig();

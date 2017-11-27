@@ -95,6 +95,10 @@
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_other_info_trip"/>
         <activity
+            android:name="com.example.android.TripEnRouteActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_trip_en_route"/>
+        <activity
             android:name="com.example.android.ProfileActivity"
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_edit_profile" >

@@ -81,7 +81,6 @@ public class TripOtherInfoActivity extends FragmentActivity implements OnMapRead
 			superTripBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					// TODO: Cancel trip and restore user status
 					try {
 						TripActionsHandler tah = new TripActionsHandler(TripActionsHandler.P_CANCEL_TRIP);
 						ConexionRest conn = new ConexionRest(tah);

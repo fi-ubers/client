@@ -100,7 +100,7 @@
             />
 
         <Button
-            android:id="@+id/restApiBtn"
+            android:id="@+id/bigRedButton"
             android:layout_width="128dp"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -108,7 +108,7 @@
             android:background="@drawable/roundedborder"
             android:textColor="#dee8f1"
             android:textSize="20sp"
-            android:text="REST API"
+            android:text="Start trip!"
             android:alpha="0.9"
             android:layout_marginTop="5dp"
             />

@@ -11,6 +11,7 @@ public class OtherUsersInfo {
 	private String picture;
 	private String orig, dest;
 	private double driverRate;
+	private int driverRateCount;
 
 	public OtherUsersInfo(String userId, String name, String picture){
 		this.name = name;
@@ -19,6 +20,9 @@ public class OtherUsersInfo {
 		orig = "";
 		dest = "";
 		driverRate = -1.0;
+		driverRateCount = -1;
+		orig = "";
+		dest = "";
 	}
 
 	public void updateLocation(LatLng location){
@@ -58,7 +62,12 @@ public class OtherUsersInfo {
 		return driverRate;
 	}
 
-	public void setDriverRate(double rate){
+	public int getDriverRateCount(){
+		return driverRateCount;
+	}
+
+	public void setDriverRates(double rate, int rateCount){
 		driverRate = rate;
+		driverRateCount = rateCount;
 	}
 }

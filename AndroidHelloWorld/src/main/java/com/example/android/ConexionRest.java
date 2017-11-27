@@ -169,7 +169,7 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
                 lector.close();
             }
             else {
-                Log.e("Fiuber ConexionRest", "cannot connect, error code: " + String.valueOf(rsp) +
+                Log.e("Fiuber ConexionRest", "cannot connect with " + appUrlString + ", error code: " + String.valueOf(rsp) +
                         "\nand message: " + conn.getResponseMessage());
             }
         }

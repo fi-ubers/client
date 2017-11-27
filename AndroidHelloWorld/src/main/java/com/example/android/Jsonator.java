@@ -1,5 +1,7 @@
 package com.example.android;
 
+import android.app.Application;
+import android.app.Dialog;
 import android.graphics.Path;
 import android.util.Log;
 
@@ -118,7 +120,7 @@ public class Jsonator {
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
             Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
-			String appTkn = "";
+			String appTkn = UserInfo.getInstance().getAppServerToken();
 			if (objJson.has("token"))
             	appTkn = objJson.getString("token");
 			JSONObject uiJson = new JSONObject(objJson.getString("user"));
@@ -133,13 +135,13 @@ public class Jsonator {
             int intId = uiJson.getInt("_id");
 			int stateCode = uiJson.getInt("state");
 			String tripId = uiJson.getString("tripId");
-            // Get trip data if any trip here
-			TripLoaderLoggin tll = new TripLoaderLoggin();
-			tll.getTripInfo(tripId);
 			UserInfo ui = UserInfo.getInstance();
 			ui.initializeUserInfo(userId, mail, fName, lName, country, bth, "", "", appTkn);
             ui.setIntegerId(intId);
 			ui.setUserStatus(UserStatus.createFromCode(stateCode));
+			// Get trip data if any trip here
+			TripLoaderLoggin tll = new TripLoaderLoggin();
+			tll.getTripInfo(tripId);
             // Retrieve cars o.o
             if(typeUser.toLowerCase().equals("driver")) {
                 JSONArray carsArray = uiJson.getJSONArray("cars");
@@ -325,19 +327,16 @@ public class Jsonator {
             if(tripWasProposed) {
                 objJson = objJson.getJSONObject("trip");
                 String oth_id;
-                double rate = -1.0;
+
                 if(UserInfo.getInstance().isDriver())
                     oth_id = objJson.getString("passengerId");
                 else {
                     oth_id = objJson.getString("driverId");
-                    // TODO: Get driver rate
-                    rate = 3.3;
                 }
 
 				Log.d("Jsonator", "Read other user id: " + oth_id);
 
                 OtherUsersInfo oui = new OtherUsersInfo(oth_id, "", "");
-                if(rate > 0)    oui.setDriverRate(rate);
                 UserInfo.getInstance().setOtherUser(oui);
                 }
 
@@ -482,6 +481,14 @@ public class Jsonator {
             // TODO: Get real picture!
             String userPic = "107457569994960";
             OtherUsersInfo oui = new OtherUsersInfo(userId, userName, userPic);
+
+            if(!UserInfo.getInstance().isDriver()) {
+                // TODO: Get driver rate
+                double rate = 3.3;
+                int rateCount = 10;
+                oui.setDriverRates(rate, rateCount);
+            }
+
             return oui;
         } catch (Exception e) {
             Log.e("Fiuber Jsonator", "exception", e);
@@ -551,6 +558,7 @@ public class Jsonator {
                 UserInfo.getInstance().setOtherUser(oui);
             }
 		}
+
 	}
 
 }

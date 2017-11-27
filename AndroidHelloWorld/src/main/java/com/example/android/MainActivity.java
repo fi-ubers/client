@@ -1,14 +1,24 @@
 package com.example.android;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,13 +34,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 /**
  * The main menu {@link Activity} of the app. The starting point for the very
  * users operations.
  */
 public class MainActivity extends Activity {
-	Button restApiBtn, anActBtn;
+	Button bigRedButton, anActBtn;
 	Button editProfBtn, chatBtn;
 	private MyBroadcastReceiver mbr;
 
@@ -87,16 +98,9 @@ public class MainActivity extends Activity {
 		mbr = new MyBroadcastReceiver();
 
 		Log.i("MainActivity", "User loaded state is:" + UserInfo.getInstance().getUserStatus().getCode());
-		// TODO: Delete on near future
-		restApiBtn = (Button) findViewById(R.id.restApiBtn);
-		restApiBtn.setEnabled(false);
-		restApiBtn.setVisibility(View.INVISIBLE);
-		restApiBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ChoosePassengerActivity.class);
-			}
-		});
+
+		bigRedButton = (Button) findViewById(R.id.bigRedButton);
+
 
 		chatBtn = (Button) findViewById(R.id.chatBtn);
 		// Overloeaded button for everything! Muahahaha
@@ -105,6 +109,24 @@ public class MainActivity extends Activity {
 		editProfBtn = (Button) findViewById(R.id.editProfBtn);
 
 		setButtons();
+		// Force confirm driver
+		if(UserInfo.getInstance().getUserStatus() == UserStatus.P_EXAMINING_DRIVER){
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Intent intent = new Intent();
+					intent.putExtra("extra", "Please confirm your driver");
+					intent.setAction("com.example.android.onMessageReceived");
+					String ouiDest = UserInfo.getInstance().getOtherUser().getDest();
+					while((ouiDest == null) || (ouiDest.length() < 1)){
+						SystemClock.sleep(1000);
+						ouiDest = UserInfo.getInstance().getOtherUser().getDest();
+					}
+					sendBroadcast(intent);
+				}
+			}, 3000);
+		}
 
 	}
 
@@ -124,6 +146,8 @@ public class MainActivity extends Activity {
 			});
 		}
 		// Set super button overloaded
+		anActBtn.setEnabled(true);
+		anActBtn.setVisibility(View.VISIBLE);
 		UserStatus uSta = UserInfo.getInstance().getUserStatus();
 		if(uSta.tripCreationEnabled()){
 			anActBtn.setOnClickListener(new View.OnClickListener() {
@@ -153,14 +177,16 @@ public class MainActivity extends Activity {
 				}
 			});
 		} else if(uSta.tripEnRouteEnabled()){
-			//anActBtn.setText("Trip on course");
-			anActBtn.setText("NOT IMPLEMENTED YET");
+			anActBtn.setText("Trip on course");
 			anActBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					ActivityChanger.getInstance().gotoActivity(MainActivity.this, TripInfoActivity.class);
+					ActivityChanger.getInstance().gotoActivity(MainActivity.this, TripEnRouteActivity.class);
 				}
 			});
+		} else if(uSta == UserStatus.P_EXAMINING_DRIVER){
+			anActBtn.setEnabled(false);
+			anActBtn.setVisibility(View.INVISIBLE);
 		}
 
 		// Set profile button (center circle)
@@ -170,6 +196,35 @@ public class MainActivity extends Activity {
 				ActivityChanger.getInstance().gotoActivity(MainActivity.this, ProfileActivity.class);
 			}
 		});
+
+		if(uSta.tripCanStart()) {
+			bigRedButton.setEnabled(true);
+			bigRedButton.setVisibility(View.VISIBLE);
+			bigRedButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					// Start trip!
+					try {
+						ConexionRest conn = new ConexionRest(null);
+						String tripId = PathInfo.getInstance().getTripId();
+						String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+						Log.d("MainActivity", "URL to start trip: " + tripUrl);
+						conn.generatePost("{ \"action\": \"start\" }", tripUrl, null);
+						if(UserInfo.getInstance().isDriver())
+							UserInfo.getInstance().setUserStatus(UserStatus.D_TRAVELLING);
+						else
+							UserInfo.getInstance().setUserStatus(UserStatus.P_TRAVELLING);
+
+						setButtons();
+					} catch (Exception e) {
+						Log.e("MainActivity", "starting trip error: ", e);
+					}
+				}
+			});
+		} else {
+			bigRedButton.setEnabled(false);
+			bigRedButton.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	@Override
@@ -186,6 +241,10 @@ public class MainActivity extends Activity {
 		super.onPause();
 		setButtons();
 		unregisterReceiver(mbr);
+	}
+
+	public void confirmRejectDriver(){
+
 	}
 
 	/**
@@ -208,12 +267,76 @@ public class MainActivity extends Activity {
 
 	private class MyBroadcastReceiver extends BroadcastReceiver {
 
+		public void confirmRejectDriver(){
+			if(UserInfo.getInstance().getUserStatus() == UserStatus.P_EXAMINING_DRIVER){
+				final Dialog dialog = new Dialog(MainActivity.this);
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				dialog.setTitle("A driver wants to pick you up!");
+				dialog.setContentView(R.layout.confirm_driver_input_box);
+				TextView txtMessage=(TextView)dialog.findViewById(R.id.txtmessage);
+				txtMessage.setText("Please confirm or reject driver");
+				txtMessage.setTextColor(Color.parseColor("#ff2222"));
+
+				final OtherInfoFragment fr = (OtherInfoFragment) getFragmentManager().findFragmentById(R.id.fragDriverInfo);
+				fr.updateFragmentElements(UserInfo.getInstance().getOtherUser(), false);
+
+				RatingBar rStars = (RatingBar) dialog.findViewById(R.id.ratingBarShowing);
+				LayerDrawable strs = (LayerDrawable) rStars.getProgressDrawable();
+				strs.getDrawable(2).setColorFilter(Color.parseColor("#ffd700"), PorterDuff.Mode.SRC_ATOP);
+				//rStars.getProgressDrawable().getDra setColorFilter(Color.parseColor("#ffd700"), PorterDuff.Mode.SRC_ATOP);
+				rStars.setRating((float) UserInfo.getInstance().getOtherUser().getDriverRate());
+				TextView txtViewRateCount = (TextView) dialog.findViewById(R.id.txtViewRateCount);
+				int rateCount = UserInfo.getInstance().getOtherUser().getDriverRateCount();
+				txtViewRateCount.setText("Driver rating (" + rateCount + " reviews):");
+
+				Button btConfirm =(Button) dialog.findViewById(R.id.confirmDriver);
+				btConfirm.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							ConexionRest conn = new ConexionRest(null);
+							String tripId = PathInfo.getInstance().getTripId();
+							String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+							Log.d("MainActivity", "URL to confirm driver: " + tripUrl);
+							conn.generatePost("{ \"action\": \"confirm\" }", tripUrl, null);
+						} catch (Exception e) {
+							Log.e("MainActivity", "Confirming driver error: ", e);
+						}
+						getFragmentManager().beginTransaction().remove(fr).commit();
+						dialog.dismiss();
+					}
+				});
+
+				Button btCancel = (Button) dialog.findViewById(R.id.rejectDriver);
+				btCancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							ConexionRest conn = new ConexionRest(null);
+							String tripId = PathInfo.getInstance().getTripId();
+							String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+							Log.d("MainActivity", "URL to cancel driver: " + tripUrl);
+							conn.generatePost("{ \"action\": \"reject\" }", tripUrl, null);
+						} catch (Exception e) {
+							Log.e("MainActivity", "Cancelling driver error: ", e);
+						}
+						getFragmentManager().beginTransaction().remove(fr).commit();
+						dialog.dismiss();
+					}
+				});
+
+				dialog.show();
+			}
+		}
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle extras = intent.getExtras();
 			String state = extras.getString("extra");
 			Toast.makeText(getApplicationContext(), state, Toast.LENGTH_SHORT).show();
 			setButtons();
+			this.confirmRejectDriver();
 		}
 	}
 

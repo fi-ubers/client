@@ -61,15 +61,21 @@ public class ChatActivity extends Activity {
 				String msg = input.getText().toString();
 				String uId = UserInfo.getInstance().getUserId();
 				String uName = UserInfo.getInstance().getFirstName();
+				// Post to app-server the chat message
+				try {
+					ConexionRest conn = new ConexionRest(null);
+					int myId = UserInfo.getInstance().getIntegerId();
+					String otherId = UserInfo.getInstance().getOtherUser().getUserId();
+					String chatUrl = conn.getBaseUrl() + "/users/" + myId + "/chat";
+					Log.d("MainActivity", "URL to post chat: " + chatUrl);
+					String toSend = "{ \"receiverId\": "+ otherId + ", \"message\": \"" + msg + "\" }";
+					conn.generatePost(toSend, chatUrl, null);
+				} catch (Exception e) {
+					Log.e("MainActivity", "Posting chat error: ", e);
+				}
+				// Post to firebase db
 				ChatMessage chatMsg = new ChatMessage(msg, uName, uId);
 				dr.push().setValue(chatMsg);
-			/*	FirebaseMessaging.getInstance().send(
-						new RemoteMessage.Builder( + "@gcm.googleapis.com")
-						.setMessageId(Integer.toString(msgId.incrementAndGet()))
-						.addData("message", "hello buddies!")
-						.build()
-
-				);*/
 				input.setText("");
 			}
 		});
