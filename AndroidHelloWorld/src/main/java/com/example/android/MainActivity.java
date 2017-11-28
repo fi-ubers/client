@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
 	Button bigRedButton, anActBtn;
 	Button editProfBtn, chatBtn;
 	private MyBroadcastReceiver mbr;
+	private Intent gpsIntent;
 
 	/**
 	 * Activity onCreate method.
@@ -62,6 +63,8 @@ public class MainActivity extends Activity {
 			if (!UserInfo.getInstance().wasInitialized()) {
 				Log.e("Fiuber MainActivity", "Token missed!");
 				ActivityChanger.getInstance().gotoLogInScreen(this);
+				finish();
+				return;
 			}
 			// If here, user already signed in manually.
 			Log.i("Fiuber MainActivity", "User has logged in manually");
@@ -99,6 +102,8 @@ public class MainActivity extends Activity {
 
 		Log.i("MainActivity", "User loaded state is:" + UserInfo.getInstance().getUserStatus().getCode());
 
+		gpsIntent = new Intent(this, GpsService.class);
+		startService(gpsIntent);
 		bigRedButton = (Button) findViewById(R.id.bigRedButton);
 
 
@@ -240,7 +245,7 @@ public class MainActivity extends Activity {
 	public void onPause(){
 		super.onPause();
 		setButtons();
-		unregisterReceiver(mbr);
+		//unregisterReceiver(mbr);
 	}
 
 	public void confirmRejectDriver(){
@@ -255,11 +260,15 @@ public class MainActivity extends Activity {
 		Log.i("Fiuber Main activity", "Logging out user");
 		UserInfo.getInstance().seppuku();
 		LoginManager.getInstance().logOut();
+		FirebaseMessaging.getInstance().unsubscribeFromTopic(UserInfo.getInstance().getUserId());
 		if (FirebaseAuth.getInstance().getCurrentUser() != null)
 			AuthUI.getInstance().signOut(this);
 		String PREFS_FILE = "AuthFile";
 		getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit().clear().apply();
+		// TODO: Post logout
+		stopService(gpsIntent);
 		ActivityChanger.getInstance().gotoLogInScreen(this);
+		finish();
 	}
 
 

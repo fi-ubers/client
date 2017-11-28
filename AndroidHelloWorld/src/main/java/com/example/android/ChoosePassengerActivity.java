@@ -95,7 +95,7 @@ public class ChoosePassengerActivity extends Activity {
 		try {
 			TripsHandler th = new TripsHandler(TripsHandler.GET_TRIPS_LIST);
 			ConexionRest conn = new ConexionRest(th);
-			String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount;
+			String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount + "&filter=proposed";
 			Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
 			conn.generateGet(tripUrl, null);
 		}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_marginLeft="6dp"
+              android:layout_marginRight="6dp"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtmessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="20sp"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="6dp"/>
+
+
+
+
+    <TextView
+        android:id="@+id/txtViewRateOurDriver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/col_plain_text"
+        android:text="Rate our driver!"
+        android:textAlignment="center"
+        android:textSize="20sp"
+         />
+
+    <RatingBar
+        android:id="@+id/ratingBarDriver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:clickable="true"
+        android:progressTint="#ffd700"
+        android:secondaryProgressTint="@android:color/transparent"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:max="5"
+        android:stepSize="1"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp"/>
+
+    <Button
+        android:id="@+id/confirmTripBtn"
+        android:layout_width="192dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/normalborder"
+        android:text="CONFIRM"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:alpha="0.8"
+        android:textStyle="bold"/>
+
+
+</LinearLayout>

@@ -434,6 +434,23 @@ public class Jsonator {
 */
 	}
 
+    public void readTripResponseId(String jsonResponse){
+        if(jsonResponse == null) return;
+        try {
+            Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+            if(objJson.getInt("code") != 200)
+                return;
+
+            objJson = objJson.getJSONObject("trip");
+            String tripId = objJson.getString("_id");
+            PathInfo.getInstance().setTripId(tripId);
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);;
+        }
+    }
+
 
 	public ArrayList<ProtoTrip> readTripsProposed(String jsonResponse) {
         ArrayList<ProtoTrip> trips = new ArrayList<>();
@@ -494,6 +511,23 @@ public class Jsonator {
             Log.e("Fiuber Jsonator", "exception", e);
             return null;
         }
+    }
+
+
+    public String writeLocationCoords(LatLng location){
+        JSONObject objJson = new JSONObject();
+        JSONObject innerCoords = new JSONObject();
+
+        try {
+            innerCoords.put("lat", location.latitude);
+            innerCoords.put("lng", location.longitude);
+            objJson.put("coord", innerCoords);
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+        }
+
+        return objJson.toString();
     }
 
 
