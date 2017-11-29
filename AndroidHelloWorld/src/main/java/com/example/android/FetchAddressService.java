@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by ale on 11/14/17.
+ * A place-to-coordinates translation class. It can retrieve an {@link Address} from a {@link LatLng},
+ * or a group of {@link Address} from a location name. This class is intended to aid {@link SelectTripActivity}
+ * in addresses translation.
  */
-
 public class FetchAddressService extends AsyncTask<String, Void, List<Address>> {
-
 	private Context context;
 	private SelectTripActivity.MapHandler mHandler;
 	private ListView destList;
@@ -34,6 +34,13 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 	private Marker mMarker;
 	private LatLng coords;
 
+	/**
+	 * Use this constructor for getting a list of addresses from a string, and updating
+	 * those results on the received {@link ListView}.
+	 * @param context Current {@link Context}
+	 * @param destList {@link ListView} to put locations into
+	 * @param mHandler {@link com.example.android.SelectTripActivity.MapHandler} of the map.
+	 */
 	public FetchAddressService(Context context, ListView destList, SelectTripActivity.MapHandler mHandler){
 		this.destList = destList;
 		this.mHandler = mHandler;
@@ -41,6 +48,12 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 		coordFromAddress = true;
 	}
 
+	/**
+	 * Use this constructor for getting the coordinates of a place from sting, and
+	 * setting a {@link Marker} position there,
+	 * @param context Current {@link Context}
+	 * @param coords {@link Marker} to put location into
+	 */
 	public FetchAddressService(Context context, Marker coords){
 		this.context = context;
 		this.mMarker = coords;
@@ -48,6 +61,11 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 		this.coords = mMarker.getPosition();
 	}
 
+	/**
+	 * Updates the graphic elemetns after translation, accordingly to the
+	 * constructor method called for this class.
+	 * @param aVoid Addresses obtained as a result from translation
+	 */
 	@Override
 	protected void onPostExecute(List<Address> aVoid){
 		if((aVoid == null) || (aVoid.size() == 0))
@@ -71,6 +89,11 @@ public class FetchAddressService extends AsyncTask<String, Void, List<Address>> 
 		}
 	}
 
+	/**
+	 * Overrided doInBackground method. Performs proper translation via {@link Geocoder}, and
+	 * accordingly to the constructor method called for this class.
+	 * @param voids Address String to translate
+	 */
 	@Override
 	protected List<Address> doInBackground(String... voids) {
 		List<Address> foundDestinations = null;

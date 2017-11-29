@@ -3,12 +3,15 @@ package com.example.android;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Location;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,10 +51,12 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
     // to 11 km of the Earth surface
     private GoogleMap mMap;
     private MapHandler mapHandler;
+    private NearUsersHandler nearHandler;
     Location lastLoc;
     EditText searchDest;
     Marker origMarker, destMarker;
     private Button confirmTripBtn;
+    private boolean onThisActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 		if((st != UserStatus.D_ON_DUTY) && (st != UserStatus.P_IDLE))
 			Log.e("TripInfoActivity", "Critical bug: user shouldnt be here!");
 
+        onThisActivity = true;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_trip);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -69,12 +75,13 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
         // TODO: Generate this via app-server
         ArrayList<NearUserInfo> nu = new ArrayList<>();
-        nu.add(new NearUserInfo(new LatLng(-34.74, -58.44) , "Juan"));
-        nu.add(new NearUserInfo(new LatLng(-34.7261, -58.419) , "Ale"));
-        nu.add(new NearUserInfo(new LatLng(-34.7224, -58.39853) , "Cami"));
-        nu.add(new NearUserInfo(new LatLng(-34.74205, -58.394) , "Euge"));
+        nu.add(new NearUserInfo(new LatLng(-34.74, -58.44) , "Juan", true));
+        nu.add(new NearUserInfo(new LatLng(-34.7261, -58.419) , "Ale", false));
+        nu.add(new NearUserInfo(new LatLng(-34.7224, -58.39853) , "Cami", false));
+        nu.add(new NearUserInfo(new LatLng(-34.74205, -58.394) , "Euge", true));
 
-        mapHandler = new MapHandler(nu);
+        mapHandler = new MapHandler();
+        nearHandler = new NearUsersHandler(nu);
 
         searchDest = (EditText) findViewById(R.id.searchDest);
         origMarker = null;
@@ -105,6 +112,21 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
                 }
             });
         }
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(nearHandler != null)
+            nearHandler.startDrawingNearest();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(nearHandler != null)
+            nearHandler.stopDrawingNearest();
     }
 
     /**
@@ -252,7 +274,11 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
                        //             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                         //    mapHandler.addTextToMarker(destMarker);
                         }
-                        mapHandler.drawNearest();
+
+
+
+
+
                         // Creates a border of around 1km
                         LatLngBounds border = new LatLngBounds(new LatLng(origin.latitude - 0.0455, origin.longitude - 0.0455),
                                                     new LatLng(origin.latitude + 0.0455, origin.longitude + 0.0455));
@@ -264,19 +290,22 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
                 }
             });
 
+        nearHandler.startDrawingNearest();
         flpc.getLastLocation();
 
     }
 
 // -----------------------------------------------------------------------------------------------------
 
-    public class NearUserInfo{
+    public static class NearUserInfo{
         private LatLng pos;
         private String uName;
+        private boolean isDriver;
 
-        public NearUserInfo(LatLng pos, String name){
+        public NearUserInfo(LatLng pos, String name, boolean isDriver){
             this.pos = pos;
             uName = name;
+            this.isDriver = isDriver;
         }
 
         public LatLng getLocation(){
@@ -287,18 +316,20 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             return uName;
         }
 
+        public boolean isDriver(){
+            return isDriver;
+        }
+
     }
 
 // -----------------------------------------------------------------------------------------------------
 
     public class MapHandler implements RestUpdate {
-        private ArrayList<NearUserInfo> nearest;
         private List<Address> destinations;
         private Polyline path;
         private Marker infoMarker;
 
-        public MapHandler(ArrayList<NearUserInfo> nearest){
-            this.nearest = nearest;
+        public MapHandler(){
             destinations = null;
             path = null;
             infoMarker = null;
@@ -330,25 +361,6 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
 
             Log.d("SelectTripActivity", "MapHandler using " + destinations.size() + " destinations");
             generatePath(origMarker.getPosition(), dest);
-        }
-
-        public void drawNearest(){
-            Iterator<NearUserInfo> it = nearest.iterator();
-            UserInfo ui = UserInfo.getInstance();
-
-            while(it.hasNext()){
-                NearUserInfo anUser = it.next();
-                LatLng pos = anUser.getLocation();
-                String name = anUser.getName();
-                Bitmap img;
-                if(ui.isDriver())
-                    img = BitmapFactory.decodeResource(getResources(), R.drawable.passenger_marker);
-                else
-                    img = BitmapFactory.decodeResource(getResources(), R.drawable.car_marker);
-                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(img);
-                mMap.addMarker(new MarkerOptions().position(pos).draggable(false).title(name)
-                        .icon(bitmapDescriptor));
-            }
         }
 
         public void addTextToMarker(Marker mMarker){
@@ -416,6 +428,101 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             Jsonator jnator = new Jsonator();
             ArrayList<LatLng> pathPoints = jnator.readDirectionsPath(servResponse, false);
             drawPath(pathPoints);
+        }
+    }
+
+
+// ----------------------------------------------------------------------------------------
+
+    public class NearUsersHandler implements RestUpdate{
+        private ArrayList<Marker> nearUsersMarkers;
+        private ArrayList<NearUserInfo> nearest;
+        private boolean meDrawing;
+        Handler handler;
+        Thread tUpdate;
+
+        public NearUsersHandler(ArrayList<NearUserInfo> nearest){
+            this.nearest = nearest;
+            this.nearUsersMarkers = new ArrayList<>();
+            handler = new Handler();
+            meDrawing = false;
+        }
+
+        public void updateNearest(){
+            try {
+                ConexionRest conn = new ConexionRest(this);
+                String nearestUrl = conn.getBaseUrl() + "/users?limit=36&sort=near";
+                Log.d("SelectTripActivity", "URL to GET near users: " + nearestUrl);
+                conn.generateGet(nearestUrl, null);
+            }
+            catch(Exception e){
+                Log.e("SelectTripActivity", "GET trips error: ", e);
+            }
+        }
+
+        public void startDrawingNearest(){
+            meDrawing = true;
+            tUpdate = new Thread() {
+                public void run(){
+                    while(meDrawing){
+                        try {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d("NearUsersHandler", "Updating loop");
+                                    updateNearest();
+                                }
+                            });
+                            sleep(10000);
+                        } catch (Exception e) {
+                            Log.e("SelectTripActivity", "Error: ", e);
+                        }
+                    }
+                }
+            };
+            tUpdate.start();
+        }
+
+        public void stopDrawingNearest(){
+            meDrawing = false;
+            //tUpdate.interrupt();
+        }
+
+
+        public void drawNearest(){
+            Iterator<Marker> itm = nearUsersMarkers.iterator();
+            while(itm.hasNext()) {
+                // Remove all markers from map
+                itm.next().remove();
+            }
+            nearUsersMarkers.clear();
+
+            Iterator<NearUserInfo> it = nearest.iterator();
+            while(it.hasNext()){
+                NearUserInfo anUser = it.next();
+                LatLng pos = anUser.getLocation();
+                String name = anUser.getName();
+                Bitmap img;
+                if(!anUser.isDriver())
+                    img = BitmapFactory.decodeResource(getResources(), R.drawable.passenger_marker);
+                else
+                    img = BitmapFactory.decodeResource(getResources(), R.drawable.car_marker);
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(img);
+                Marker nMarker = mMap.addMarker(new MarkerOptions().position(pos).draggable(false).title(name)
+                        .icon(bitmapDescriptor));
+                nearUsersMarkers.add(nMarker);
+            }
+        }
+
+        @Override
+        public void executeUpdate(String servResponse) {
+            Log.d("SelectTripActivity", "Received users: " + servResponse);
+            Jsonator jnator = new Jsonator();
+            ArrayList<NearUserInfo> newNearest = jnator.readNearUsers(servResponse);
+            if(newNearest != null){
+                this.nearest = newNearest;
+                this.drawNearest();
+            }
         }
     }
 

@@ -122,6 +122,10 @@
             android:name="com.example.android.CarsActivity"
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_cars"/>
+        <activity
+            android:name="com.example.android.PayingActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_paying"/>
 
         <service android:name="com.example.android.MyService">
             <intent-filter>

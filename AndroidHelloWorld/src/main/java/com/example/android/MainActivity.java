@@ -165,7 +165,7 @@ public class MainActivity extends Activity {
 			if(UserInfo.getInstance().getCars().size() == 0){
 				Toast.makeText(getApplicationContext(), "You need to register a car first!", Toast.LENGTH_SHORT).show();
 			} else {
-				anActBtn.setText("Find trips");
+				anActBtn.setText("View map");
 				anActBtn.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
@@ -182,7 +182,7 @@ public class MainActivity extends Activity {
 				}
 			});
 		} else if(uSta.tripEnRouteEnabled()){
-			anActBtn.setText("Trip on course");
+			anActBtn.setText("My trip");
 			anActBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {

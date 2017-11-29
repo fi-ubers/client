@@ -319,7 +319,7 @@ public class Jsonator {
         if(jsonResponse == null) return null;
         ArrayList<LatLng> pathPoints = new ArrayList<>();
         try {
-            Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
+            Log.d("Fiuber Jsonator", "Received TRIP response:"+ jsonResponse);
             JSONObject objJson = new JSONObject(jsonResponse);
             if(objJson.getInt("code") != 200)
                 return null;
@@ -345,8 +345,15 @@ public class Jsonator {
             double distance = objJson.getDouble("distance");
             PathInfo.getInstance().setDistance(distance / 1000.0); // in km
 			PathInfo.getInstance().setDuration(objJson.getDouble("duration"));
-			// TODO: get real cost
-			PathInfo.getInstance().setCost(11.9);
+
+            double cost = -1.0;
+            if(!tripWasProposed){
+                JSONObject aux = new JSONObject(jsonResponse);
+                aux = aux.getJSONObject("cost");
+                cost = aux.getDouble("value");
+            }
+
+			PathInfo.getInstance().setCost(cost);
             if(tripWasProposed){
                 String origin = objJson.getString("origin_name").split(",")[0];
                 String destination = objJson.getString("destination_name").split(",")[0];
@@ -382,56 +389,6 @@ public class Jsonator {
 			return "";
 
 		return normalizeString(PathInfo.getInstance().getTripJson());
-
-	/*
-		JSONObject objJson = new JSONObject();
-		JSONObject origJson = new JSONObject();
-		JSONObject destJson = new JSONObject();
-		JSONArray pathJson = new JSONArray();
-
-		PathInfo pi = PathInfo.getInstance();
-
-		try {
-			List<LatLng> path =  pi.getPath();
-			LatLng origin = path.get(0);
-			origJson.put("lat", origin.latitude);
-			origJson.put("lng", origin.longitude);
-
-			LatLng destination = path.get(path.size() - 1);
-			destJson.put("lat", destination.latitude);
-			destJson.put("lng", destination.longitude);
-
-			objJson.put("origin", origJson);
-			objJson.put("destination", destJson);
-			objJson.put("destination_name", pi.getDestAddress());
-			objJson.put("origin_name", pi.getOrigAddress());
-			objJson.put("distance", pi.getDistance());
-			objJson.put("duration", pi.getDuration());
-			objJson.put("status", "OK");
-
-			Iterator<LatLng> it = path.iterator();
-			while(it.hasNext()){
-				LatLng nexPoint = it.next();
-				JSONObject pointJson = new JSONObject();
-				pointJson.put("duration", 0);
-				pointJson.put("distance", 0);
-				JSONObject coordsJson = new JSONObject();
-                coordsJson.put("lat", nexPoint.latitude);
-                coordsJson.put("lng", nexPoint.longitude);
-				pointJson.put("coords", coordsJson);
-				pathJson.put(pointJson);
-			}
-
-			objJson.put("path", pathJson);
-
-
-		}
-		catch (Exception e) {
-			Log.e("Fiuber Jsonator", "exception", e);
-		}
-
-        return normalizeString(objJson.toString());
-*/
 	}
 
     public void readTripResponseId(String jsonResponse){
@@ -500,10 +457,9 @@ public class Jsonator {
             OtherUsersInfo oui = new OtherUsersInfo(userId, userName, userPic);
 
             if(!UserInfo.getInstance().isDriver()) {
-                // TODO: Get driver rate
-                double rate = 3.3;
-                int rateCount = 10;
-                oui.setDriverRates(rate, rateCount);
+                double rate = objJson.getJSONObject("rating").getDouble("rate");
+                int rateCount = objJson.getJSONObject("rating").getInt("rateCount");
+                oui.setDriverRates(rate / (float) rateCount, rateCount);
             }
 
             return oui;
@@ -529,6 +485,65 @@ public class Jsonator {
 
         return objJson.toString();
     }
+
+    public String writePaymentAction(PaymethodInfo pm){
+        JSONObject objJson = new JSONObject();
+        JSONObject innerPayment = new JSONObject();
+        JSONObject payParameters = new JSONObject();
+
+        try {
+            innerPayment.put("paymethod", pm.method);
+            payParameters.put("ccvv", pm.cardCcvv);
+            payParameters.put("expiration_month", pm.expMonth);
+            payParameters.put("expiration_year", pm.expYear);
+            payParameters.put("number", pm.cardNumber);
+            payParameters.put("type", pm.cardType);
+            innerPayment.put("parameters", payParameters);
+            objJson.put("paymethod", innerPayment);
+            objJson.put("action", "pay");
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+        }
+
+        return objJson.toString();
+    }
+
+
+    public ArrayList<SelectTripActivity.NearUserInfo> readNearUsers(String jsonResponse){
+        try {
+            Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+
+            if(objJson.getInt("code") != 200)
+                return null;
+
+            JSONArray jsonUsers = objJson.getJSONArray("users");
+            ArrayList<SelectTripActivity.NearUserInfo> nearUsers = new ArrayList<>();
+            int i, usersAmount = jsonUsers.length();
+            for(i = 0; i < usersAmount; i++){
+                JSONObject thisUserJson = jsonUsers.getJSONObject(i);
+                // Create this user
+                String thisUserName = thisUserJson.getString("username");
+                if(thisUserName.equals(UserInfo.getInstance().getUserId()))
+                    continue;
+                boolean thisUserDriver = thisUserJson.getString("type").toLowerCase().equals("driver");
+                double thisLat = thisUserJson.getJSONObject("coord").getDouble("lat");
+                double thisLng = thisUserJson.getJSONObject("coord").getDouble("lng");
+                LatLng thisPos = new LatLng(thisLat, thisLng);
+                SelectTripActivity.NearUserInfo thisUser = new SelectTripActivity.NearUserInfo(thisPos, thisUserName, thisUserDriver);
+                if(thisUserName != null)
+                    nearUsers.add(thisUser);
+            }
+
+            return nearUsers;
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+            return null;
+        }
+    }
+
 
 
 // --------------------------------------------------------------------------------------

@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textColor="@color/col_plain_text"
-        android:text="Rate our driver!"
+        android:text="Please leave your rating"
         android:textAlignment="center"
         android:textSize="20sp"
          />
@@ -53,7 +53,7 @@
         android:layout_height="24dp"/>
 
     <Button
-        android:id="@+id/confirmTripBtn"
+        android:id="@+id/confirmRateBtn"
         android:layout_width="192dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

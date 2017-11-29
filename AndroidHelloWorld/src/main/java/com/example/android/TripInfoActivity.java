@@ -161,8 +161,8 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 				setSnippet(PathInfo.getInstance().getOrigAddress());
 
 		TextView cstDst = (TextView) findViewById(R.id.distTrip);
-		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km ($" +
-				PathInfo.getInstance().getCost() + ")");
+		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km (" +
+				PathInfo.getInstance().getCost() + " ARS)");
     }
 
 

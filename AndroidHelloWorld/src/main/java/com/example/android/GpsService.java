@@ -17,7 +17,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-
+/**
+ * A service created to run in background, which only purpose is to constantly
+ * update location to app-server.
+ */
 public class GpsService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 	private LocationRequest mLocationRequest;
 	private GoogleApiClient mGoogleApiClient;
@@ -99,8 +102,10 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 
 	private void initLocationRequest() {
 		mLocationRequest = new LocationRequest();
-		mLocationRequest.setInterval(5000);
-		mLocationRequest.setFastestInterval(2000);
+	//	mLocationRequest.setInterval(5000);
+	//	mLocationRequest.setFastestInterval(2000);
+		mLocationRequest.setInterval(12000);
+		mLocationRequest.setFastestInterval(7000);
 		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 	}
@@ -109,7 +114,7 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 		initLocationRequest();
 
 	/*	if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATIO) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATIO) != PackageManager.PERMISSION_GRANTED) {
-			// TODO: Consider calling
+
 			//    ActivityCompat#requestPermissions
 			// here to request the missing permissions, and then overriding
 			//   public void onRequestPermissionsResult(int requestCode, String[] permissions,

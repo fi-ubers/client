@@ -29,7 +29,7 @@ import java.util.List;
 
 
 /**
- * A list-shaped screen showing the driver's cars. Allows driver to update, delete and add cars.
+ * Am {@link Activity} with pending trips for drivers to accept them.
  */
 public class ChoosePassengerActivity extends Activity {
 	private ArrayList<ProtoTrip> trips;
@@ -82,8 +82,8 @@ public class ChoosePassengerActivity extends Activity {
 				try {
 					TripsHandler th = new TripsHandler(TripsHandler.GET_TRIPS_LIST);
 					ConexionRest conn = new ConexionRest(th);
-					String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount + "&filter=proposed";
-					Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
+					String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount + "&filter=proposed&sort=near";
+					Log.d("ChoosePassengerActivity", "URL to POST trip: " + tripUrl);
 					conn.generateGet(tripUrl, null);
 				}
 				catch(Exception e){
@@ -95,8 +95,8 @@ public class ChoosePassengerActivity extends Activity {
 		try {
 			TripsHandler th = new TripsHandler(TripsHandler.GET_TRIPS_LIST);
 			ConexionRest conn = new ConexionRest(th);
-			String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount + "&filter=proposed";
-			Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
+			String tripUrl = conn.getBaseUrl() + "/trips?limit=" + tripAmount + "&filter=proposed&sort=near";
+			Log.d("ChoosePassengerActivity", "URL to POST trip: " + tripUrl);
 			conn.generateGet(tripUrl, null);
 		}
 		catch(Exception e){
@@ -111,7 +111,7 @@ public class ChoosePassengerActivity extends Activity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
-		Log.d("ProfileActivity", "Back button pressed on actionBar");
+		Log.d("ChoosePassengerActivity", "Back button pressed on actionBar");
 		ActivityChanger.getInstance().gotoActivity(ChoosePassengerActivity.this, SelectTripActivity.class);
 		finish();
 		return true;

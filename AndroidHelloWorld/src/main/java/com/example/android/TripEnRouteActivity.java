@@ -55,7 +55,17 @@ public class TripEnRouteActivity extends FragmentActivity implements OnMapReadyC
 			@Override
 			public void onClick(View view) {
 				Log.d("TripEnRouteActivity", "finish trip button pressed");
-				// TODO: Successfully finish trip for real!
+				// Successfully finish trip for real!
+				try {
+					TripFinsher tf = new TripFinsher();
+					ConexionRest conn = new ConexionRest(tf);
+					String tripId = PathInfo.getInstance().getTripId();
+					String tripUrl = conn.getBaseUrl() + "/trips/" + tripId + "/action";
+					Log.d("TripEnRouteActivity", "URL to finish trip: " + tripUrl);
+					conn.generatePost("{ \"action\": \"finish\" }", tripUrl, null);
+				} catch (Exception e) {
+					Log.e("TripEnRouteActivity", "Cancel trip error: ", e);
+				}
 			}
 		});
     }
@@ -152,38 +162,29 @@ public class TripEnRouteActivity extends FragmentActivity implements OnMapReadyC
 
 // -----------------------------------------------------------------------------------------------
 
-	public class TripProposer implements RestUpdate{
+	public class TripFinsher implements RestUpdate{
 
-		public TripProposer(){
+		public TripFinsher(){
 
 		}
 
 		public void submitTrip(){
-			try {
-				Jsonator jnator = new Jsonator();
-				String toSendJson = jnator.writeProposedTrip();
-				Log.d("SelectTripActivity", "JSON to send: " + toSendJson);
-				ConexionRest conn = new ConexionRest(this);
-				String tripUrl = conn.getBaseUrl() + "/trips";
-				Log.d("SelectTripActivity", "URL to POST trip: " + tripUrl);
-				conn.generatePost(toSendJson, tripUrl, null);
-			}
-			catch(Exception e){
-				Log.e("SelectTripActivity", "Sunmitting POST error: ", e);
-			}
+
 		}
 
 		@Override
 		public void executeUpdate(String servResponse) {
-			Log.d("TripInfoActivity", "Received response: " + servResponse);
-			// No need to retrieve trip id
-			Toast.makeText(getApplicationContext(), "Trip created! One of our drivers will soon contact you.", Toast.LENGTH_SHORT).show();
-			UserInfo.getInstance().setUserStatus(UserStatus.P_WAITING_CONFIRMATION);
-			ActivityChanger.getInstance().gotoActivity(TripEnRouteActivity.this, MainActivity.class);
-			OtherUsersInfo oui = new OtherUsersInfo("-1", "No driver took this trip yet", "");
-			PathInfo pi = PathInfo.getInstance();
-			oui.setOriginDestination(pi.getOrigAddress(), pi.getDestAddress());
-			UserInfo.getInstance().setOtherUser(oui);
+			Log.d("TripEnRouteActivity", "Received response: " + servResponse);
+			if(UserInfo.getInstance().isDriver()){
+				UserInfo.getInstance().setUserStatus(UserStatus.D_ON_DUTY);
+				PathInfo.getInstance().selfDestruct();
+				UserInfo.getInstance().setOtherUser(null);
+				ActivityChanger.getInstance().gotoActivity(TripEnRouteActivity.this, MainActivity.class);
+			} else{
+				UserInfo.getInstance().setUserStatus(UserStatus.P_ARRIVED);
+				ActivityChanger.getInstance().gotoActivity(TripEnRouteActivity.this, PayingActivity.class);
+			}
+
 			finish();
 		}
 	}

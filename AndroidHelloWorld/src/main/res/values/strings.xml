@@ -13,6 +13,7 @@
     <string name="title_activity_info_trip">Your trip info</string>
     <string name="title_activity_other_info_trip">Trip info</string>
     <string name="title_activity_trip_en_route">Trip en route</string>
+    <string name="title_activity_paying">Payment options</string>
     <string name="title_choose_passenger">Choose trip</string>
     <string name="google_maps_key">AIzaSyBDaVyTnBzeucCQzrRCtFPjwQjbWpwsqjk</string>
     <!-- Strings related to login -->
