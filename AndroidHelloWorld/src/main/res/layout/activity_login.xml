@@ -46,10 +46,12 @@
 
     <Button
         android:id="@+id/signBtn"
-        android:layout_width="152dp"
+        android:layout_width="match_parent"
+        android:layout_marginRight="48dp"
+        android:layout_marginLeft="48dp"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.50"
+        android:layout_weight="0.60"
         android:background="@drawable/urgentborder"
         android:text="Sign in"
         android:textAllCaps="false"

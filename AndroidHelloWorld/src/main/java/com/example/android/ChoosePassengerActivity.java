@@ -121,7 +121,7 @@ public class ChoosePassengerActivity extends Activity {
 
 // ------------------------------------------------------------------------------------------------
 	/**
-	 * A class for handling app-server responses for cars POST.
+	 * A class for handling app-server trips.
 	 */
 	public class TripsHandler implements RestUpdate{
 
@@ -132,12 +132,20 @@ public class ChoosePassengerActivity extends Activity {
 		private int dataMode;
 
 		/**
-		 * Class default constructor.
+		 * Class constructor. The mode represents the action to do.
+		 * @param mode The action for this {@link TripsHandler} to perform. Either
+		 *             GET_TRIPS_LIST, GET_TRIP_DATA or GET_PASSENGER_DATA.
 		 */
 		public TripsHandler(int mode){
 			this.dataMode = mode;
 		}
 
+		/**
+		 * Gets a list of trips for the driver to accept from the app-server response, a
+		 * nd updates the {{@link ListView}} showing them. This function is only called if
+		 * this {@link TripsHandler} mode is GET_TRIPS_LIST.
+		 * @param servResponse Response from app-server
+		 */
 		private void getTripsList(String servResponse){
 			int itemChecked = listView.getCheckedItemPosition();
 			listView.clearChoices();
@@ -158,6 +166,11 @@ public class ChoosePassengerActivity extends Activity {
 			return;
 		}
 
+		/**
+		 * Gets the passenger data from the app-server response, and updates the {@link OtherInfoFragment}
+		 * fields with it. This function is only called if this {@link TripsHandler} mode is GET_PASSENGER_DATA.
+		 * @param servResponse Response from app-server
+		 */
 		private void getPassengerData(String servResponse){
 			Log.d("ChoosePassengerActivity", "GET passenger response:" + servResponse);
 			Jsonator jnator = new Jsonator();
@@ -194,6 +207,11 @@ public class ChoosePassengerActivity extends Activity {
 			});
 		}
 
+		/**
+		 * Gets trips data from a certain trip. This function is only called if this
+		 * {@link TripsHandler} mode is GET_TRIP_DATA.
+		 * @param servResponse Response from app-server
+		 */
 		private void getTripsData(String servResponse) {
 			Log.d("ChoosePassengerActivity", "GET trip Id response:" + servResponse);
 			Jsonator jnator = new Jsonator();
@@ -213,6 +231,12 @@ public class ChoosePassengerActivity extends Activity {
 
 		}
 
+		/**
+		 * Overrided {@link RestUpdate} method to be performed after the request
+		 * to the app-server. Simply dispatches the response to the corresponding
+		 * method, based on this {@link TripsHandler} mode value.
+		 * @param servResponse Response from app-server.
+		 */
 		@Override
 		public void executeUpdate(String servResponse) {
 			switch(dataMode){

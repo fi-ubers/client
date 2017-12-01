@@ -26,6 +26,9 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 	private GoogleApiClient mGoogleApiClient;
 	private static final String LOGSERVICE = "GpsService";
 
+	/**
+	 * Overrided onCreate method for this class. Builds the {@link GoogleApiClient} inside.
+	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -34,6 +37,10 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 
 	}
 
+	/**
+	 * Overrided onStartCommand. Simply starts the service and connects
+	 * as a google API client.
+	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(LOGSERVICE, "onStartCommand");
@@ -43,7 +50,9 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 		return START_STICKY;
 	}
 
-
+	/**
+	 * Overrided onConnected. Makes the first return of coordinates.
+	 */
 	@Override
 	public void onConnected(Bundle bundle) {
 		Log.i(LOGSERVICE, "onConnected" + bundle);
@@ -57,12 +66,20 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 		startLocationUpdate();
 	}
 
+	/**
+	 * Overrided onConnectionSuspended. Does nothing.
+	 */
 	@Override
 	public void onConnectionSuspended(int i) {
 		Log.i(LOGSERVICE, "onConnectionSuspended " + i);
 
 	}
 
+	/**
+	 * Overrided onLocationChanged. POSTs the retrieved user location
+	 * to the app-server.
+	 * @param location Last user retrieved location
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		if(UserInfo.getInstance().getIntegerId() < 0)	return;
@@ -81,6 +98,9 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 
 	}
 
+	/**
+	 * Overrided onDestroy. Does nothing.
+	 * */
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -88,49 +108,56 @@ public class GpsService extends Service implements GoogleApiClient.ConnectionCal
 
 	}
 
+	/**
+	 * Overrided onBind. Does nothing.
+	 */
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
 
+	/**
+	 * Overrided onConnetionFailed. Simply logs an error.
+	 */
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
-		Log.i(LOGSERVICE, "onConnectionFailed ");
+		Log.e(LOGSERVICE, "onConnectionFailed ");
 
 	}
 
+	/**
+	 * Starts the location request. This function sets the time interval between
+	 * every get location request.
+	 */
 	private void initLocationRequest() {
 		mLocationRequest = new LocationRequest();
-	//	mLocationRequest.setInterval(5000);
-	//	mLocationRequest.setFastestInterval(2000);
 		mLocationRequest.setInterval(12000);
 		mLocationRequest.setFastestInterval(7000);
 		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 	}
 
+	/**
+	 * As its name suggests, starts the location update.
+	 */
 	private void startLocationUpdate() {
 		initLocationRequest();
 
-	/*	if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATIO) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATIO) != PackageManager.PERMISSION_GRANTED) {
-
-			//    ActivityCompat#requestPermissions
-			// here to request the missing permissions, and then overriding
-			//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-			//                                          int[] grantResults)
-			// to handle the case where the user grants the permission. See the documentation
-			// for ActivityCompat#requestPermissions for more details.
-			return;
-		}*/
 		LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 	}
 
+	/**
+	 * Stop the location updates.
+	 */
 	private void stopLocationUpdate() {
 		LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
 	}
 
+	/**
+	 * Creates the {@link GoogleApiClient} needed to retrieve locations.
+	 */
 	protected synchronized void buildGoogleApiClient() {
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addOnConnectionFailedListener(this)

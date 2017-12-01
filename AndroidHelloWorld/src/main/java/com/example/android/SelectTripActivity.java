@@ -246,6 +246,10 @@ public class SelectTripActivity extends FragmentActivity implements OnMapReadyCa
             public void onMapClick(LatLng latLng) {
                 if(UserInfo.getInstance().isDriver())
                     return;
+                if(origMarker == null) {
+                    Toast.makeText(getApplicationContext(), "Please, turn on your GPS and reload", Toast.LENGTH_SHORT).show();g
+                    return;
+                }
                 if(destMarker == null) {
                     destMarker = mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Destination")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));

@@ -1,21 +1,16 @@
 package com.example.android;
 
-import android.app.Application;
-import android.app.Dialog;
-import android.graphics.Path;
+
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.*;
 
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+
 
 
 /**
@@ -45,6 +40,10 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Normalizes an utf format string into unicode.
+     * @param s String to format
+     */
     private String normalizeString(String s){
         String sn = s.replace("á", "\\u00e1");
         sn = sn.replace("é", "\\u00e9");
@@ -240,7 +239,11 @@ public class Jsonator {
         }
     }
 
-
+    /**
+     * Reads the info of a received car.
+     * @param jsonResponse The app-server's response to the request
+     * @param isPost True if the response was from a POST and not a GET
+     */
     public CarInfo readCarInfo(String jsonResponse, boolean isPost){
         try {
             Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
@@ -265,7 +268,10 @@ public class Jsonator {
         }
     }
 
-
+    /**
+     * Writes the info of a received car.
+     * @param car The {@link CarInfo} to write.
+     */
     public String writeCarInfo(CarInfo car){
         JSONObject objJson = new JSONObject();
         UserInfo ui = UserInfo.getInstance();
@@ -288,6 +294,11 @@ public class Jsonator {
         return normalizeString(objJson.toString());
     }
 
+    /**
+     * Writes the request for asking directions to app-server.
+     * @param orig Origin coordinates (starting point)
+     * @param dest Destination coordinates (finishing point)
+     */
     public String writeDirectionsInfo(LatLng orig, LatLng dest){
         UserInfo ui = UserInfo.getInstance();
         if((!ui.wasInitialized()) || ui.isDriver())
@@ -315,6 +326,11 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Reads the path from an app-server trip or directions request.
+     * @param jsonResponse The app-server's response to the request
+     * @param tripWasProposed True if the trip already figures as proposed on the app-server
+     */
     public ArrayList<LatLng> readDirectionsPath(String jsonResponse, boolean tripWasProposed){
         if(jsonResponse == null) return null;
         ArrayList<LatLng> pathPoints = new ArrayList<>();
@@ -383,7 +399,10 @@ public class Jsonator {
         return pathPoints;
     }
 
-	public String writeProposedTrip(){
+    /**
+     * Generates a JSON for a passenger to POST a trip.
+     */
+    public String writeProposedTrip(){
 		UserInfo ui = UserInfo.getInstance();
 		if((!ui.wasInitialized()) || ui.isDriver())
 			return "";
@@ -391,6 +410,11 @@ public class Jsonator {
 		return normalizeString(PathInfo.getInstance().getTripJson());
 	}
 
+    /**
+     * Reads a the trip id from the app-server POST trip response and
+     * stores it in the currrent {@link PathInfo}.
+     * @param jsonResponse The app-server's response to the request
+     */
     public void readTripResponseId(String jsonResponse){
         if(jsonResponse == null) return;
         try {
@@ -408,8 +432,11 @@ public class Jsonator {
         }
     }
 
-
-	public ArrayList<ProtoTrip> readTripsProposed(String jsonResponse) {
+    /**
+     * Reads all the trips proposed to a driver.
+     * @param jsonResponse The app-server's response to the request
+     */
+    public ArrayList<ProtoTrip> readTripsProposed(String jsonResponse) {
         ArrayList<ProtoTrip> trips = new ArrayList<>();
         try {
             Log.d("Fiuber Jsonator", "Received response:" + jsonResponse);
@@ -442,6 +469,10 @@ public class Jsonator {
         return trips;
     }
 
+    /**
+     * Reads the info of the other user linked to this user's current trip.
+     * @param jsonResponse The app-server's response to the request
+     */
     public OtherUsersInfo readOtherUserInfo(String jsonResponse) {
         try {
             Log.d("Fiuber Jsonator", "Received response:" + jsonResponse);
@@ -469,7 +500,10 @@ public class Jsonator {
         }
     }
 
-
+    /**
+     * Writes the received location into a JSON for posting it.
+     * @param location The current location to POST.
+     */
     public String writeLocationCoords(LatLng location){
         JSONObject objJson = new JSONObject();
         JSONObject innerCoords = new JSONObject();
@@ -486,6 +520,10 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Writes the received {@link PaymethodInfo} into a JSON to pay the trip.
+     * @param pm The {@link PaymethodInfo} to send to app-server
+     */
     public String writePaymentAction(PaymethodInfo pm){
         JSONObject objJson = new JSONObject();
         JSONObject innerPayment = new JSONObject();
@@ -509,7 +547,10 @@ public class Jsonator {
         return objJson.toString();
     }
 
-
+    /**
+     * Reads the info of all near users.
+     * @param jsonResponse The app-server's response to the request
+     */
     public ArrayList<SelectTripActivity.NearUserInfo> readNearUsers(String jsonResponse){
         try {
             Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
@@ -543,7 +584,6 @@ public class Jsonator {
             return null;
         }
     }
-
 
 
 // --------------------------------------------------------------------------------------

@@ -267,6 +267,7 @@ public class MainActivity extends Activity {
 		getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit().clear().apply();
 		// TODO: Post logout
 		stopService(gpsIntent);
+		unregisterReceiver(mbr);
 		ActivityChanger.getInstance().gotoLogInScreen(this);
 		finish();
 	}
