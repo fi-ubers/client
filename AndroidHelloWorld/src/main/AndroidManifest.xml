@@ -95,6 +95,10 @@
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_other_info_trip"/>
         <activity
+            android:name="com.example.android.TripEnRouteActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_trip_en_route"/>
+        <activity
             android:name="com.example.android.ProfileActivity"
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_edit_profile" >
@@ -118,6 +122,10 @@
             android:name="com.example.android.CarsActivity"
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_cars"/>
+        <activity
+            android:name="com.example.android.PayingActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_paying"/>
 
         <service android:name="com.example.android.MyService">
             <intent-filter>
@@ -129,6 +137,9 @@
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
+        </service>
+        <service
+            android:name="com.example.android.GpsService">
         </service>
 
     </application>

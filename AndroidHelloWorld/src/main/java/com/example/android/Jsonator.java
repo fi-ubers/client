@@ -1,19 +1,16 @@
 package com.example.android;
 
-import android.graphics.Path;
+
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.*;
 
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+
 
 
 /**
@@ -43,6 +40,10 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Normalizes an utf format string into unicode.
+     * @param s String to format
+     */
     private String normalizeString(String s){
         String sn = s.replace("á", "\\u00e1");
         sn = sn.replace("é", "\\u00e9");
@@ -118,7 +119,9 @@ public class Jsonator {
         try {
             JSONObject objJson = new JSONObject(jsonResponse);
             Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
-            String appTkn = objJson.getString("token");
+			String appTkn = UserInfo.getInstance().getAppServerToken();
+			if (objJson.has("token"))
+            	appTkn = objJson.getString("token");
 			JSONObject uiJson = new JSONObject(objJson.getString("user"));
 
 			String mail = uiJson.getString("email");
@@ -129,10 +132,15 @@ public class Jsonator {
 			String userId = uiJson.getString("username");
             String typeUser = uiJson.getString("type");
             int intId = uiJson.getInt("_id");
-            // TODO: Get user UserStatus and set it to ui
+			int stateCode = uiJson.getInt("state");
+			String tripId = uiJson.getString("tripId");
 			UserInfo ui = UserInfo.getInstance();
 			ui.initializeUserInfo(userId, mail, fName, lName, country, bth, "", "", appTkn);
             ui.setIntegerId(intId);
+			ui.setUserStatus(UserStatus.createFromCode(stateCode));
+			// Get trip data if any trip here
+			TripLoaderLoggin tll = new TripLoaderLoggin();
+			tll.getTripInfo(tripId);
             // Retrieve cars o.o
             if(typeUser.toLowerCase().equals("driver")) {
                 JSONArray carsArray = uiJson.getJSONArray("cars");
@@ -231,7 +239,11 @@ public class Jsonator {
         }
     }
 
-
+    /**
+     * Reads the info of a received car.
+     * @param jsonResponse The app-server's response to the request
+     * @param isPost True if the response was from a POST and not a GET
+     */
     public CarInfo readCarInfo(String jsonResponse, boolean isPost){
         try {
             Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
@@ -256,7 +268,10 @@ public class Jsonator {
         }
     }
 
-
+    /**
+     * Writes the info of a received car.
+     * @param car The {@link CarInfo} to write.
+     */
     public String writeCarInfo(CarInfo car){
         JSONObject objJson = new JSONObject();
         UserInfo ui = UserInfo.getInstance();
@@ -279,6 +294,11 @@ public class Jsonator {
         return normalizeString(objJson.toString());
     }
 
+    /**
+     * Writes the request for asking directions to app-server.
+     * @param orig Origin coordinates (starting point)
+     * @param dest Destination coordinates (finishing point)
+     */
     public String writeDirectionsInfo(LatLng orig, LatLng dest){
         UserInfo ui = UserInfo.getInstance();
         if((!ui.wasInitialized()) || ui.isDriver())
@@ -306,18 +326,33 @@ public class Jsonator {
         return objJson.toString();
     }
 
+    /**
+     * Reads the path from an app-server trip or directions request.
+     * @param jsonResponse The app-server's response to the request
+     * @param tripWasProposed True if the trip already figures as proposed on the app-server
+     */
     public ArrayList<LatLng> readDirectionsPath(String jsonResponse, boolean tripWasProposed){
+        if(jsonResponse == null) return null;
         ArrayList<LatLng> pathPoints = new ArrayList<>();
         try {
-            Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
+            Log.d("Fiuber Jsonator", "Received TRIP response:"+ jsonResponse);
             JSONObject objJson = new JSONObject(jsonResponse);
             if(objJson.getInt("code") != 200)
                 return null;
 
             if(tripWasProposed) {
                 objJson = objJson.getJSONObject("trip");
-                String p_id = objJson.getString("passengerId");
-                OtherUsersInfo oui = new OtherUsersInfo(p_id, "", "");
+                String oth_id;
+
+                if(UserInfo.getInstance().isDriver())
+                    oth_id = objJson.getString("passengerId");
+                else {
+                    oth_id = objJson.getString("driverId");
+                }
+
+				Log.d("Jsonator", "Read other user id: " + oth_id);
+
+                OtherUsersInfo oui = new OtherUsersInfo(oth_id, "", "");
                 UserInfo.getInstance().setOtherUser(oui);
                 }
 
@@ -326,8 +361,20 @@ public class Jsonator {
             double distance = objJson.getDouble("distance");
             PathInfo.getInstance().setDistance(distance / 1000.0); // in km
 			PathInfo.getInstance().setDuration(objJson.getDouble("duration"));
-			// TODO: get real cost
-			PathInfo.getInstance().setCost(11.9);
+
+            double cost = -1.0;
+            if(!tripWasProposed){
+                JSONObject aux = new JSONObject(jsonResponse);
+                aux = aux.getJSONObject("cost");
+                cost = aux.getDouble("value");
+            }
+
+			PathInfo.getInstance().setCost(cost);
+            if(tripWasProposed){
+                String origin = objJson.getString("origin_name").split(",")[0];
+                String destination = objJson.getString("destination_name").split(",")[0];
+                PathInfo.getInstance().setAddresses(origin, destination);
+            }
 
             double origLat = objJson.getJSONObject("origin").getDouble("lat");
             double origLong = objJson.getJSONObject("origin").getDouble("lng");
@@ -352,66 +399,44 @@ public class Jsonator {
         return pathPoints;
     }
 
-	public String writeProposedTrip(){
+    /**
+     * Generates a JSON for a passenger to POST a trip.
+     */
+    public String writeProposedTrip(){
 		UserInfo ui = UserInfo.getInstance();
 		if((!ui.wasInitialized()) || ui.isDriver())
 			return "";
 
 		return normalizeString(PathInfo.getInstance().getTripJson());
-
-	/*
-		JSONObject objJson = new JSONObject();
-		JSONObject origJson = new JSONObject();
-		JSONObject destJson = new JSONObject();
-		JSONArray pathJson = new JSONArray();
-
-		PathInfo pi = PathInfo.getInstance();
-
-		try {
-			List<LatLng> path =  pi.getPath();
-			LatLng origin = path.get(0);
-			origJson.put("lat", origin.latitude);
-			origJson.put("lng", origin.longitude);
-
-			LatLng destination = path.get(path.size() - 1);
-			destJson.put("lat", destination.latitude);
-			destJson.put("lng", destination.longitude);
-
-			objJson.put("origin", origJson);
-			objJson.put("destination", destJson);
-			objJson.put("destination_name", pi.getDestAddress());
-			objJson.put("origin_name", pi.getOrigAddress());
-			objJson.put("distance", pi.getDistance());
-			objJson.put("duration", pi.getDuration());
-			objJson.put("status", "OK");
-
-			Iterator<LatLng> it = path.iterator();
-			while(it.hasNext()){
-				LatLng nexPoint = it.next();
-				JSONObject pointJson = new JSONObject();
-				pointJson.put("duration", 0);
-				pointJson.put("distance", 0);
-				JSONObject coordsJson = new JSONObject();
-                coordsJson.put("lat", nexPoint.latitude);
-                coordsJson.put("lng", nexPoint.longitude);
-				pointJson.put("coords", coordsJson);
-				pathJson.put(pointJson);
-			}
-
-			objJson.put("path", pathJson);
-
-
-		}
-		catch (Exception e) {
-			Log.e("Fiuber Jsonator", "exception", e);
-		}
-
-        return normalizeString(objJson.toString());
-*/
 	}
 
+    /**
+     * Reads a the trip id from the app-server POST trip response and
+     * stores it in the currrent {@link PathInfo}.
+     * @param jsonResponse The app-server's response to the request
+     */
+    public void readTripResponseId(String jsonResponse){
+        if(jsonResponse == null) return;
+        try {
+            Log.d("Fiuber Jsonator", "Received response:"+ jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+            if(objJson.getInt("code") != 200)
+                return;
 
-	public ArrayList<ProtoTrip> readTripsProposed(String jsonResponse) {
+            objJson = objJson.getJSONObject("trip");
+            String tripId = objJson.getString("_id");
+            PathInfo.getInstance().setTripId(tripId);
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);;
+        }
+    }
+
+    /**
+     * Reads all the trips proposed to a driver.
+     * @param jsonResponse The app-server's response to the request
+     */
+    public ArrayList<ProtoTrip> readTripsProposed(String jsonResponse) {
         ArrayList<ProtoTrip> trips = new ArrayList<>();
         try {
             Log.d("Fiuber Jsonator", "Received response:" + jsonResponse);
@@ -444,6 +469,10 @@ public class Jsonator {
         return trips;
     }
 
+    /**
+     * Reads the info of the other user linked to this user's current trip.
+     * @param jsonResponse The app-server's response to the request
+     */
     public OtherUsersInfo readOtherUserInfo(String jsonResponse) {
         try {
             Log.d("Fiuber Jsonator", "Received response:" + jsonResponse);
@@ -457,11 +486,168 @@ public class Jsonator {
             // TODO: Get real picture!
             String userPic = "107457569994960";
             OtherUsersInfo oui = new OtherUsersInfo(userId, userName, userPic);
+
+            if(!UserInfo.getInstance().isDriver()) {
+                double rate = objJson.getJSONObject("rating").getDouble("rate");
+                int rateCount = objJson.getJSONObject("rating").getInt("rateCount");
+                oui.setDriverRates(rate / (float) rateCount, rateCount);
+            }
+
             return oui;
         } catch (Exception e) {
             Log.e("Fiuber Jsonator", "exception", e);
             return null;
         }
     }
+
+    /**
+     * Writes the received location into a JSON for posting it.
+     * @param location The current location to POST.
+     */
+    public String writeLocationCoords(LatLng location){
+        JSONObject objJson = new JSONObject();
+        JSONObject innerCoords = new JSONObject();
+
+        try {
+            innerCoords.put("lat", location.latitude);
+            innerCoords.put("lng", location.longitude);
+            objJson.put("coord", innerCoords);
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+        }
+
+        return objJson.toString();
+    }
+
+    /**
+     * Writes the received {@link PaymethodInfo} into a JSON to pay the trip.
+     * @param pm The {@link PaymethodInfo} to send to app-server
+     */
+    public String writePaymentAction(PaymethodInfo pm){
+        JSONObject objJson = new JSONObject();
+        JSONObject innerPayment = new JSONObject();
+        JSONObject payParameters = new JSONObject();
+
+        try {
+            innerPayment.put("paymethod", pm.method);
+            payParameters.put("ccvv", pm.cardCcvv);
+            payParameters.put("expiration_month", pm.expMonth);
+            payParameters.put("expiration_year", pm.expYear);
+            payParameters.put("number", pm.cardNumber);
+            payParameters.put("type", pm.cardType);
+            innerPayment.put("parameters", payParameters);
+            objJson.put("paymethod", innerPayment);
+            objJson.put("action", "pay");
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+        }
+
+        return objJson.toString();
+    }
+
+    /**
+     * Reads the info of all near users.
+     * @param jsonResponse The app-server's response to the request
+     */
+    public ArrayList<SelectTripActivity.NearUserInfo> readNearUsers(String jsonResponse){
+        try {
+            Log.d("Fiuber Jsonator", "Received response:"+jsonResponse);
+            JSONObject objJson = new JSONObject(jsonResponse);
+
+            if(objJson.getInt("code") != 200)
+                return null;
+
+            JSONArray jsonUsers = objJson.getJSONArray("users");
+            ArrayList<SelectTripActivity.NearUserInfo> nearUsers = new ArrayList<>();
+            int i, usersAmount = jsonUsers.length();
+            for(i = 0; i < usersAmount; i++){
+                JSONObject thisUserJson = jsonUsers.getJSONObject(i);
+                // Create this user
+                String thisUserName = thisUserJson.getString("username");
+                if(thisUserName.equals(UserInfo.getInstance().getUserId()))
+                    continue;
+                boolean thisUserDriver = thisUserJson.getString("type").toLowerCase().equals("driver");
+                double thisLat = thisUserJson.getJSONObject("coord").getDouble("lat");
+                double thisLng = thisUserJson.getJSONObject("coord").getDouble("lng");
+                LatLng thisPos = new LatLng(thisLat, thisLng);
+                SelectTripActivity.NearUserInfo thisUser = new SelectTripActivity.NearUserInfo(thisPos, thisUserName, thisUserDriver);
+                if(thisUserName != null)
+                    nearUsers.add(thisUser);
+            }
+
+            return nearUsers;
+        }
+        catch (Exception e) {
+            Log.e("Fiuber Jsonator", "exception", e);
+            return null;
+        }
+    }
+
+
+// --------------------------------------------------------------------------------------
+
+	public class TripLoaderLoggin implements RestUpdate{
+        private boolean retrieveTrip;
+
+		public TripLoaderLoggin(){
+            retrieveTrip = true;
+		}
+
+		public void getTripInfo(String tripId){
+			if((tripId == null) || (tripId.length() == 0))
+				return;
+			// Get trip info from app-server
+            PathInfo.getInstance().setTripId(tripId);
+			try {
+				ConexionRest conn = new ConexionRest(this);
+				String tripUrl = conn.getBaseUrl() + "/trips/" + tripId;
+				Log.d("TripLoaderLoggin", "URL to GET trip: " + tripUrl);
+				conn.generateGet(tripUrl, null);
+			}
+			catch(Exception e){
+				Log.e("TripLoaderLoggin", "GET trips error: ", e);
+			}
+		}
+
+		@Override
+		public void executeUpdate(String servResponse) {
+            if(servResponse == null)    return;
+            if(retrieveTrip) {
+                Log.d("TripLoaderLoggin", "Received response: " + servResponse);
+                Jsonator jnator = new Jsonator();
+                ArrayList<LatLng> selectedTrip = jnator.readDirectionsPath(servResponse, true);
+                PathInfo.getInstance().setPath(selectedTrip);
+                String otherId = UserInfo.getInstance().getOtherUser().getUserId();
+                if(otherId.equals("-1")) {
+                    // If here, there's no other user yet
+                    // TODO: Set profile pic to "-1"
+                    OtherUsersInfo oui = new OtherUsersInfo("-1", "No driver took this trip yet", "");
+                    PathInfo pi = PathInfo.getInstance();
+                    oui.setOriginDestination(pi.getOrigAddress(), pi.getDestAddress());
+                    UserInfo.getInstance().setOtherUser(oui);
+                    return;
+                }
+                    try {
+                        ConexionRest conn = new ConexionRest(this);
+                        String passUrl = conn.getBaseUrl() + "/users/" + otherId;
+                        Log.d("SelectTripActivity", "URL to GET passenger data: " + passUrl);
+                        conn.generateGet(passUrl, null);
+                        retrieveTrip = false;
+                    } catch (Exception e) {
+                        Log.e("ChoosePassengerActivity", "GET passenger error: ", e);
+                    }
+            } else {
+                Log.d("TripLoaderLoggin", "Received response: " + servResponse);
+                Jsonator jnator = new Jsonator();
+                OtherUsersInfo oui = jnator.readOtherUserInfo(servResponse);
+                PathInfo pi = PathInfo.getInstance();
+                oui.setOriginDestination(pi.getOrigAddress(), pi.getDestAddress());
+                UserInfo.getInstance().setOtherUser(oui);
+            }
+		}
+
+	}
 
 }

@@ -30,6 +30,7 @@ public class PathInfo {
 		distance = -1.0;
 		destinations = null;
 		cost = -1.0;
+		destinations = null;
 	}
 
 	/**
@@ -101,5 +102,16 @@ public class PathInfo {
 
 	public void setTripId(String tripId){
 		this.tripId = tripId;
+	}
+
+	public void selfDestruct(){
+		origAddress = "";
+		destAddress = "";
+		tripJson = "";
+		tripId = "";
+		distance = -1.0;
+		destinations = null;
+		cost = -1.0;
+		destinations = null;
 	}
 }

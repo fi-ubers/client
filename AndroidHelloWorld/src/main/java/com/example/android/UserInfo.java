@@ -245,6 +245,7 @@ public class UserInfo {
         wasInitialized = false;
         cars = null;
         status = UserStatus.NO_STATE;
+        other = null;
     }
 
     public OtherUsersInfo getOtherUser(){

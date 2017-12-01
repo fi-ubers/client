@@ -28,7 +28,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 public class ChatActivity extends Activity {
 
 	ImageView fab;
-
 	private ListView listView;
 	/**
 	 * Activity onCreate method.
@@ -38,8 +37,15 @@ public class ChatActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		// TODO: Give dedicated chats to pairs passenger-driver
-		final String chatName = "chat";
+		// Create dedicated chat for the pair driver-passenger
+		int idMine = UserInfo.getInstance().getIntegerId();
+		String idOther = UserInfo.getInstance().getOtherUser().getUserId();
+		final String chatName;
+		// Chat name is "chat-<driver id>-<passenger id>"
+		if(UserInfo.getInstance().isDriver())
+			chatName = "chat-" + idMine + "-" + idOther;
+		else
+			chatName = "chat-" + idOther + "-" + idMine;
 
 		FirebaseApp.initializeApp(this);
 		fab = (ImageView) findViewById(R.id.sendBtn);
@@ -54,15 +60,21 @@ public class ChatActivity extends Activity {
 				String msg = input.getText().toString();
 				String uId = UserInfo.getInstance().getUserId();
 				String uName = UserInfo.getInstance().getFirstName();
+				// Post to app-server the chat message
+				try {
+					ConexionRest conn = new ConexionRest(null);
+					int myId = UserInfo.getInstance().getIntegerId();
+					String otherId = UserInfo.getInstance().getOtherUser().getUserId();
+					String chatUrl = conn.getBaseUrl() + "/users/" + myId + "/chat";
+					Log.d("MainActivity", "URL to post chat: " + chatUrl);
+					String toSend = "{ \"receiverId\": "+ otherId + ", \"message\": \"" + msg + "\" }";
+					conn.generatePost(toSend, chatUrl, null);
+				} catch (Exception e) {
+					Log.e("MainActivity", "Posting chat error: ", e);
+				}
+				// Post to firebase db
 				ChatMessage chatMsg = new ChatMessage(msg, uName, uId);
 				dr.push().setValue(chatMsg);
-			/*	FirebaseMessaging.getInstance().send(
-						new RemoteMessage.Builder( + "@gcm.googleapis.com")
-						.setMessageId(Integer.toString(msgId.incrementAndGet()))
-						.addData("message", "hello buddies!")
-						.build()
-
-				);*/
 				input.setText("");
 			}
 		});
@@ -227,6 +239,12 @@ public class ChatActivity extends Activity {
 			this.activity = activity;
 		}
 
+		/**
+		 * Overrided method for populating the {@link ListView} of chat messages.
+		 * @param v The {@link ListView} to populate
+		 * @param model The {@link ChatMessage} to put inside the list
+		 * @param position The position index of the message at the list
+		 */
 		@Override
 		protected void populateView(View v, ChatMessage model, int position) {
 			Log.d("ChatActivity", "Message is: "+ model.getMessageText());
@@ -243,6 +261,12 @@ public class ChatActivity extends Activity {
 			//messageTime.setText(DateFormat.getD format("dd-MM-yyyy (HH:mm:ss)", ));
 		}
 
+		/**
+		 * Overrided method for generating the dialog bubbles.
+		 * @param position The position in the list of the chat message
+		 * @param view The {@link ListView} to update
+		 * @param viewGroup The {@link ViewGroup} of the message
+		 */
 		@Override
 		public View getView(int position, View view, ViewGroup viewGroup) {
 			ChatMessage chatMessage = getItem(position);
@@ -258,17 +282,21 @@ public class ChatActivity extends Activity {
 			return view;
 		}
 
+		/**
+		 * Returns the total number of view types. This value should
+		 * never change at runtime
+		 */
 		@Override
 		public int getViewTypeCount() {
-			// return the total number of view types. this value should never change
-			// at runtime
-			return 2;
+			return 2; // 2 people chatting!
 		}
 
+		/**
+		 * Returns a value between 0 and getViewTypeCount()-1.
+		 */
 		@Override
 		public int getItemViewType(int position) {
-			// return a value between 0 and (getViewTypeCount - 1)
-			return position % 2;
+			return position % 2; // 0: me ; 1: the other
 		}
 	}
 }

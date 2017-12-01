@@ -23,19 +23,28 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
     private String restMethod = "GET";
     private String lastResponse = "";
     private TextView resultTxtView;
-    private String toSendText = ""; // Sólo para enviar con POST
+    private String toSendText = ""; // Just for POST
     private URL appUrl;
     private RestUpdate updater;
 
+    /**
+     * Class default constructor.
+     */
     ConexionRest(){
         this.updater = null;
         this.resultTxtView = null;
     }
 
+    /**
+     * Creates a new ConexionRest linked with a {@link RestUpdate} object. The {@link RestUpdate}
+     * update executeUpdate method is called after receiving response from connection.
+     * @param anUpdater The {@link RestUpdate} to execute after finished connection. Can be null.
+     */
     ConexionRest(RestUpdate anUpdater){
         this.updater = anUpdater;
         this.resultTxtView = null;
     }
+
     /**
      * Generates a GET request to the app-server for retrieving a user data.
      * @param urlRequest The URL for making the request
@@ -169,7 +178,7 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
                 lector.close();
             }
             else {
-                Log.e("Fiuber ConexionRest", "cannot connect, error code: " + String.valueOf(rsp) +
+                Log.e("Fiuber ConexionRest", "cannot connect with " + appUrlString + ", error code: " + String.valueOf(rsp) +
                         "\nand message: " + conn.getResponseMessage());
             }
         }
@@ -241,6 +250,9 @@ public class ConexionRest extends AsyncTask<Void, Integer, String> {
         return this.baseUrlString;
     }
 
+    /**
+     * Returns the last respose received..
+     */
     public String getLastResponse(){
         return lastResponse;
     }

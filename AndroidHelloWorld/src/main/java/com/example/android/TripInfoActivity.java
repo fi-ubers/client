@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,11 +42,10 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
 		if(UserInfo.getInstance().isDriver())
 			Log.e("TripInfoActivity", "Critical bug: driver is here!");
-		// TODO: Uncomment when status works
-		/*
+
 		if(!UserInfo.getInstance().getUserStatus().tripCreationEnabled())
 			Log.e("TripInfoActivity", "Critical bug: passenger cannot create trip!");
-		*/
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_info);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -161,8 +161,8 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 				setSnippet(PathInfo.getInstance().getOrigAddress());
 
 		TextView cstDst = (TextView) findViewById(R.id.distTrip);
-		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km ($" +
-				PathInfo.getInstance().getCost() + ")");
+		cstDst.setText("Distance: " + PathInfo.getInstance().getDistance() + "km (" +
+				PathInfo.getInstance().getCost() + " ARS)");
     }
 
 
@@ -192,8 +192,17 @@ public class TripInfoActivity extends FragmentActivity implements OnMapReadyCall
 		@Override
 		public void executeUpdate(String servResponse) {
 			Log.d("TripInfoActivity", "Received response: " + servResponse);
-			// TODO: Retrieve trip id
-			// TODO: Return to MainActivity and change user status when status works
+			// Retrieve trip id
+			Jsonator jnator = new Jsonator();
+			jnator.readTripResponseId(servResponse);
+			Toast.makeText(getApplicationContext(), "Trip created! One of our drivers will soon contact you.", Toast.LENGTH_SHORT).show();
+			UserInfo.getInstance().setUserStatus(UserStatus.P_WAITING_CONFIRMATION);
+			ActivityChanger.getInstance().gotoActivity(TripInfoActivity.this, MainActivity.class);
+			OtherUsersInfo oui = new OtherUsersInfo("-1", "No driver took this trip yet", "");
+			PathInfo pi = PathInfo.getInstance();
+			oui.setOriginDestination(pi.getOrigAddress(), pi.getDestAddress());
+			UserInfo.getInstance().setOtherUser(oui);
+			finish();
 		}
 	}
 

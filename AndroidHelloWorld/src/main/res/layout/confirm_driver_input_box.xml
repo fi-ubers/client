@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_marginLeft="6dp"
+              android:layout_marginRight="6dp"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtmessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="20sp"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="6dp"/>
+
+    <fragment
+        android:id="@+id/fragDriverInfo"
+        android:name="com.example.android.OtherInfoFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:layout="@layout/fragment_otherinfo" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp"/>
+
+    <TextView
+        android:id="@+id/txtViewRateCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/col_plain_text"
+        android:text="  Driver rating"
+        android:textAlignment="center"
+        android:textSize="20sp"
+         />
+
+    <RatingBar
+        android:id="@+id/ratingBarShowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:clickable="false"
+        android:progressTint="#ffd700"
+        android:secondaryProgressTint="@android:color/transparent"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:max="5"
+        android:rating="3.5"
+        android:stepSize="0.5"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/confirmDriver"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/col_imp_btn_bck"
+            android:textColor="@color/col_plain_text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="CONFIRM" />
+
+        <Button
+            android:id="@+id/whiteyBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:clickable="false"
+            android:background="@color/col_imp_btn_bck"
+            android:textColor="@color/col_plain_text"
+            android:visibility="invisible"
+            android:text="Reset" />
+
+        <Button
+            android:id="@+id/rejectDriver"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/col_imp_btn_bck"
+            android:textColor="@color/col_plain_text"
+            android:textStyle="bold"
+            android:text="REJECT" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

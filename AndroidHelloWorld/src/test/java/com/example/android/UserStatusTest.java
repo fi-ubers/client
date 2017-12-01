@@ -55,13 +55,19 @@ public class UserStatusTest {
 	@Test
 	public void chooseTripEnabled() throws Exception {
 		UserStatus st = UserStatus.P_IDLE;
-		assertFalse(st.chooseTripEnabled());
+		assertFalse(st.choosePassengerEnabled());
 		st = UserStatus.D_TRAVELLING;
-		assertFalse(st.chooseTripEnabled());
+		assertFalse(st.choosePassengerEnabled());
 		st = UserStatus.P_WAITING_CONFIRMATION;
-		assertFalse(st.chooseTripEnabled());
+		assertFalse(st.choosePassengerEnabled());
 		st = UserStatus.D_ON_DUTY;
-		assertTrue(st.chooseTripEnabled());
+		assertTrue(st.choosePassengerEnabled());
+	}
+
+	@Test
+	public void createFromCode() throws Exception {
+		UserStatus st = UserStatus.createFromCode(5);
+		assertEquals(st, UserStatus.P_TRAVELLING);
 	}
 
 }

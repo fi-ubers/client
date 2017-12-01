@@ -19,6 +19,9 @@ public class LoginActivity extends Activity{
 
     Button signBtn;
 
+    /**
+     * This {@link Activity} overrided onCreate method.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,10 @@ public class LoginActivity extends Activity{
 
     }
 
+    /**
+     * Starts the UI of this {@link Activity}. Should only be called if no
+     * user has previously logged in.
+     */
     public void startUI(){
         setContentView(R.layout.activity_login);
 
@@ -57,14 +64,19 @@ public class LoginActivity extends Activity{
 
 // -------------------------------------------------------------------------------------------------
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
+     * Represents the user login if that user has previously logged in on
+     * this device.
      */
     public class LoginFromFile implements RestUpdate {
 
         private final String mUserId;
         private final String mPassword;
 
+        /**
+         * Constructor for this class, considering user auths.
+         * @param userId The user id of the logging in user.
+         * @param password The password of that user
+         */
         LoginFromFile(String userId, String password) {
             mUserId = userId;
             mPassword = password;
