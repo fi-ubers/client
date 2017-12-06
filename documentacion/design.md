@@ -20,36 +20,27 @@ Diagrama general de capas:
 
 ![alt text](https://github.com/fi-ubers/app-server/blob/master/docs/ArchDiagram.png)
 
-Por lo tanto, las funcionalidades implementadas estaban en parte limitadas por la API que se provee desde el *Shared Server*. A continuación se detallan la estructura del código del *App Server* así como los aspectos clave de la arquitectura y diseño.
-
-## Estructura de paquetes
-
-La división del código en distintos módulos y paquetes se resume a continuación. Todo el código relevante a las distintas funcionalidades de la aplicación se encuentran en el directorio *src/main*. El código de las pruebas unitarias y de integración se encuentra en *src/test*.
-
-+ *src/main/myApp.py* : aquí se encuentran definidos todos los *endpoints* definidos para la REST API y su vinculación a los *recursos* designados para cada uno.
-
-+ *src/main/resources* : es el directorio que contiene todos los controladores de los *recursos*, encargados de manejar los requests realizados a los endpoints definidos en *myApp.py*. Los controladores de de endpoints similares están definidos en un mismo archivo.
-
-+ *src/main/com* : aquí residen los archivos que implementan módulos auxiliares. Éstos manejan tanto la comunicación con otras aplicaciones (i.e. shared-server o Google API), como el aislamiento de operaciones comunes a varios endpoints (e.g. validación de tokens del application server). 
-
-  + *ServerRequest.py* es el módulo que permite realizar requests al *Shared Server*.
-  + *NotificationManager.py* es el módulo que permite conectarse con el servicio de *Firebase* para enviar notificaciones a los clientes.
-  + *TokenGenerator.py* es el módulo encargado de la validación de los *tokens* de seguridad utilizados en la comunicación entre las tres capas.
-  + *ResponseMaker.py* es un módulo que encapsula la generación de respuestas de la API: serialización de json y respuestas estándar de error.
-  + *Distances.py* encapsula la lógica de cálculo de distancias entre coordenadas dadas en formato latitud-longitud.
-
-+ *src/main/mongodb* : 
-
-  + *MongoController.py* : es el módulo encargado de la conexión con la base de datos remota o local, si la anterior no estuviera definida.
-
-+ *src/main/mode/* : en este directorio se encuentran los archivos encargados de modelar las estructuras de las entidades conceptuales importantes del sistema para garantizar la compatibilidad entre los datos intercambiados entre el *Cliente* y el *Shared Server*.
-
-  + *TripStates.py* : en este módulo se definen todos los estados posibles de un viaje. Permite mappear la información de un viaje desde el formato recibido desde el cliente al formato de viajes compatible con el *Shared Server*.
-
-  + *Client.py* : en este módulo se definen todos los estados posibles de un usuario (tanto para pasajero como para chofer). Permite mappear los datos de los usuarios a un formato compatible con el utilizado por la base de datos local.
-
 
 ## Arquitectura y diseño
+
+La arquitectura de la aplicación está organizada en clases Activity de Android, según como se muestra en el siguiente esquema. Debido a que los usuarios de la aplicación pueden ser tanto *pasajeros* como *conductores*, se especifican estas diferencias en el diagrama con colores, señalando aquellas activities sólo accesibles por pasajeros con azul, y esas sólo accesibles por conductores en rojo.
+
+![](https://github.com/fi-ubers/client/blob/master/documentacion/activities.png)
+
+Las funciones de las activities señaladas en el diagrama son:
+
+- LoginActivity: Es el punto de entrada al sistema. Los usuarios pueden loggearse con Facebook, o acceder a la pantalla de registro manual.
+- ManuaSignInActivity: Permite al usuario crear una nueva cuenta FIUBER o ingresar a la aplicación con una cuenta FIUBER existente.
+- MainActivity: La Activity truncal de la aplicación. Presenta un menú con notificaciones para que los usuarios puedan acceder a las demás activities.
+- ProfileActivity: Brinda la posibilidad de ver y modificar los datos de la cuenta de usuario.
+- CarsActivity: Permite al conductor registrar o dar de baja sus autos en el sistema.
+- SelectTripActivity: Activity con un mapa. Muestra la ubicación del usuario, y la de otros usuarios cercanos. Su función varía dependiendo el tipo del usuario: a los pasajeros, les permite buscar lugares y generar nuevos viajes; a los conductores, les deja buscar viajes para aceptar.
+- TripInfoActivity: Una vez que el pasajero diagrama un viaje, esta pantalla le hace un resumen del mismo, estima su costo y le permite confirmarlo.
+- ChoosePassengerActivity: Lista para el conductor los viajes cercanos disponibles, y le permite verlos en el mapa para aceptarlos.
+- ChatActivity: Pantalla de chat para poder conversar con el otro usuario vinculado en el viaje.
+- TripOtherInfoActivity: Muestra un resumen del viaje y del otro usuario vinculado a este.
+- TripEnRouteActivity: Permite ver el progreso del viaje en curso (mientras se está viajando) y terminarlo.
+- PayingActivity: Permite al pasajero pagar su viaje luego de finalizarlo.
 
 Todo el diseño del *App Server* gira en torno a las dos entidades principales dentro del dominio de negocios: los *Users* (Usuarios) y los *Trips* (Viajes). Ambas entidades son modeladas dentro del *App Server* como diccionarios, con una sierie de campos requeridos y otras opcionales. Las razones detrás de esta decisión radican en 1) la facilidad del manejo de estos objetos en python y 2) la cercanía de los mismos al formato de comunicación con el *Shared Server*.
 
