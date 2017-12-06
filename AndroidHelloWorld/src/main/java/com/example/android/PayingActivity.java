@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * {@link Activity} for allowing the user of the app to log in.
+ * {@link Activity} for allowing the user of the app to pay their trip.
  * @see LoginFragment
  */
 public class PayingActivity extends Activity{
