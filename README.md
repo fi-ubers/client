@@ -1,6 +1,5 @@
 # Android Client
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 Aplicación Android (Java) para el cliente de Fiuber App.
 
