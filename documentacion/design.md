@@ -18,7 +18,7 @@ Para implementar esta aplicación se utilizó una arquitectura de 3 capas (3-Tie
 
 Diagrama general de capas:
 
-![alt text](https://github.com/fi-ubers/app-server/blob/master/docs/ArchDiagram.png)
+![](https://github.com/fi-ubers/app-server/blob/master/docs/ArchDiagram.png)
 
 
 ## Arquitectura y diseño
@@ -26,6 +26,7 @@ Diagrama general de capas:
 La arquitectura de la aplicación está organizada en clases Activity de Android, según como se muestra en el siguiente esquema. Debido a que los usuarios de la aplicación pueden ser tanto *pasajeros* como *conductores*, se especifican estas diferencias en el diagrama con colores, señalando aquellas activities sólo accesibles por pasajeros con azul, y esas sólo accesibles por conductores en rojo.
 
 ![](https://github.com/fi-ubers/client/blob/master/documentacion/activities.png)
+
 
 Las funciones de las activities señaladas en el diagrama son:
 
@@ -42,188 +43,142 @@ Las funciones de las activities señaladas en el diagrama son:
 - TripEnRouteActivity: Permite ver el progreso del viaje en curso (mientras se está viajando) y terminarlo.
 - PayingActivity: Permite al pasajero pagar su viaje luego de finalizarlo.
 
-Todo el diseño del *App Server* gira en torno a las dos entidades principales dentro del dominio de negocios: los *Users* (Usuarios) y los *Trips* (Viajes). Ambas entidades son modeladas dentro del *App Server* como diccionarios, con una sierie de campos requeridos y otras opcionales. Las razones detrás de esta decisión radican en 1) la facilidad del manejo de estos objetos en python y 2) la cercanía de los mismos al formato de comunicación con el *Shared Server*.
 
-### Users
+### Estados de pasajeros y conductores
 
-Los *Users* dentro de la aplicación representan a una persona que utiliza un cliente en su teléfono. Así pues distinguimos dos roles dentro de los *Users*: los *Passengers* (pasajeros) y los *Drivers* (conductores). Ambos tienen la misma información básica (i.e. datos personales), pero se diferencian en algunos atributos y en cómo se relacionan con el resto de las entidades. El esquema de datos de un *User* tal y como se lo maneja en la aplicación y se lo guarda en la base de datos es el siguiente.
+Al ser la aplicación cliente una por roles, fue necesario distinguir los estados de pasajeros y conductores, identificando las acciones que cada uno podía hacer en cada situación.
 
-```json
-"user": {
-  "_id": 7,
-  "_ref": "74f3270c-f453-4fae-8eda-ac7f7a04a9ff",
-  "applicationOwner": "1",
-  "balance": [],
-  "birthdate": "29-2-1971",
-  "cars": [],
-  "coord": {
-    "lat": 34.161,
-    "lng": 58.96
-  },
-  "country": "France",
-  "email": "cosmefulanito3@thebest.com",
-  "images": [
-    "No tengo imagen"
-  ],
-  "name": "Cosme",
-  "online": true,
-  "rating": {
-    "rate": 4,
-    "rateCount": 2
-  },
-  "state": 11,
-  "surname": "Fulanito",
-  "tripId": "",
-  "type": "driver",
-  "username": "cosme_fulanito3"
+Así, los estados de un pasajero son los siguientes:
+
+* *Idle*: el pasajero está recien logueado en la aplicación, puede ver conductores cercanos, averiguar por el costo de un viaje o bien proponer un viaje nuevo y esperar por conductores.
+* *Waiting Confirmation*: un pasajero que acaba de solicitar un viaje está en este estado, y representa la espera hasta que un conductor decida tomarlo. El pasajero puede, en cualquier momento, cambiar de parecer y cancelar el viaje, regresando al estado *idle*.
+* *Examining Driver*: cuando un conductor acepta el viaje propuesto por el pasajero, éste último entrará en este estado. En este momento, él podrá ver la información del conductor y decidir entre confirmar el viaje o rechazarlo.
+* *Waiting Driver*: el pasajero que haya aceptado a un conductor estará en este estado, e indica que está esperando a que lo pasen a buscar. Durante este estado se puede todavía cancelar el viaje (como en *waiting confirmation*), o bien iniciarlo cuando el conductor llegue al lugar.
+* *Travelling*: cuando el viaje inició tanto pasajero como conductor entrarán en este estado, que representa el viaje en sí. Se trackearán las posiciones de ambos usuarios para definir el camino real del viaje. La única acción permitida en este estado es la de finalizar el viaje.
+* *Arrived*: este es el estado final del pasajero en un viaje. Representa que el viaje terminó y que debe efectuar el pago del mismo. En este momento se permite realizar una reseña del conductor. El ciclo de vida del viaje termina cuando el pasajero efectúa el pago, volviendo él al estado *idle*.
+
+En cambio, los estados de un conductor son:
+
+* *On Duty*: un conductor en este estado no está asociado a ningún viaje. Puede ver otros usuarios cercanos, y obtener una lista de viajes propuestos que requieren de un conductor. Viendo la lista de viajes puede elegir tomar uno.
+* *Waiting Confirmation*: un conductor que decida aceptar un viaje todavía no estará asociado al mismo, pues debe esperar a que el pasajero que lo propuso le dé su aprobación. En este estado, puede ocurrir que tanto el pasajero lo rechace (en cuyo caso, el conductor volverá al estado *on duty*) como que lo acepte.
+* *Going To Pickup*: cuando el conductor es confirmado, debe ir al punto de encuentro establecido por el viaje. Una vez ahí, deberá comenzar el viaje.
+* *Travelling*: cuando el viaje inició tanto pasajero como conductor entrarán en este estado, que representa el viaje en sí. Ver el estado homónimo en los pasajeros.
+
+Toda la información de los usuarios y la lógica de sus estados (y, por ende, de las acciones que pueden realizar en cada caso) fue encapsulada en las clases UserInfo y UserStatus.
+
+### Code snippets
+
+A continuación se muestran unos pequeños fragmentos de código que ejemplifican las principales características de la arquitectura y diseño de la aplicación:
+
+Inicio de sesión (log in) de un usuario:
+```java
+public void logUser() {
+    try {
+        Jsonator jnator = new Jsonator();
+        String toSendJson = jnator.writeUserLoginCredentials(mUserId, mPassword, " ");
+        ConexionRest conn = new ConexionRest(this);
+        String urlReq = conn.getBaseUrl() + "/users/login";
+        Log.d("LoginActivity", "JSON to send: "+ toSendJson);
+        conn.generatePost(toSendJson, urlReq, null);
+    }
+    catch(Exception e){
+        Log.e("LoginActivity", "Manual log in error: ", e);
+    }
 }
 ```
 
-### Trips
+Escritura de un JSON (método de pago) para enviar al Application Server usando Jsonator
+```java
+public String writePaymentAction(PaymethodInfo pm){
+	JSONObject objJson = new JSONObject();
+	JSONObject innerPayment = new JSONObject();
+	JSONObject payParameters = new JSONObject();
 
-Los *Trips* representan un viaje en cualquiera de sus estadíos: desde un viaje que se ha propuesto pero todavía carece de conductor, hasta uno que ha finalizado pero tiene pago pendiente. Al igual que los *Users* los *Trips* se modelan internamente como un diccionario y se guardan como tales en la base de datos. Todos los *Trips* tienen asociada necesariamente un objeto de tipo *Directions* que indica las direcciones del camino (i.e. puntos de origen y destino, tiempo estimado, distancia estimada y una serie de waypoints que marcan el camino paso a paso).
+	try {
+	    innerPayment.put("paymethod", pm.method);
+	    payParameters.put("ccvv", pm.cardCcvv);
+	    payParameters.put("expiration_month", pm.expMonth);
+	    payParameters.put("expiration_year", pm.expYear);
+	    payParameters.put("number", pm.cardNumber);
+	    payParameters.put("type", pm.cardType);
+	    innerPayment.put("parameters", payParameters);
+	    objJson.put("paymethod", innerPayment);
+	    objJson.put("action", "pay");
+	}
+	catch (Exception e) {
+	    Log.e("Fiuber Jsonator", "exception", e);
+	}
 
-El estado de un viaje se codifica en un campo especial dentro de su estructura, y éste a su vez indica la validez y o necesidad de incluir los otros campos. La estructura completa de un viaje es la siguiente:
-
-```json
-{
-    "_id": "9b568ad2-d5f6-11e7-b2af-be5f70b87d11",
-    "driverId": 4,
-    "cost": {
-        "currency": "ARS",
-        "value": 70.95
-    },
-    "state": "finished_rated",
-    "directions": {
-        "duration": 740,
-        "origin_name": "Ramón Franco 4142-4198, Remedios de Escalada, Buenos Aires, Argentina",
-        "origin": {
-            "lng": -58.4110197,
-            "lat": -34.7313204
-        },
-        "path": [
-            {
-                "distance": 33,
-                "duration": 6,
-                "coords": {
-                    "lng": -58.41132769999999,
-                    "lat": -34.7314771
-                }
-            }
-        ],
-        "destination_name": "Yapeyú 801-899, B1828BBK Banfield, Buenos Aires, Argentina",
-        "status": "OK",
-        "destination": {
-            "lng": -58.3801311,
-            "lat": -34.7473679
-        },
-        "distance": 4300
-    },
-    "passengerId": 2,
-    "time_start": "2017-11-30T17:48:55.104382",
-    "time_start_waiting": "2017-11-30T17:48:55.108341",
-    "real_route": [
-        {
-            "lng": -58.4110484,
-            "timestamp": "2017-11-30T17:48:58.045657",
-            "lat": -34.7316897
-        }
-    ],
-    "time_finish": "2017-11-30T17:49:06.580658"
+	return objJson.toString();
+	}
+```
+Crear lista de viajes para aceptar (chofer), luego de recibirlos del Application Server en formato JSON:
+```java
+private void getTripsList(String servResponse){
+	int itemChecked = listView.getCheckedItemPosition();
+	listView.clearChoices();
+	Log.d("ChoosePassengerActivity", "GET trips response:" + servResponse);
+	Jsonator jnator = new Jsonator();
+	trips = jnator.readTripsProposed(servResponse);
+	ArrayAdapter<String> mAdapter = (ArrayAdapter<String>) listView.getAdapter();
+	mAdapter.clear();
+	Iterator<ProtoTrip> it = trips.iterator();
+	while(it.hasNext()){
+		ProtoTrip nexTrip = it.next();
+		String addrO = nexTrip.getOriginName().split(",")[0];
+		String addrD = nexTrip.getDestinationName().split(",")[0];
+		String fromTo =  "From: " + addrO + "\nTo: " + addrD;
+		mAdapter.add(fromTo);
+	}
+	listView.setItemChecked(itemChecked, true);
+	return;
 }
 ```
 
-### Diagramas de estados
+Usar Firebase para enviar un mensaje a otro usuario al apretar botón de enviar:
+```java
+public void onClick(View view) {
+	if(input.getText().toString().trim().equals(""))
+		return; // empty string, does nothing
 
-Cada entidad tiene su propio set de estados, que indican las acciones que pueden efectuar y el punto en el que se encuentran dentro del flujo de eventos principal.
+	DatabaseReference dr = FirebaseDatabase.getInstance().getReference(chatName);
+	String msg = input.getText().toString();
+	String uId = UserInfo.getInstance().getUserId();
+	String uName = UserInfo.getInstance().getFirstName();
+	// Post to firebase db
+	ChatMessage chatMsg = new ChatMessage(msg, uName, uId);
+	dr.push().setValue(chatMsg);
+	input.setText("");
+}
+```
 
-Los estados de un *Passenger* son los siguientes:
-
-* *Idle*: el pasajero está recien logueado en la aplicación, puede ver conductores cercanos (GET a /users), averiguar por el costo de un viaje (POST /directions) o bien proponer un viaje nuevo y esperar por conductores (POST /trips)
-* *Waiting Accept*: un pasajero que acaba de postear un *Trip* está en este estado, y representa la espera hasta que un *Driver* decida tomar el viaje. En cualquier momento se puede cancelar el viaje (POST a /trip/tripId/action, *'cancel'*)
-* *Selecting Driver*: cuando un *Driver* acepte el *Trip* propuesto por un *Passenger*, éste último entrará en este estado. En este momento podrá ver la información del *Driver* (GET a /users/userId) y decidir si le parece bien (POS a /trip/tripId/action, *'confirm'*) o bien prefiere rechazarlo y esperar a otro *Driver* (POST a /trip/tripId/action, *'reject'*)
-* *Waiting Driver*: el *Passenger* que haya aceptado a un *Driver* estará en este estado, e indica que está esperando a que lo pasen a buscar. Durante este estado se puede todavía cancelar el viaje (de la misma manera que se describió en *Waiting Accept*), o bien iniciarlo mediante un *two-way handshake* (POST a /trip/tripId/action, 'start').
-* *Waiting Start*: para iniciar un viaje se necesita que tanto el *Driver* como el *Passenger* expresen que quieren iniciar el viaje a través del endpoint apropiado (/trip/tripId/action). Si fuera el *Passenger* el primero en querer iniciar el viaje, entra en este estado en el cual estará esperando a que el *Driver* también lo inicie. Esta es el último momento en que se puede cacelar un viaje sin que se realicen transferencias monetarias.
-* *Travelling*: cuando el viaje inició tanto *Passengers* como *Drivers* entrarán en este estado, que representa el viaje en sí. Se trackearán las posiciones de ambos *Users* para definir el camino real del *Trip*. La única acción permitida en este estado es la de finalizar el viaje (POST a /trip/tripId/action, *'finish'*). Al igual que en el mecanismo de inicio del viaje, se hace a través de un *two-way handshake*, teniendo ambos *Users* que estar de acuerdo en la finalización del *Trip*.
-* *Waiting Finish*: es el análogo a *Waiting Start* pero para la finalización del viaje: se da sólo si el *Passenger* es el primero en terminar el *Trip* y debe esperar a que el *Driver* haga lo propio.
-* *Arrived*: este es el estado final del *Passenger* en un viaje. Representa que el viaje terminó y que debe efectuar el pago del mismo. En este momento se permite realizar una reseña del conductor (POST a /trip/tripId/action, *'rate'*). El ciclo de vida del viaje termina cuando el *Passenger* efectúa el pago (POST a /trip/tripId/action, *'pay'*), volviendo al estado *Idle*.
-
-Los estados de un *Driver* son los siguientes:
-
-* *Idle*: un *Driver* en este estado no está asociado a ningún viaje. Puede ver otros *Users* cercanos (GET /users), y obtener una lista de *Trips* propuestos que requieren de un conductor (GET /trips). Viendo la lista de viajes puede elegir tomar uno (POST /trips/tripId/action, *'accept'*).
-* *Waiting Confirmation*: un *Driver* que decida aceptar un *Trip* todavía no estará asociado al mismo, debe esperar a que el *Passenger* que propuso el viaje le de su aprovación (ver estado *Selecting Driver* del pasajero). Este estado representa la espera del *Driver* a ser confirmado para tomar el viaje.
-* *Going To Pickup*: cuando el *Driver* es confirmado, debe ir al punto de encuentro establecido al proponerse el *Trip*. Una vez ahí, deberá comenzar el viaje mediante el *two-way handshake* explicado en los estados del *Passenger* (POST a /trip/tripId/action, *'start'*.
-* *Waiting Start*: si el *Driver* fue el primero en querer iniciar el viaje, entra en este estado en el cual estará esperando a que el *Passenger* también lo inicie.
-* *Travelling*: cuando el viaje inició tanto *Passengers* como *Drivers* entrarán en este estado, que representa el viaje en sí. Ver el estado homónimo del *Passenger*.
-* *Waiting Finish*: es el análogo a *Waiting Finish* pero si el *Driver* es el primero en terminar el viaje.
-
-Los *Trips* tienen una referencia tanto al *Passenger* como al *Driver* (cuando lo haya), y una serie de estados que acompaña a los estados de los *Users*. Los estados posibles de un *Trip* son los siguientes.
-
-* *Proposed*: corresponde a un *Trip* recién creado como producto de la acción de un *Passenger* (POST a /trips). Este estado es el único que tiene una referencia a *Driver* inválida, puesto que todavía no ha sido tomado por ningún conductor.
-* *Accepted*: un *Trip* que haya sido tomado por un *Driver* pero aún no esté confirmado por el *Passenger* está en este estado.
-* *Confirmed*: un *Trip* pasa a este estado cuando el *Passenger* confirma al *Driver*. Ambos *Users* pueden ahora iniciar el *two-way handshake* para dar inicio al *Trip*.
-* *Started*, *Passenger Started* y *Driver Started*: son los tres estadíos del *two-way handshake* para iniciar un viaje. *Passenger Started* corresponde al estado en que el pasajero indicó que quiere comenzar el viaje, pero el conductor todavía no. El caso contrario es el del estado *Driver Started*. El estado *Started* corresponde a un viaje ya comenzado, y que se está llevando a cabo en este momento.
-* *Finished*, *Passenger Finished* y *Driver Finished*: son los estados análogos al comienzo del viaje, pero para la finalización del mismo.
-* *Finished Rated*: este es un estado de post-finalización que indica que el *Passenger* ha decidido dejar un rating al *Driver*. Sólo se puede puntuar al conductor si el viaje está en estado *Finished* y para evitar que haya más de un rating por *Trip* una vez hecha la puntuación el mismo pasa a este estado. Este estado no es parte del flujo de estados obligatorio de un *Trip*.
-* *Completed* (a.k.a. *Payed*): este es un estado tácito puesto que los viajes finazliados y pagos no se almacenan el la base de datos propia del *Application Server*, sino que se realiza la alta apropiada en el *Shared Server*. Así, lógicamente todos los *Trips* que estén guardados en el *Shared Server* tendrán implícitamente este estado.
-
-![Diagrama de estados de los pasajeros](https://github.com/fi-ubers/app-server/blob/master/docs/PassStateDiag.png)
-
-![Diagrama de estados de los conductores](https://github.com/fi-ubers/app-server/blob/master/docs/DriverStateDiag.png)
-
-Las posibles transiciones entre los estados puede resumirse en el siguiente diagrama:
-
-![Diagrama de secuencias del ciclo de vida de un viaje](https://github.com/fi-ubers/app-server/blob/master/docs/TripSeqDiagram.png)
-
-### Login y Logout de *Users*
-
-Todos los *Users* en la base de datos local tienen un flag que indica si están logueados o no. Esto permite mantener registro del estado de los usuarios incluso si se desconectan. Los pasos a seguir en caso del login de un *User* son:
-
-1. Verificar las credenciales del usuario con el *Shared Server*, y obtener los datos del mismo.
-2. Buscar el usuario en la base de datos y comparar los __ref_, actualizar los campos en caso de ser necesario.
-3. Si el usuario existía, recuperar su estado, sino ponerlo en estado *Idle*.
-4. Marcar al user como _online_
-
-El proceso de logout sólo borra al usuario de la base de datos local en caso de que el estado del mismo sea *Idle*, en caso contrario sólo se lo marca como _offline_.
-
-![Diagrama de secuencia del login](https://github.com/fi-ubers/app-server/blob/master/docs/BasicSeqDiagram.png)
 
 ## Dependencias y herramientas
 
+La aplicación de cliente Android depende de las siguientes librerías externas:
 
-Esta sección está destinada a mencionar las herramientas, librerías y APIs más relevantes utilizadas en este proyecto. Destacamos que esta no pretende ser una descripción de todas las librerías utilizadas, sino una breve mención de aquellas más relevantes para la funcionalidad de este proyecto.
-
-- **GUnicorn** + **Flask**
-
-  Este proyecto consiste en un servidor HTTP basado en *GUnicorn*. Para confeccionar la REST API que permite la comunicación con el servidor, se utilizó un framework para Python llamado *Flask*. 
 
 - **Google Maps API**
 
-  Se utilizó *Google Maps API* para obtener recorridos de viaje para los vehículos a partir del origen y el destino deseado. A partir de la información provista por Google Directions el usuario de la aplicación puede realizar un request al endpoint /directions para obtener tanto el recorrido como la estimación del costo de viaje.
+  Se usó Google Maps API como soporte para poder visualizar y manejar mapas en toda la aplicación, así como para la traducción de coordenadas geográficas a lugares relevantes y viceversa (servicios de geolocalización directa e inversa). A partir de la información provista por Google Maps, los usuarios pueden confeccionar viajes, ver a los demás usuarios cercanos, detectar viajes por cercanía y demás.
 
-- **Firebase**
+- **Firebase CM**
 
-  Se utilizó firebase como servicio web para poder proveer un servicio de mensajería (chat) entre el viajero y el conductor. Adicionalmente se utilizó Firebase para enviar notificaciones de eventos (como mensajes nuevos o la cancelación de un viaje) a los usuarios de la aplicación. 
+  Se utilizó Firebase como servicio web para poder proveer un servicio de mensajería (chat) entre el pasajero y el conductor. Adicionalmente se utilizó Firebase para recibir notificaciones push de eventos (como mensajes nuevos o la cancelación de un viaje).
 
-- **Docker**
+- **Facebook SDK**
 
-  Para asegurar la flexibilidad y garantizar la compatibilidad en distintas plataformas, se utilizó Docker + Docker Compose. Existen 2 containers principales, uno para la base de datos y otro para la aplicación. Los archivos de configuración de docker pueden encontrarse en el directorio raíz del proyecto. En estos archivos se definen los nombres, puertos y propiedades principales de los containers, así como también las variables de entorno y dependencias de cada uno:
-
-   + *Dockerfile*
-
-   + *docker-compose.yml*
-
-- **MongoDB**
-
-  Mongo Database es el sistema de base de datos (NoSQL) seleccionado para este proyecto. Existe una base de test definida en el archivo *docker-compose.yml* que será la utilizada por el servidor como base default. El usuario puede optar por mantener esta base o definir la propia en el archivo citado. De no encontrarse una definición se utiliza el servicio de Mongo localmente.
+  Para facilitar el inicio de sesión en la aplicación para el usuario, se integró a la aplicación con Facebook SDK. De esa manera, los usuarios pueden ahorrarse el tener que cargar todos sus datos personales, ya que el cliente Android los obtiene automáticamente al vincularse con la cuenta de Facebook del usuario.
 
 ## Bugs conocidos y puntos a mejorar
 
 Debido a restricciones temporales, existen algunos aspectos de este proyecto que requieren ser mejorados o concluidos. A continuación, realizamos una breve descripción de las falencias y bugs detectados hasta el momento:
 
-+ **Controles de concurrencia en la base de datos:** actualmente no existen controles de concurrencia sobre la base de datos. Como se mencionó anteriormente, uno de los objetivos de esta aplicación es que puedan coexistir varias instancias de *App Server* trabajando sobre una misma base hosteada en la web (salvo que por algún motivo se trabaje sobre una base de datos instanciada en forma local). Debido a que en MONGODB no existe el concepto de transacción para garantizar la integridad de los datos, estos controles deben realizarse en forma manual. En nuestra implementación, estos controles no están implementados, pudiendo ocasionarse una *race condition* si varios usuarios quisieran realizar modificaciones sobre la base al mismo tiempo.
++ **Inicio y fin de viaje sin doble confirmación:** Actualmente, tanto chofer como pasajero deben ponerse de acuerdo a la hora de iniciar o terminar el viaje, ya que ambos deben dar su consentimiento presionando un botón. La razón para hacerlo de esta manera fue tratar de evitar que, al tener sólo uno de los dos usuarios la potestad de iniciar o terminar el viaje, éste pudiera hacerlo en un momento no correcto, perjudicando al otro usuario. No obstante, se reconoció que esta doble confirmación, aunque más justa, vuelve mucho más molesta la aplicación, por lo que un cambio sería bastante deseable.
 
++ **Notificaciones configurables:** Las notificaciones push o con mensajes dentro de la aplicación pueden resultar molestas para el usuario, en especial si ya estaba esperando que esos eventos ocurrieran. Una característica buena para agregar sería la de permitir al usuario elegir qué tipo de notificaciones recibir, e incluso desactivar las notificaciones por completo.
 
++ **Botón de denuncia (pánico) en la aplicación:** Creemos que un simple botón que permita denunciar al otro usuario durante un viaje de forma inmediata sería de gran valor para la aplicación, pues ayudaría a los usuarios a viajar más tranquilos y seguros.
 
 
 
